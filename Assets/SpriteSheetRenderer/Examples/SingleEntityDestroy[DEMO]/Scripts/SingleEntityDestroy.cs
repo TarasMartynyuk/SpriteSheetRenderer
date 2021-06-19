@@ -41,7 +41,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
         new LifeTime{ Value = UnityEngine.Random.Range(5,15)}
       };
 
-      SpriteSheetManager.Instantiate(archetype, components, "emoji");
+      SpriteSheetManager.Instantiate(archetype, "emoji");
     }
   }
 }

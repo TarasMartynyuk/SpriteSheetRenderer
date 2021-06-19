@@ -9,15 +9,8 @@ using System.Linq;
 //todo entity is a dictionary with spritesheetmaterial and is used to separate buffers from different material
 
 public static class DynamicBufferManager {
-  private static EntityManager entityManager;
-
-  public static EntityManager EntityManager {
-    get {
-      if(entityManager == null)
-        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-      return entityManager;
-    }
-  }
+  public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
+ 
   //list of all the "Enities with all the buffers"
   //Each different material have a different bufferEnity
   private static List<Entity> bufferEntities = new List<Entity>();

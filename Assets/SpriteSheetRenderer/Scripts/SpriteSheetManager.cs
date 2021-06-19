@@ -4,23 +4,15 @@ using Unity.Mathematics;
 using UnityEngine;
 
 public abstract class SpriteSheetManager {
-  private static EntityManager entityManager;
   public static List<RenderInformation> renderInformation = new List<RenderInformation>();
 
-  public static EntityManager EntityManager {
-    get {
-      if(entityManager == null)
-        entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-      return entityManager;
-    }
-  }
+  public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
-  public static Entity Instantiate(EntityArchetype archetype, List<IComponentData> componentDatas, string spriteSheetName) {
+  public static Entity Instantiate(EntityArchetype archetype, string spriteSheetName)
+  {
     Entity e = EntityManager.CreateEntity(archetype);
     Material material = SpriteSheetCache.GetMaterial(spriteSheetName);
     int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-    foreach(IComponentData Idata in componentDatas)
-      EntityManager.SetComponentData(e, (dynamic)Idata);
 
     var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
     BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };

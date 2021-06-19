@@ -28,15 +28,14 @@ public class SingleSpriteSheetSpawner : MonoBehaviour, IConvertGameObjectToEntit
     int maxSprites = SpriteSheetCache.GetLength("emoji");
     var color = UnityEngine.Random.ColorHSV(.35f, .85f);
 
-    // 3) Populate components
-    List<IComponentData> components = new List<IComponentData> {
-        new Position2D { Value = float2.zero },
-        new Scale { Value = 15 },
-        new SpriteIndex { Value = UnityEngine.Random.Range(0, maxSprites) },
-        new SpriteSheetAnimation { maxSprites = maxSprites, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 },
-        new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) }
-      };
     // 4) Instantiate the entity
-    Entity e = SpriteSheetManager.Instantiate(archetype, components, "emoji");
+    Entity e = SpriteSheetManager.Instantiate(archetype, "emoji");
+    
+    // 3) Populate components
+    eManager.AddComponentData(e, new Position2D { Value = float2.zero });
+    eManager.AddComponentData(e, new Scale { Value = 15 });
+    eManager.AddComponentData(e, new SpriteIndex { Value = UnityEngine.Random.Range(0, maxSprites) });
+    eManager.AddComponentData(e, new SpriteSheetAnimation { maxSprites = maxSprites, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
+    eManager.AddComponentData(e, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
   }
 }
