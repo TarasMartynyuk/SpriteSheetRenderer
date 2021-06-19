@@ -21,16 +21,14 @@ public abstract class SpriteSheetManager {
     return e;
   }
 
-  public static Entity Instantiate(EntityArchetype archetype, List<IComponentData> componentDatas, SpriteSheetAnimator animator)
-  {
+  public static Entity Instantiate(EntityArchetype archetype, SpriteSheetAnimator animator)
+    {
     Entity e = EntityManager.CreateEntity(archetype);
     animator.currentAnimationIndex = animator.defaultAnimationIndex;
     SpriteSheetAnimationData startAnim = animator.animations[animator.defaultAnimationIndex];
     int maxSprites = startAnim.sprites.Length;
     Material material = SpriteSheetCache.GetMaterial(animator.animations[animator.defaultAnimationIndex].animationName);
     int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-    foreach(IComponentData Idata in componentDatas)
-      EntityManager.SetComponentData(e, (dynamic)Idata);
 
     var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
     BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };

@@ -25,15 +25,13 @@ public class DynamicAnimationsDemo: MonoBehaviour, IConvertGameObjectToEntity {
     );
     SpriteSheetManager.RecordAnimator(animator);
 
-    var color = Color.white;
 
-    // 3) Populate components
-    List<IComponentData> components = new List<IComponentData> {
-        new Position2D { Value = float2.zero },
-        new Scale { Value = 5 },
-        new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) }
-    };
     // 4) Instantiate the entity
-    character = SpriteSheetManager.Instantiate(archetype, components, animator);
+    character = SpriteSheetManager.Instantiate(archetype, animator);
+    // 3) Populate components
+    var color = Color.white;
+    eManager.AddComponentData(character, new Position2D { Value = float2.zero });
+    eManager.AddComponentData(character, new Scale { Value = 5 });
+    eManager.AddComponentData(character, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
   }
 }
