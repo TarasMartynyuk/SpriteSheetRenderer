@@ -18,5 +18,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5602bbe2cc4159040b5fb93b1abfc81c, type: 2}
   - {fileID: 11400000, guid: fde296a1432e3dd43a25fa7190cb6c85, type: 2}
   defaultAnimationIndex: 0
-  currentAnimationIndex: 0
-  speed: 1
+  currentAnimationIndex: 1
+  speed: 0.3

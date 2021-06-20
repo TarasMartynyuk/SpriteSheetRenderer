@@ -1,0 +1,24 @@
+{
+  "name": "com.taras_martyniuk.sprite_sheet_renderer",
+  "version": "0.115.0",
+  "displayName": "SpriteSheetRenderer",
+  "description": "A powerful Unity ECS system to render massive numbers of animated sprites.",
+  "unity": "2020.2",
+  "dependencies": {
+    "com.unity.entities": "0.17.0-preview.42",
+    "com.unity.burst": "1.5.4",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.2d.tilemap": "1.0.0",
+    "com.unity.textmeshpro": "3.0.1",
+    "com.unity.mathematics": "1.2.1"
+ },
+ "keywords": [
+    "sprite",
+    "2D",
+    "ECS"
+  ],
+  "author": {
+    "name": "Fabrizio Spadaro, Victor Pan",
+    "url": "https://github.com/LordArugula/SpriteSheetRenderer"
+  }
+}
