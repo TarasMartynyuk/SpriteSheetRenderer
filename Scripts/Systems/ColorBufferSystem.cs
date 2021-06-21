@@ -8,48 +8,26 @@ using UnityEngine;
 
 public class ColorBufferSystem : SystemBase
 {
-    //protected override void OnUpdate()
+    //protected void OnUpdate_BK()
     //{
     //    var buffers = DynamicBufferManager.GetColorBuffers();
-    //    NativeArray<JobHandle> jobs = new NativeArray<JobHandle>(buffers.Length, Allocator.TempJob);
 
     //    //var bufferEnityIDInputArray = new NativeArray<int>
 
     //    for (int i = 0; i < buffers.Length; i++)
     //    {
-    //        //var inputDeps = new UpdateJob()
-    //        //{
-    //        //    indexBuffer = buffers[i],
-    //        //    bufferEnityID = i
-    //        //}.Schedule(this, inputDeps);
     //        var indexBuffer = buffers[i].AsNativeArray();
     //        var bufferEnityID = i;
 
-    //        //var inputDeps = 
-    //        Entities.ForEach((ref SpriteSheetColor data, ref BufferHook hook) =>
+    //        Entities.ForEach((ref BufferHook hook, in SpriteSheetColor data) =>
     //        {
     //            if (bufferEnityID == hook.bufferEnityID)
     //                indexBuffer[hook.bufferID] = data.color;
     //        })
+    //        .WithReadOnly(buffers)
+    //        .WithChangeFilter<SpriteSheetColor>()
     //        .Run();
-    //        //.Schedule(Dependency);
-
-
-    //        //jobs[i] = inputDeps;
     //    }
-
-    //    //Entities.ForEach((ref SpriteSheetColor data, ref BufferHook hook) =>
-    //    //    {
-    //    //        //if (bufferEnityID == hook.bufferEnityID)
-    //    //        //    indexBuffer[hook.bufferID] = data.color;
-
-    //    //        var buffer = buffers[hook.bufferEnityID];
-    //    //        buffer[hook.bufferID] = data.color;
-    //    //    })
-    //    //.WithBurst()
-    //    //Dependency = JobHandle.CombineDependencies(jobs);
-    //    //JobHandle.CompleteAll(jobs);
-    //    jobs.Dispose();
     //}
 
     NativeList<Entity> m_bufferEntities;
@@ -62,11 +40,8 @@ public class ColorBufferSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        //var buffers = DynamicBufferManager.GetColorBuffers();
         DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
         var bufferEntities = m_bufferEntities.AsArray();
-        //var bufferEnityIDInputArray = new NativeArray<int>
-
         var entityManager = EntityManager;
         Entities.ForEach((ref BufferHook hook, in SpriteSheetColor data) =>
             {
@@ -74,25 +49,16 @@ public class ColorBufferSystem : SystemBase
                 buffer[hook.bufferID] = data.color;
             })
             .WithReadOnly(bufferEntities)
-            .WithChangeFilter<SpriteSheetColor>()
+            //.WithChangeFilter<SpriteSheetColor>()
             //.WithBurst()
             .Schedule();
-
-
-
-        //Entities.ForEach((ref SpriteSheetColor data, ref BufferHook hook) =>
-        //    {
-        //        //if (bufferEnityID == hook.bufferEnityID)
-        //        //    indexBuffer[hook.bufferID] = data.color;
-
-        //        var buffer = buffers[hook.bufferEnityID];
-        //        buffer[hook.bufferID] = data.color;
-        //    })
-        //.WithBurst()
-        //Dependency = JobHandle.CombineDependencies(jobs);
-        //JobHandle.CompleteAll(jobs);
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        m_bufferEntities.Dispose();
+    }
 
     //[BurstCompile]
     //struct UpdateJob : IJobForEach<SpriteSheetColor, BufferHook>

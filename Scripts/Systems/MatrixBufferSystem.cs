@@ -6,37 +6,44 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-public class MatrixBufferSystem : JobComponentSystem
+public class MatrixBufferSystem : SystemBase
 {
-    [BurstCompile]
-    struct UpdateJob : IJobForEach<SpriteMatrix, BufferHook>
+    //[BurstCompile]
+    //struct UpdateJob : IJobForEach<SpriteMatrix, BufferHook>
+    //{
+    //    [NativeDisableParallelForRestriction]
+    //    public DynamicBuffer<MatrixBuffer> indexBuffer;
+    //    [ReadOnly]
+    //    public int bufferEnityID;
+    //    public void Execute([ReadOnly, ChangedFilter] ref SpriteMatrix data, [ReadOnly] ref BufferHook hook)
+    //    {
+    //        if (bufferEnityID == hook.bufferEnityID)
+    //            indexBuffer[hook.bufferID] = data.matrix;
+    //    }
+    //}
+
+    NativeList<Entity> m_bufferEntities;
+
+    protected override void OnCreate()
     {
-        [NativeDisableParallelForRestriction]
-        public DynamicBuffer<MatrixBuffer> indexBuffer;
-        [ReadOnly]
-        public int bufferEnityID;
-        public void Execute([ReadOnly, ChangedFilter] ref SpriteMatrix data, [ReadOnly] ref BufferHook hook)
-        {
-            if (bufferEnityID == hook.bufferEnityID)
-                indexBuffer[hook.bufferID] = data.matrix;
-        }
+        base.OnCreate();
+        m_bufferEntities = new NativeList<Entity>(50, Allocator.Persistent);
     }
 
-    protected override JobHandle OnUpdate(JobHandle inputDeps)
+    protected override void OnUpdate()
     {
-        var buffers = DynamicBufferManager.GetMatrixBuffers();
-        NativeArray<JobHandle> jobs = new NativeArray<JobHandle>(buffers.Length, Allocator.TempJob);
-        for (int i = 0; i < buffers.Length; i++)
-        {
-            inputDeps = new UpdateJob()
+        DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
+        var bufferEntities = m_bufferEntities.AsArray();
+        var entityManager = EntityManager;
+
+        Entities.ForEach((ref BufferHook hook, in SpriteMatrix data) =>
             {
-                indexBuffer = buffers[i],
-                bufferEnityID = i
-            }.Schedule(this, inputDeps);
-            jobs[i] = inputDeps;
-        }
-        JobHandle.CompleteAll(jobs);
-        jobs.Dispose();
-        return inputDeps;
+                var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
+                buffer[hook.bufferID] = data.matrix;
+            })
+            .WithReadOnly(bufferEntities)
+            //.WithChangeFilter<SpriteSheetColor>()
+            //.WithBurst()
+            .Schedule();
     }
 }
