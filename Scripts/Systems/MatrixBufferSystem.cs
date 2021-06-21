@@ -8,20 +8,6 @@ using UnityEngine;
 
 public class MatrixBufferSystem : SystemBase
 {
-    //[BurstCompile]
-    //struct UpdateJob : IJobForEach<SpriteMatrix, BufferHook>
-    //{
-    //    [NativeDisableParallelForRestriction]
-    //    public DynamicBuffer<MatrixBuffer> indexBuffer;
-    //    [ReadOnly]
-    //    public int bufferEnityID;
-    //    public void Execute([ReadOnly, ChangedFilter] ref SpriteMatrix data, [ReadOnly] ref BufferHook hook)
-    //    {
-    //        if (bufferEnityID == hook.bufferEnityID)
-    //            indexBuffer[hook.bufferID] = data.matrix;
-    //    }
-    //}
-
     NativeList<Entity> m_bufferEntities;
 
     protected override void OnCreate()
@@ -43,7 +29,6 @@ public class MatrixBufferSystem : SystemBase
             })
             .WithReadOnly(bufferEntities)
             .WithChangeFilter<SpriteMatrix>()
-            //.WithBurst()
             .Schedule();
     }
 

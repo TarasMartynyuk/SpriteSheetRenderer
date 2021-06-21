@@ -15,20 +15,4 @@ public class SpriteSheetScaleSystem : SystemBase
         .WithChangeFilter<Scale>()
         .Schedule();
     }
-
-
-    //[BurstCompile]
-    //struct SpriteSheetScaleJob : IJobForEach<Scale, SpriteMatrix>
-    //{
-    //    public void Execute([ReadOnly][ChangedFilter] ref Scale scale, ref SpriteMatrix renderData)
-    //    {
-    //        renderData.matrix.w = scale.Value;
-    //    }
-    //}
-
-    //protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //{
-    //    var job = new SpriteSheetScaleJob() { };
-    //    return job.Schedule(this, inputDeps);
-    //}
 }

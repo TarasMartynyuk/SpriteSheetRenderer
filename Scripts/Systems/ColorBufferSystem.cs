@@ -8,28 +8,6 @@ using UnityEngine;
 
 public class ColorBufferSystem : SystemBase
 {
-    //protected void OnUpdate_BK()
-    //{
-    //    var buffers = DynamicBufferManager.GetColorBuffers();
-
-    //    //var bufferEnityIDInputArray = new NativeArray<int>
-
-    //    for (int i = 0; i < buffers.Length; i++)
-    //    {
-    //        var indexBuffer = buffers[i].AsNativeArray();
-    //        var bufferEnityID = i;
-
-    //        Entities.ForEach((ref BufferHook hook, in SpriteSheetColor data) =>
-    //        {
-    //            if (bufferEnityID == hook.bufferEnityID)
-    //                indexBuffer[hook.bufferID] = data.color;
-    //        })
-    //        .WithReadOnly(buffers)
-    //        .WithChangeFilter<SpriteSheetColor>()
-    //        .Run();
-    //    }
-    //}
-
     NativeList<Entity> m_bufferEntities;
 
     protected override void OnCreate()
@@ -50,7 +28,6 @@ public class ColorBufferSystem : SystemBase
             })
             .WithReadOnly(bufferEntities)
             //.WithChangeFilter<SpriteSheetColor>()
-            //.WithBurst()
             .Schedule();
     }
 
@@ -59,38 +36,6 @@ public class ColorBufferSystem : SystemBase
         base.OnDestroy();
         m_bufferEntities.Dispose();
     }
-
-    //[BurstCompile]
-    //struct UpdateJob : IJobForEach<SpriteSheetColor, BufferHook>
-    //{
-    //    [NativeDisableParallelForRestriction]
-    //    public DynamicBuffer<SpriteColorBuffer> indexBuffer;
-    //    [ReadOnly]
-    //    public int bufferEnityID;
-    //    public void Execute([ReadOnly, ChangedFilter] ref SpriteSheetColor data, [ReadOnly] ref BufferHook hook)
-    //    {
-    //        if (bufferEnityID == hook.bufferEnityID)
-    //            indexBuffer[hook.bufferID] = data.color;
-    //    }
-    //}
-
-    //protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //{
-    //    var buffers = DynamicBufferManager.GetColorBuffers();
-    //    NativeArray<JobHandle> jobs = new NativeArray<JobHandle>(buffers.Length, Allocator.TempJob);
-    //    for (int i = 0; i < buffers.Length; i++)
-    //    {
-    //        inputDeps = new UpdateJob()
-    //        {
-    //            indexBuffer = buffers[i],
-    //            bufferEnityID = i
-    //        }.Schedule(this, inputDeps);
-    //        jobs[i] = inputDeps;
-    //    }
-    //    JobHandle.CompleteAll(jobs);
-    //    jobs.Dispose();
-    //    return inputDeps;
-    //}
 }
 
 public static class JobSystemUtils

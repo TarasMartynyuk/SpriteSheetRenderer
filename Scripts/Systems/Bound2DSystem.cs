@@ -15,20 +15,4 @@ public class Bound2DSystem : SystemBase
         })
         .Schedule();
     }
-
-
-    //[BurstCompile]
-    //struct Bound2DJob : IJobForEach<Position2D, Scale, Bound2D>
-    //{
-    //    public void Execute([ReadOnly] ref Position2D position, [ReadOnly] ref Scale scale, ref Bound2D bound)
-    //    {
-    //        bound.scale = scale.Value;
-    //        bound.position = position.Value;
-    //    }
-    //}
-    //protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //{
-    //    var job = new Bound2DJob() { };
-    //    return job.Schedule(this, inputDeps);
-    //}
 }

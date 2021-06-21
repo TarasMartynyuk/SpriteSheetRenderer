@@ -6,22 +6,6 @@ using Unity.Collections;
 
 public class SpriteSheetPositionSystem : SystemBase
 {
-    //[BurstCompile]
-    //struct SpriteSheetPositionJob : IJobForEach<Position2D, SpriteMatrix>
-    //{
-    //    public void Execute([ReadOnly][ChangedFilter] ref Position2D translation, ref SpriteMatrix renderData)
-    //    {
-    //        renderData.matrix.x = translation.Value.x;
-    //        renderData.matrix.y = translation.Value.y;
-    //    }
-    //}
-
-    //protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //{
-    //    var job = new SpriteSheetPositionJob() { };
-    //    return job.Schedule(this, inputDeps);
-    //}
-
     protected override void OnUpdate()
     {
         Entities.ForEach((ref SpriteMatrix renderData, in Position2D translation) =>
@@ -29,7 +13,6 @@ public class SpriteSheetPositionSystem : SystemBase
             renderData.matrix.x = translation.Value.x;
             renderData.matrix.y = translation.Value.y;
         })
-        //.WithBurst()
         .WithChangeFilter<Position2D>()
         .Schedule();
     }

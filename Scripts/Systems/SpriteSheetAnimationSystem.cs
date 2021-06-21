@@ -5,20 +5,8 @@ using UnityEngine;
 
 public class SpriteSheetAnimationSystem : SystemBase
 {
-  //  [BurstCompile]
-  //  struct SpriteSheetAnimationJob : IJobForEach<SpriteSheetAnimation, SpriteIndex>
-  //  {
-
-  //      public void Execute
-  
-
-  //}
-
     protected override void OnUpdate()
     {
-        //var job = new SpriteSheetAnimationJob();
-        //return job.Schedule(this, inputDeps);
-
         Entities.ForEach((ref SpriteSheetAnimation AnimCmp, ref SpriteIndex spriteSheetCmp)
         => {
             if (AnimCmp.play && AnimCmp.elapsedFrames % AnimCmp.samples == 0 && AnimCmp.elapsedFrames != 0)
@@ -50,9 +38,7 @@ public class SpriteSheetAnimationSystem : SystemBase
                 AnimCmp.elapsedFrames += 1;
             }
         })
-        //.WithBurst()
         .Schedule();
-
   }
 
     static bool NextWillReachEnd(SpriteSheetAnimation anim, SpriteIndex sprite)

@@ -8,20 +8,6 @@ using UnityEngine;
 
 public class SpriteSheetUvJobSystem : SystemBase
 {
-    //[BurstCompile]
-    //struct UpdateJob : IJobForEach<SpriteIndex, BufferHook>
-    //{
-    //    [NativeDisableParallelForRestriction]
-    //    public DynamicBuffer<SpriteIndexBuffer> indexBuffer;
-    //    [ReadOnly]
-    //    public int bufferEnityID;
-    //    public void Execute([ReadOnly, ChangedFilter] ref SpriteIndex data, [ReadOnly] ref BufferHook hook)
-    //    {
-    //        if (bufferEnityID == hook.bufferEnityID)
-    //            indexBuffer[hook.bufferID] = data.Value;
-    //    }
-    //}
-
     NativeList<Entity> m_bufferEntities;
 
     protected override void OnCreate()
@@ -43,7 +29,6 @@ public class SpriteSheetUvJobSystem : SystemBase
             })
             .WithReadOnly(bufferEntities)
             .WithChangeFilter<SpriteIndex>()
-            //.WithBurst()
             .Schedule();
     }
 
