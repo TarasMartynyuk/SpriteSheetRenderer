@@ -3,6 +3,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class Fractalnitializer : MonoBehaviour, IConvertGameObjectToEntity {
   public Sprite[] sprites;
   public static EntityArchetype archetype;
@@ -24,4 +26,5 @@ public class Fractalnitializer : MonoBehaviour, IConvertGameObjectToEntity {
     SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
     qt = new QuadTree(new float3(0, 0, 20), Entity.Null);
   }
+}
 }

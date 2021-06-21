@@ -5,7 +5,9 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
-namespace ECSSpriteSheetAnimation.Examples {
+namespace SpriteSheetRendererExamples
+{ 
+
   public class MakeSpriteEntities : MonoBehaviour, IConvertGameObjectToEntity {
     public int spriteCount = 5000;
     public Sprite[] sprites;

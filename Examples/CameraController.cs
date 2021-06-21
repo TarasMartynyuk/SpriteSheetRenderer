@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+namespace SpriteSheetRendererExamples
+{
 public class CameraController : MonoBehaviour
 {
     public float zoomOutMin = 10;
@@ -92,4 +94,5 @@ public class CameraController : MonoBehaviour
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 1f * Time.deltaTime);
         }
     }
+}
 }

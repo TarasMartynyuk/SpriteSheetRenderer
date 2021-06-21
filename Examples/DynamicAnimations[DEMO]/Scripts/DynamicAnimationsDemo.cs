@@ -5,6 +5,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class DynamicAnimationsDemo : MonoBehaviour, IConvertGameObjectToEntity
 {
     public SpriteSheetAnimator animator;
@@ -37,4 +39,5 @@ public class DynamicAnimationsDemo : MonoBehaviour, IConvertGameObjectToEntity
 
         SpriteMovement.Sprite = character;
     }
+}
 }

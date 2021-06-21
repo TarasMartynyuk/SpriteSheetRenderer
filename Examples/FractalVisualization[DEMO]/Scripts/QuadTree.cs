@@ -3,6 +3,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
+namespace SpriteSheetRendererExamples
+{
 public class QuadTree {
   float3 bounds;
   private QuadTree[] tree;
@@ -66,4 +68,5 @@ public class QuadTree {
     }
   }
 
+}
 }

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class CameraZoom : MonoBehaviour {
   float minFov = 20;
   float maxFov = 90f;
@@ -15,4 +17,5 @@ public class CameraZoom : MonoBehaviour {
     fov = Mathf.Clamp(fov, minFov, maxFov);
     Camera.main.orthographicSize = fov;
   }
+}
 }

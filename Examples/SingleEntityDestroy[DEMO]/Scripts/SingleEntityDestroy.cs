@@ -5,6 +5,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
   public Sprite[] sprites;
   EntityArchetype archetype;
@@ -44,4 +46,5 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
       SpriteSheetManager.Instantiate(archetype, "emoji");
     }
   }
+}
 }

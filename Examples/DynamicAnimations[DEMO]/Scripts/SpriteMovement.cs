@@ -4,6 +4,8 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class SpriteMovement : MonoBehaviour
 {
     public static Entity Sprite;
@@ -28,4 +30,5 @@ public class SpriteMovement : MonoBehaviour
         float rotationPercent = (Time.realtimeSinceStartup % m_360RotationTime); 
         eManager.SetComponentData(Sprite, new Rotation2D { angle = 360.0f * rotationPercent});
     }
+}
 }

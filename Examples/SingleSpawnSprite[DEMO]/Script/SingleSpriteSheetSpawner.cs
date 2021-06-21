@@ -5,6 +5,8 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 
+namespace SpriteSheetRendererExamples
+{
 public class SingleSpriteSheetSpawner : MonoBehaviour, IConvertGameObjectToEntity {
   public Sprite[] sprites;
   public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem) {
@@ -38,4 +40,5 @@ public class SingleSpriteSheetSpawner : MonoBehaviour, IConvertGameObjectToEntit
     eManager.AddComponentData(e, new SpriteSheetAnimation { maxSprites = maxSprites, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
     eManager.AddComponentData(e, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
   }
+}
 }
