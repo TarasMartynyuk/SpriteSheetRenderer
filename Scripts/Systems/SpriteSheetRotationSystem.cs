@@ -10,7 +10,7 @@ public class SpriteSheetRotationSystem : SystemBase
         Entities.ForEach((ref SpriteMatrix renderData, in Rotation2D rotation) =>
         {
             renderData.matrix.z = rotation.angle;
-        }).ScheduleParallel();
+        }).Schedule();
     }
 
 

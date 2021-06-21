@@ -43,7 +43,7 @@ public class ColorBufferSystem : SystemBase
         DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
         var bufferEntities = m_bufferEntities.AsArray();
         var entityManager = EntityManager;
-        Entities.ForEach((ref BufferHook hook, in SpriteSheetColor data) =>
+        Entities.ForEach((in BufferHook hook, in SpriteSheetColor data) =>
             {
                 var buffer = GetBuffer<SpriteColorBuffer>(bufferEntities[hook.bufferEnityID]);
                 buffer[hook.bufferID] = data.color;

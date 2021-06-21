@@ -22,52 +22,34 @@ public class SpriteSheetUvJobSystem : SystemBase
     //    }
     //}
 
-    //protected override JobHandle OnUpdate(JobHandle inputDeps)
-    //{
-    //    var buffers = DynamicBufferManager.GetIndexBuffers();
-    //    NativeArray<JobHandle> jobs = new NativeArray<JobHandle>(buffers.Length, Allocator.TempJob);
-    //    for (int i = 0; i < buffers.Length; i++)
-    //    {
-    //        inputDeps = new UpdateJob()
-    //        {
-    //            indexBuffer = buffers[i],
-    //            bufferEnityID = i
-    //        }.Schedule(this, inputDeps);
-    //        jobs[i] = inputDeps;
-    //    }
-    //    JobHandle.CompleteAll(jobs);
-    //    jobs.Dispose();
-    //    return inputDeps;
-    //}
+    NativeList<Entity> m_bufferEntities;
+
+    protected override void OnCreate()
+    {
+        base.OnCreate();
+        m_bufferEntities = new NativeList<Entity>(50, Allocator.Persistent);
+    }
 
     protected override void OnUpdate()
     {
-        var buffers = DynamicBufferManager.GetIndexBuffers();
-        NativeArray<JobHandle> jobs = new NativeArray<JobHandle>(buffers.Length, Allocator.TempJob);
-        for (int i = 0; i < buffers.Length; i++)
-        {
-            //var inputDeps = new UpdateJob()
-            //{
-            //    indexBuffer = buffers[i],
-            //    bufferEnityID = i
-            //}.Schedule(this, inputDeps);
-            var indexBuffer = buffers[i].AsNativeArray();
-            var bufferEnityID = i;
+        DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
+        var bufferEntities = m_bufferEntities.AsArray();
+        var entityManager = EntityManager;
 
-            //var jobHandle = 
-            Entities.ForEach((ref SpriteIndex data, ref BufferHook hook) =>
+        Entities.ForEach((in BufferHook hook, in SpriteIndex data) =>
             {
-                if (bufferEnityID == hook.bufferEnityID)
-                    indexBuffer[hook.bufferID] = data.Value;
+                var buffer = GetBuffer<SpriteIndexBuffer>(bufferEntities[hook.bufferEnityID]);
+                buffer[hook.bufferID] = data.Value;
             })
+            .WithReadOnly(bufferEntities)
+            .WithChangeFilter<SpriteIndex>()
             //.WithBurst()
-            //.ScheduleParallel(Dependency);
-            .Run();
+            .Schedule();
+    }
 
-            //jobs[i] = jobHandle;
-        }
-        //JobHandle.CompleteAll(jobs);
-        jobs.Dispose();
-
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        m_bufferEntities.Dispose();
     }
 }

@@ -51,7 +51,7 @@ public class SpriteSheetAnimationSystem : SystemBase
             }
         })
         //.WithBurst()
-        .ScheduleParallel();
+        .Schedule();
 
   }
 

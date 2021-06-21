@@ -11,7 +11,9 @@ public class SpriteSheetScaleSystem : SystemBase
         Entities.ForEach((ref SpriteMatrix renderData, in Scale scale) =>
         {
             renderData.matrix.w = scale.Value;
-        }).ScheduleParallel();
+        })
+        .WithChangeFilter<Scale>()
+        .Schedule();
     }
 
 

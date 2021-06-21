@@ -30,6 +30,7 @@ public class SpriteSheetPositionSystem : SystemBase
             renderData.matrix.y = translation.Value.y;
         })
         //.WithBurst()
-        .ScheduleParallel();
+        .WithChangeFilter<Position2D>()
+        .Schedule();
     }
 }

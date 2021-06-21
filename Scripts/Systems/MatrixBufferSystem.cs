@@ -36,14 +36,20 @@ public class MatrixBufferSystem : SystemBase
         var bufferEntities = m_bufferEntities.AsArray();
         var entityManager = EntityManager;
 
-        Entities.ForEach((ref BufferHook hook, in SpriteMatrix data) =>
+        Entities.ForEach((in BufferHook hook, in SpriteMatrix data) =>
             {
                 var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
                 buffer[hook.bufferID] = data.matrix;
             })
             .WithReadOnly(bufferEntities)
-            //.WithChangeFilter<SpriteSheetColor>()
+            .WithChangeFilter<SpriteMatrix>()
             //.WithBurst()
             .Schedule();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        m_bufferEntities.Dispose();
     }
 }
