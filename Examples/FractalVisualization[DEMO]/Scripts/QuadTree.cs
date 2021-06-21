@@ -38,8 +38,9 @@ public class QuadTree {
   }
 
   private void UpdateEntityMatrix() {
-    SpriteSheetManager.UpdateEntity(entity, new Position2D { Value = bounds.xy });
-    SpriteSheetManager.UpdateEntity(entity, new Scale { Value = bounds.z });
+    var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+    eManager.SetComponentData(entity, new Scale { Value = bounds.z });
+    eManager.SetComponentData(entity, new Position2D { Value = bounds.xy });
   }
 
   public void Subdivide() {

@@ -85,11 +85,6 @@ public abstract class SpriteSheetManager {
   }
 
   public static void UpdateEntity(Entity entity, IComponentData componentData) {
-    EntityManager.SetComponentData(entity, (dynamic)componentData);
-  }
-
-  public static void UpdateEntity(EntityCommandBuffer commandBuffer,Entity entity, IComponentData componentData){
-    commandBuffer.SetComponent(entity, (dynamic)componentData);
   }
 
   public static void DestroyEntity(Entity e, string materialName) {
