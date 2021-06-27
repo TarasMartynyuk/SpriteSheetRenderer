@@ -117,6 +117,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -553,6 +554,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      EmojiOne 1_12: -3866680687824494963
+      EmojiOne 1_1: 6191509826233423226
+      EmojiOne 1_7: -6555101948311811443
+      EmojiOne 1_4: 7333718747592911931
+      EmojiOne 1_2: -3382597266031040065
+      EmojiOne 1_5: -7576364691294958848
+      EmojiOne 1_14: -2068372742122556654
+      EmojiOne 1_15: 6956787895621405797
+      EmojiOne 1_6: 8679332757349637653
+      EmojiOne 1_11: 1598121676810280834
+      EmojiOne 1_8: -4022401434188806707
+      EmojiOne 1_9: 7082230791884041763
+      EmojiOne 1_13: -1362501629173164557
+      EmojiOne 1_10: 6733292874893715752
+      EmojiOne 1_3: -532575279437139693
+      EmojiOne 1_0: -654221344278647648
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
