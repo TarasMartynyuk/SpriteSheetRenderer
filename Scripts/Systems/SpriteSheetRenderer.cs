@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Transforms;
+
 public class SpriteSheetRenderer : SystemBase
 {
     private Mesh mesh;
+    ShaderDebugBuffer<Vector4> m_debugBuffer = new ShaderDebugBuffer<Vector4>(1);
+
     protected override void OnCreate()
     {
         mesh = MeshExtension.Quad();
@@ -12,12 +16,20 @@ public class SpriteSheetRenderer : SystemBase
     protected override void OnDestroy()
     {
         SpriteSheetManager.CleanBuffers();
+        m_debugBuffer.Dispose();
     }
     protected override void OnUpdate()
     {
 
         for (int i = 0; i < SpriteSheetManager.renderInformation.Count; i++)
         {
+            if (i == 1)
+            {
+                m_debugBuffer.Material = SpriteSheetManager.renderInformation[i].material;
+                var debugData = m_debugBuffer.GetBufferData();
+                Debug.Log($"after: {debugData[0]:F3}");
+            }
+
             if (UpdateBuffers(i) > 0)
                 Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.renderInformation[i].material, new Bounds(Vector2.zero, Vector3.one), SpriteSheetManager.renderInformation[i].argsBuffer);
 
@@ -67,8 +79,9 @@ public class SpriteSheetRenderer : SystemBase
             renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Reinterpret<int>().AsNativeArray());
             renderInformation.material.SetBuffer("indexBuffer", renderInformation.indexBuffer);
 
-            renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, 16);
-            renderInformation.matrixBuffer.SetData(EntityManager.GetBuffer<MatrixBuffer>(renderInformation.bufferEntity).Reinterpret<float4>().AsNativeArray());
+            //renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, 16);
+            renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, 4 * 16); //UnsafeUtility.SizeOf<float4x4>());
+            renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.bufferEntity).AsNativeArray());
             renderInformation.material.SetBuffer("matrixBuffer", renderInformation.matrixBuffer);
 
             renderInformation.args[1] = (uint) instanceCount;

@@ -4,6 +4,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class MatrixBufferSystem : SystemBase
@@ -25,7 +26,7 @@ public class MatrixBufferSystem : SystemBase
         Entities.ForEach((in BufferHook hook, in SpriteMatrix data) =>
             {
                 var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
-                buffer[hook.bufferID] = data.matrix;
+                buffer[hook.bufferID] = new float4x4 { c0 = data.matrix };
             })
             .WithReadOnly(bufferEntities)
             .WithChangeFilter<SpriteMatrix>()
