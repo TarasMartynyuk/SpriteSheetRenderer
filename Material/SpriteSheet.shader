@@ -54,21 +54,21 @@
 
             v2f vert (appdata_full v, uint instanceID : SV_InstanceID){
                 float4 mat = matrixBuffer[instanceID];
-                //float2 position = float2(mat[0], mat[1]);
-                //float rotationZ = mat[2];
-                //float scale = mat[3];
-                //float4 uv = uvBuffer[indexBuffer[instanceID]];
-                ////rotate the vertex
-                //v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(rotationZ));
-                ////scale it
-                //float randomZ = -position.y/10;
-                float4 worldPosition = v.vertex * mat * UNITY_MATRIX_VP; //float3(position,randomZ) + v.vertex.xyz * scale;
+                float2 position = float2(mat[0], mat[1]);
+                float rotationZ = mat[2];
+                float scale = mat[3];
+                float4 uv = uvBuffer[indexBuffer[instanceID]];
+                //rotate the vertex
+                v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(rotationZ));
+                //scale it
+                float randomZ = -position.y/10;
+                float3 worldPosition = float3(position,randomZ) + v.vertex.xyz * scale;
                
                 v2f o;
-                o.pos = UnityObjectToClipPos(worldPosition); //float4(worldPosition, 1.0f));
+                o.pos = UnityObjectToClipPos(float4(worldPosition, 1.0f));
                 o.uv =  v.texcoord * uv.xy + uv.zw;
 				o.color = colorsBuffer[instanceID];
-                
+
                 _DebugBuffer[0] = float4(position, rotationZ, 42);
                 _DebugBuffer[1] = float4(scale, 42, 42, 42);
                 return o;
