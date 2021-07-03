@@ -11,6 +11,7 @@ namespace SpriteSheetRendererExamples
         public static Entity Sprite;
 
         [SerializeField] bool m_moving;
+        [SerializeField] bool m_rotating;
 
         const float m_speed = 5.0f;
         const float m_360RotationTime = 4.0f;
@@ -26,8 +27,12 @@ namespace SpriteSheetRendererExamples
         {
             var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
-            float rotationPercent = (Time.realtimeSinceStartup % m_360RotationTime);
-            eManager.SetComponentData(Sprite, new Rotation2D { angle = 360.0f * rotationPercent });
+            if (m_rotating)
+            {
+                float rotationPercent = (Time.realtimeSinceStartup % m_360RotationTime);
+                eManager.SetComponentData(Sprite, new Rotation2D { angle = 360.0f * rotationPercent });
+            }
+
             if (!m_moving)
                 return;
 

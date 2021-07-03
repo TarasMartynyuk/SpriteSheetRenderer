@@ -14,7 +14,8 @@
         ZWrite On
         Blend One OneMinusSrcAlpha
         Pass {
-            CGPROGRAM
+            //CGPROGRAM
+            HLSLPROGRAM
             // Upgrade NOTE: excluded shader from OpenGL ES 2.0 because it uses non-square matrices
             #pragma exclude_renderers gles
 
@@ -25,7 +26,7 @@
 
             sampler2D _MainTex;
 
-            StructuredBuffer<float4x4> matrixBuffer;
+            StructuredBuffer<float4> matrixBuffer;
             StructuredBuffer<int> indexBuffer;
             StructuredBuffer<float4> uvBuffer;
 			StructuredBuffer<float4> colorsBuffer;
@@ -51,41 +52,25 @@
                 return ZMatrix;
             }
 
-    //        v2f vert (appdata_full v, uint instanceID : SV_InstanceID){
-    //            //transform.xy = posizion x and y
-    //            //transform.z = rotation angle
-    //            //transform.w = scale
-    //            float4 transform = matrixBuffer[instanceID];
-    //            float4 uv = uvBuffer[indexBuffer[instanceID]];
-    //            //rotate the vertex
-    //            v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(transform.z));
-    //            //scale it
-    //            float3 worldPosition = float3(transform.x,transform.y,-transform.y/10) + (v.vertex.xyz * transform.w);
-    //            v2f o;
-    //            o.pos = UnityObjectToClipPos(float4(worldPosition, 1.0f));
-    //            o.uv =  v.texcoord * uv.xy + uv.zw;
-				//o.color = colorsBuffer[instanceID];
-    //            return o;
-    //        }
-
             v2f vert (appdata_full v, uint instanceID : SV_InstanceID){
-                //transform.xy = posizion x and y
-                //transform.z = rotation angle
-                //transform.w = scale
-                float4 transform = matrixBuffer[instanceID][0];
+                float4 mat = matrixBuffer[instanceID];
+                float2 position = float2(mat[0], mat[1]);
+                float rotationZ = mat[2];
+                float scale = mat[3];
                 float4 uv = uvBuffer[indexBuffer[instanceID]];
                 //rotate the vertex
-                v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(transform.z));
+                v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(rotationZ));
                 //scale it
-                float3 worldPosition = float3(transform.x,transform.y,-transform.y/10) + (v.vertex.xyz * transform.w);
+                float randomZ = -position.y/10;
+                float3 worldPosition = float3(position,randomZ) + v.vertex.xyz * scale;
+               
                 v2f o;
                 o.pos = UnityObjectToClipPos(float4(worldPosition, 1.0f));
                 o.uv =  v.texcoord * uv.xy + uv.zw;
 				o.color = colorsBuffer[instanceID];
 
-                _DebugBuffer[0] = float4(.23, .2, .7, .42);
-
-
+                _DebugBuffer[0] = float4(position, rotationZ, 42);
+                _DebugBuffer[1] = float4(scale, 42, 42, 42);
                 return o;
             }
 
@@ -100,7 +85,7 @@
 				return col;
             }
 
-            ENDCG
+            ENDHLSL
         }
     }
 }

@@ -29,12 +29,12 @@ public class ShaderDebug : MonoBehaviour
 		Graphics.ClearRandomWriteTargets();
 		material.SetPass(0);
 		material.SetBuffer("buffer", buffer);
-		Graphics.SetRandomWriteTarget(1, buffer, false);
-		buffer.GetData(element);
-		label = (element!=null && render.isVisible) ? element[0].ToString("F3") : string.Empty;
+        Graphics.SetRandomWriteTarget(1, buffer, false);
+        buffer.GetData(element);
+        label = (element != null && render.isVisible) ? element[0].ToString("F3") : string.Empty;
 
         Debug.Log(label);
-	}
+    }
 
 	//void OnGUI()
 	//{

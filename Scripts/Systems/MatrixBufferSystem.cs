@@ -26,11 +26,19 @@ public class MatrixBufferSystem : SystemBase
         Entities.ForEach((in BufferHook hook, in SpriteMatrix data) =>
             {
                 var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
-                buffer[hook.bufferID] = new float4x4 { c0 = data.matrix };
+
+                //var m = new float3x2 { c0 = data.matrix.xyz, c1 = new float3(5, -1, 1)};// * data.matrix.w };
+                ////m[1][1] = m[1][1] * 2;
+                //Debug.Log($"data.matrix: {data.matrix}");
+                //Debug.Log($"float3x2: {m}");
+
+                buffer[hook.bufferID] = data.matrix;
             })
             .WithReadOnly(bufferEntities)
-            .WithChangeFilter<SpriteMatrix>()
-            .Schedule();
+            //.WithChangeFilter<SpriteMatrix>()
+            //.Schedule();
+            .WithoutBurst()
+            .Run();
     }
 
     protected override void OnDestroy()

@@ -6,7 +6,7 @@ using Unity.Transforms;
 public class SpriteSheetRenderer : SystemBase
 {
     private Mesh mesh;
-    ShaderDebugBuffer<Vector4> m_debugBuffer = new ShaderDebugBuffer<Vector4>(1);
+    ShaderDebugBuffer<Vector4> m_debugBuffer = new ShaderDebugBuffer<Vector4>(2);
 
     protected override void OnCreate()
     {
@@ -27,11 +27,13 @@ public class SpriteSheetRenderer : SystemBase
             {
                 m_debugBuffer.Material = SpriteSheetManager.renderInformation[i].material;
                 var debugData = m_debugBuffer.GetBufferData();
-                Debug.Log($"after: {debugData[0]:F3}");
+                Debug.Log($"pos rot: {debugData[0]:F3}");
+                Debug.Log($"scale : {debugData[1]:F3}");
             }
 
             if (UpdateBuffers(i) > 0)
                 Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.renderInformation[i].material, new Bounds(Vector2.zero, Vector3.one), SpriteSheetManager.renderInformation[i].argsBuffer);
+
 
             //this is w.i.p to clean the old buffers
             DynamicBuffer<SpriteIndexBuffer> indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.renderInformation[i].bufferEntity);
@@ -79,8 +81,7 @@ public class SpriteSheetRenderer : SystemBase
             renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Reinterpret<int>().AsNativeArray());
             renderInformation.material.SetBuffer("indexBuffer", renderInformation.indexBuffer);
 
-            //renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, 16);
-            renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, 4 * 16); //UnsafeUtility.SizeOf<float4x4>());
+            renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, MatrixBuffer.SizeOf());
             renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.bufferEntity).AsNativeArray());
             renderInformation.material.SetBuffer("matrixBuffer", renderInformation.matrixBuffer);
 
