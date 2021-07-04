@@ -5,6 +5,7 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Transforms;
 using UnityEngine;
 
 public class MatrixBufferSystem : SystemBase
@@ -23,7 +24,7 @@ public class MatrixBufferSystem : SystemBase
         var bufferEntities = m_bufferEntities.AsArray();
         var entityManager = EntityManager;
 
-        Entities.ForEach((in BufferHook hook, in SpriteMatrix data) =>
+        Entities.ForEach((in BufferHook hook, in LocalToWorld localToWorld) =>
             {
                 var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
 
@@ -31,8 +32,11 @@ public class MatrixBufferSystem : SystemBase
                 ////m[1][1] = m[1][1] * 2;
                 //Debug.Log($"data.matrix: {data.matrix}");
                 //Debug.Log($"float3x2: {m}");
+                float rotation = ((Quaternion) localToWorld.Rotation).eulerAngles.z;
 
-                buffer[hook.bufferID] = data.matrix;
+                Debug.Log($"MatrixBufferSystem rot: {rotation}");
+                float scaleX = math.length(localToWorld.Value.c0.xyz);
+                buffer[hook.bufferID] = new float4(localToWorld.Position.xy, rotation, scaleX);
             })
             .WithReadOnly(bufferEntities)
             //.WithChangeFilter<SpriteMatrix>()

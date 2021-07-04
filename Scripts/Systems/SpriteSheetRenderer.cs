@@ -27,8 +27,8 @@ public class SpriteSheetRenderer : SystemBase
             {
                 m_debugBuffer.Material = SpriteSheetManager.renderInformation[i].material;
                 var debugData = m_debugBuffer.GetBufferData();
-                Debug.Log($"pos rot: {debugData[0]:F3}");
-                Debug.Log($"scale : {debugData[1]:F3}");
+                //Debug.Log($"pos rot: {debugData[0]:F3}");
+                //Debug.Log($"scale : {debugData[1]:F3}");
             }
 
             if (UpdateBuffers(i) > 0)
