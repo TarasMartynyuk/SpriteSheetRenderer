@@ -9,7 +9,7 @@
             "IgnoreProjector"="True"
             "RenderType"="Transparent"
         }
-        Cull Back
+        Cull Off
         Lighting Off
         ZWrite On
         Blend One OneMinusSrcAlpha
@@ -26,12 +26,12 @@
 
             sampler2D _MainTex;
 
-            StructuredBuffer<float4> matrixBuffer;
+            StructuredBuffer<float4x4> matrixBuffer;
             StructuredBuffer<int> indexBuffer;
             StructuredBuffer<float4> uvBuffer;
 			StructuredBuffer<float4> colorsBuffer;
 
-			RWStructuredBuffer<float4> _DebugBuffer : register(u1);
+			RWStructuredBuffer<float4x4> _DebugBuffer : register(u1);
 
             struct v2f{
                 float4 pos : SV_POSITION;
@@ -53,24 +53,16 @@
             }
 
             v2f vert (appdata_full v, uint instanceID : SV_InstanceID){
-                float4 mat = matrixBuffer[instanceID];
-                float2 position = float2(mat[0], mat[1]);
-                float rotationZ = mat[2];
-                float scale = mat[3];
+                float4x4 model = matrixBuffer[instanceID];
                 float4 uv = uvBuffer[indexBuffer[instanceID]];
-                //rotate the vertex
-                v.vertex = mul(v.vertex-float4(0.5,0.5,0,0),rotationZMatrix(rotationZ));
-                //scale it
-                float randomZ = -position.y/10;
-                float3 worldPosition = float3(position,randomZ) + v.vertex.xyz * scale;
-               
+                // todo: construct full MVP on cpu and pass to shader - using camera.worldToCameraMatrix and projectionMatrix does not seem to work
+                float4 worldPosition = mul(model, v.vertex-float4(0.5,0.5,0,0));
                 v2f o;
-                o.pos = UnityObjectToClipPos(float4(worldPosition, 1.0f));
+                o.pos = mul(UNITY_MATRIX_VP, worldPosition);
                 o.uv =  v.texcoord * uv.xy + uv.zw;
 				o.color = colorsBuffer[instanceID];
 
-                _DebugBuffer[0] = float4(position, rotationZ, 42);
-                _DebugBuffer[1] = float4(scale, 42, 42, 42);
+                _DebugBuffer[0] = model;
                 return o;
             }
 
@@ -78,9 +70,6 @@
                 fixed4 col = tex2D(_MainTex, i.uv) * i.color;
 				clip(col.a - 1.0 / 255.0);
                 col.rgb *= col.a;
-
-                //buffer[0] = float4(.3, .3, 0, 0);
-
 
 				return col;
             }

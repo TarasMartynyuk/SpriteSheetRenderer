@@ -6,7 +6,7 @@ using Unity.Transforms;
 public class SpriteSheetRenderer : SystemBase
 {
     private Mesh mesh;
-    ShaderDebugBuffer<Vector4> m_debugBuffer = new ShaderDebugBuffer<Vector4>(2);
+    ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new ShaderDebugBuffer<Matrix4x4>(3);
 
     protected override void OnCreate()
     {
@@ -27,8 +27,7 @@ public class SpriteSheetRenderer : SystemBase
             {
                 m_debugBuffer.Material = SpriteSheetManager.renderInformation[i].material;
                 var debugData = m_debugBuffer.GetBufferData();
-                //Debug.Log($"pos rot: {debugData[0]:F3}");
-                //Debug.Log($"scale : {debugData[1]:F3}");
+                Debug.Log($"mvp : {debugData[0]:F3}");
             }
 
             if (UpdateBuffers(i) > 0)

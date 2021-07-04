@@ -7,41 +7,41 @@ using UnityEngine;
 
 namespace SpriteSheetRendererExamples
 {
-public class DynamicAnimationsDemo : MonoBehaviour, IConvertGameObjectToEntity
-{
-    public SpriteSheetAnimator animator;
-    public static Entity character;
-    public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
+    public class DynamicAnimationsDemo : MonoBehaviour, IConvertGameObjectToEntity
     {
-        // 1) Create Archetype
-        EntityArchetype archetype = eManager.CreateArchetype(
-                 //typeof(Position2D),
-                 //typeof(Rotation2D),
-                 typeof(LocalToWorld),
-                 typeof(Translation),
-                 typeof(Rotation),
-                 typeof(Scale),
-                 //required params
-                 typeof(SpriteIndex),
-                 typeof(SpriteSheetAnimation),
-                 typeof(SpriteSheetMaterial),
-                 typeof(SpriteSheetColor),
-                 //typeof(SpriteMatrix),
-                 typeof(BufferHook)
-        );
-        SpriteSheetManager.RecordAnimator(animator);
+        public SpriteSheetAnimator animator;
+        public static Entity character;
+        public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
+        {
+
+            eManager.SetName(entity, "CONVERt ENTITY");
+
+            // 1) Create Archetype
+            EntityArchetype archetype = eManager.CreateArchetype(
+                     typeof(LocalToWorld),
+                     typeof(Translation),
+                     typeof(Rotation),
+                     typeof(NonUniformScale),
+                     //required params
+                     typeof(SpriteIndex),
+                     typeof(SpriteSheetAnimation),
+                     typeof(SpriteSheetMaterial),
+                     typeof(SpriteSheetColor),
+                     typeof(BufferHook)
+            );
+            SpriteSheetManager.RecordAnimator(animator);
 
 
-        // 4) Instantiate the entity
-        character = SpriteSheetManager.Instantiate(archetype, animator);
-        // 3) Populate components
-        var color = Color.white;
-        //eManager.AddComponentData(character, new Position2D { Value = float2.zero });
-        eManager.AddComponentData(character, new Translation { Value = float3.zero });
-        eManager.AddComponentData(character, new Scale { Value = 5 });
-        eManager.AddComponentData(character, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
+            // 4) Instantiate the entity
+            character = SpriteSheetManager.Instantiate(archetype, animator);
+            eManager.SetName(character, "DynamicAnimationsDemo");
+            // 3) Populate components
+            var color = Color.white;
+            eManager.AddComponentData(character, new Translation { Value = float3.zero });
+            eManager.AddComponentData(character, new NonUniformScale { Value = new float3(-3, 7, 0) });
+            eManager.AddComponentData(character, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
 
-        SpriteMovement.Sprite = character;
+            SpriteMovement.Sprite = character;
+        }
     }
-}
 }

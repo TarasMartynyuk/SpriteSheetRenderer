@@ -22,44 +22,43 @@ namespace SpriteSheetRendererExamples
 
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
-            //EntityArchetype archetype = eManager.CreateArchetype(
-            //   typeof(Position2D),
-            //   typeof(Rotation2D),
-            //   typeof(Scale),
-            //   //required params
-            //   typeof(SpriteIndex),
-            //   typeof(SpriteSheetAnimation),
-            //   typeof(SpriteSheetMaterial),
-            //   typeof(SpriteSheetColor),
-            //   typeof(SpriteMatrix),
-            //   typeof(BufferHook)
-            //);
+            EntityArchetype archetype = eManager.CreateArchetype(
+               typeof(LocalToWorld),
+               typeof(Translation),
+               typeof(Scale),
+               //required params
+               typeof(SpriteIndex),
+               typeof(SpriteSheetAnimation),
+               typeof(SpriteSheetMaterial),
+               typeof(SpriteSheetColor),
+               typeof(BufferHook)
+            );
 
-            //NativeArray<Entity> entities = new NativeArray<Entity>(spriteCount, Allocator.Temp);
-            //eManager.CreateEntity(archetype, entities);
+            NativeArray<Entity> entities = new NativeArray<Entity>(spriteCount, Allocator.Temp);
+            eManager.CreateEntity(archetype, entities);
 
-            ////only needed for the first time to bake the material and create the uv map
-            //SpriteSheetManager.RecordSpriteSheet(sprites, "emoji", entities.Length);
+            //only needed for the first time to bake the material and create the uv map
+            SpriteSheetManager.RecordSpriteSheet(sprites, "emoji", entities.Length);
 
 
-            //Rect area = GetSpawnArea();
-            //Random rand = new Random((uint) UnityEngine.Random.Range(0, int.MaxValue));
-            //int cellCount = SpriteSheetCache.GetLength("emoji");
-            //SpriteSheetMaterial material = new SpriteSheetMaterial { material = SpriteSheetCache.GetMaterial("emoji") };
+            Rect area = GetSpawnArea();
+            Random rand = new Random((uint) UnityEngine.Random.Range(0, int.MaxValue));
+            int cellCount = SpriteSheetCache.GetLength("emoji");
+            SpriteSheetMaterial material = new SpriteSheetMaterial { material = SpriteSheetCache.GetMaterial("emoji") };
 
-            //for (int i = 0; i < entities.Length; i++)
-            //{
-            //    Entity e = entities[i];
-            //    eManager.SetComponentData(e, new SpriteIndex { Value = rand.NextInt(0, cellCount) });
-            //    eManager.SetComponentData(e, new Scale { Value = 10 });
-            //    eManager.SetComponentData(e, new Position2D { Value = rand.NextFloat2(area.min, area.max) });
-            //    eManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = cellCount, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
-            //    var color = UnityEngine.Random.ColorHSV(.15f, .75f);
-            //    SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
-            //    eManager.SetComponentData(e, col);
-            //    eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
-            //    eManager.SetSharedComponentData(e, material);
-            //}
+            for (int i = 0; i < entities.Length; i++)
+            {
+                Entity e = entities[i];
+                eManager.SetComponentData(e, new SpriteIndex { Value = rand.NextInt(0, cellCount) });
+                eManager.SetComponentData(e, new Scale { Value = 10 });
+                eManager.SetComponentData(e, new Translation { Value = new float3(rand.NextFloat2(area.min, area.max), 0) });
+                eManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = cellCount, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
+                var color = UnityEngine.Random.ColorHSV(.15f, .75f);
+                SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
+                eManager.SetComponentData(e, col);
+                eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
+                eManager.SetSharedComponentData(e, material);
+            }
         }
         private void OnDrawGizmosSelected()
         {
