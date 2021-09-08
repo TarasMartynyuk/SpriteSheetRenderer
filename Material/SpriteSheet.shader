@@ -62,7 +62,7 @@
                 o.uv =  v.texcoord * uv.xy + uv.zw;
 				o.color = colorsBuffer[instanceID];
 
-                _DebugBuffer[0] = model;
+                //_DebugBuffer[0] = model;
                 return o;
             }
 

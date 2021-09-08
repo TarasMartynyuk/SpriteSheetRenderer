@@ -14,7 +14,7 @@ public class RenderInformation {
   public bool updateUvs;
   public RenderInformation(Material material, Entity bufferEntity) {
     this.material = material;
-    spriteCount = SpriteSheetCache.GetLenght(material);
+    spriteCount = SpriteSheetCache.Instance.GetLenght(material);
     this.bufferEntity = bufferEntity;
     args = new uint[5] { 0, 0, 0, 0, 0 };
     argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);

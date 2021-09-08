@@ -47,11 +47,6 @@ namespace SpriteSheetRendererExamples
             float2 offset = new float2(1) * ((percent * m_speed) - m_speed / 2);
             float3 pos = m_startPosition + new float3(offset, 0);
             eManager.SetComponentData(Sprite, new Translation { Value = pos });
-            DebugExtensions.LogVar(new
-            {
-                pos,
-                trans = eManager.GetComponentData<Translation>(Sprite).Value
-            });
         }
     }
 }

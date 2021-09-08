@@ -31,7 +31,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
   }
   void Update() {
     if(Input.GetKeyDown(KeyCode.Space)) {
-      int maxSprites = SpriteSheetCache.GetLength("emoji");
+      int maxSprites = SpriteSheetCache.Instance.GetLength("emoji");
       var color = UnityEngine.Random.ColorHSV(.35f, .85f);
 
 

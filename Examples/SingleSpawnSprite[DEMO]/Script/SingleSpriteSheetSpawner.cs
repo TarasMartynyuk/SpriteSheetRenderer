@@ -29,7 +29,7 @@ namespace SpriteSheetRendererExamples
             //// 2) Record and bake this spritesheet(only once)
             //SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
 
-            //int maxSprites = SpriteSheetCache.GetLength("emoji");
+            //int maxSprites = SpriteSheetCache.Instance.GetLength("emoji");
             //var color = UnityEngine.Random.ColorHSV(.35f, .85f);
 
             //// 4) Instantiate the entity

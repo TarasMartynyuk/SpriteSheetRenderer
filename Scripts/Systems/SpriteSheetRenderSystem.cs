@@ -3,7 +3,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-public class SpriteSheetRenderer : SystemBase
+public class SpriteSheetRenderSystem : SystemBase
 {
     private Mesh mesh;
     ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new ShaderDebugBuffer<Matrix4x4>(3);
@@ -27,7 +27,6 @@ public class SpriteSheetRenderer : SystemBase
             {
                 m_debugBuffer.Material = SpriteSheetManager.renderInformation[i].material;
                 var debugData = m_debugBuffer.GetBufferData();
-                Debug.Log($"mvp : {debugData[0]:F3}");
             }
 
             if (UpdateBuffers(i) > 0)
@@ -66,7 +65,7 @@ public class SpriteSheetRenderer : SystemBase
         int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Length;
         if (instanceCount > 0)
         {
-            int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.GetLenght(renderInformation.material);
+            int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.Instance.GetLenght(renderInformation.material);
             if (renderInformation.updateUvs)
             {
                 SpriteSheetManager.ReleaseUvBuffer(renderIndex);

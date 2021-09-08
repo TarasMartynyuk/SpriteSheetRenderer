@@ -43,8 +43,8 @@ namespace SpriteSheetRendererExamples
 
             Rect area = GetSpawnArea();
             Random rand = new Random((uint) UnityEngine.Random.Range(0, int.MaxValue));
-            int cellCount = SpriteSheetCache.GetLength("emoji");
-            SpriteSheetMaterial material = new SpriteSheetMaterial { material = SpriteSheetCache.GetMaterial("emoji") };
+            int cellCount = SpriteSheetCache.Instance.GetLength("emoji");
+            SpriteSheetMaterial material = new SpriteSheetMaterial { material = SpriteSheetCache.Instance.GetMaterial("emoji") };
 
             for (int i = 0; i < entities.Length; i++)
             {
