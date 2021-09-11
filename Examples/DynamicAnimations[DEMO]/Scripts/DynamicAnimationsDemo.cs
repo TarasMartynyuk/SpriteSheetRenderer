@@ -14,7 +14,7 @@ namespace SpriteSheetRendererExamples
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
 
-            eManager.SetName(entity, "CONVERt ENTITY");
+            //eManager.SetNameInd(entity, "CONVERt ENTITY");
 
             // 1) Create Archetype
             EntityArchetype archetype = eManager.CreateArchetype(
@@ -34,7 +34,7 @@ namespace SpriteSheetRendererExamples
 
             // 4) Instantiate the entity
             character = SpriteSheetManager.Instantiate(archetype, animator);
-            eManager.SetName(character, "DynamicAnimationsDemo");
+            //eManager.SetName(character, "DynamicAnimationsDemo");
             // 3) Populate components
             var color = Color.white;
             eManager.AddComponentData(character, new Translation { Value = float3.zero });

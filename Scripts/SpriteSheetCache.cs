@@ -9,10 +9,16 @@ public class SpriteSheetCache : SingletonBase<SpriteSheetCache>
     private Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new Dictionary<string, KeyValuePair<Material, int>>();
     private Dictionary<Material, string> materialToName = new Dictionary<Material, string>();
     public Dictionary<Entity, SpriteSheetAnimator> entityAnimator = new Dictionary<Entity, SpriteSheetAnimator>();
+    Shader m_spriteSheetShader;
+
+    public void Init(Shader spriteSheetShader)
+    {
+        m_spriteSheetShader = spriteSheetShader;
+    }
 
     public KeyValuePair<Material, float4[]> BakeSprites(Sprite[] sprites, string materialName)
     {
-        Material material = new Material(Shader.Find("Instanced/SpriteSheet"));
+        Material material = new Material(m_spriteSheetShader);
         Texture texture = sprites[0].texture;
         material.mainTexture = texture;
         if (sprites.Length == 1)

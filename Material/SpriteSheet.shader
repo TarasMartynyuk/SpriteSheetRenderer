@@ -21,7 +21,8 @@
 
             #pragma vertex vert
             #pragma fragment frag
-            #pragma target 4.5
+            //#pragma target 4.5
+            #pragma target 3.0
             #include "UnityCG.cginc"
 
             sampler2D _MainTex;
@@ -31,7 +32,7 @@
             StructuredBuffer<float4> uvBuffer;
 			StructuredBuffer<float4> colorsBuffer;
 
-			RWStructuredBuffer<float4x4> _DebugBuffer : register(u1);
+			//RWStructuredBuffer<float4x4> _DebugBuffer : register(u1);
 
             struct v2f{
                 float4 pos : SV_POSITION;
