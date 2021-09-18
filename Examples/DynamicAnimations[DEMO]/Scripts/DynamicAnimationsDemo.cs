@@ -9,12 +9,15 @@ namespace SpriteSheetRendererExamples
 {
     public class DynamicAnimationsDemo : MonoBehaviour, IConvertGameObjectToEntity
     {
-        public SpriteSheetAnimator animator;
         public static Entity character;
+        public SpriteSheetAnimator animator;
+        [SerializeField] Shader m_shader;
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
-
+            SpriteSheetCache.Instance.Init(m_shader);
             //eManager.SetNameInd(entity, "CONVERt ENTITY");
+
+
 
             // 1) Create Archetype
             EntityArchetype archetype = eManager.CreateArchetype(
