@@ -30,7 +30,12 @@ public class SpriteSheetRenderSystem : SystemBase
             }
 
             if (UpdateBuffers(i) > 0)
-                Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.renderInformation[i].material, new Bounds(Vector2.zero, Vector3.one), SpriteSheetManager.renderInformation[i].argsBuffer);
+            {
+                // todo: allow setting dimensions (to the dimensions of map, e.g.), or to the frustrum bounds dynamically
+                var dimensions = new float3(1000);
+                var bounds = new Bounds(dimensions / 2, dimensions);
+                Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.renderInformation[i].material, bounds, SpriteSheetManager.renderInformation[i].argsBuffer);
+            }
 
 
             //this is w.i.p to clean the old buffers
