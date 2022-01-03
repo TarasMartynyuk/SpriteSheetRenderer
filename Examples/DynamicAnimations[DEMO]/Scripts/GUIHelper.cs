@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace SpriteSheetRendererExamples
 {
-public class GUIHelper : MonoBehaviour{
-  public void ChangeAnimation(string animationName) {
-    SpriteSheetAnimator.Play(DynamicAnimationsDemo.character, animationName);
-  }
-}
+    public class GUIHelper : MonoBehaviour
+    {
+        public void ChangeAnimation(string animationName)
+        {
+            SpriteSheetManager.SetAnimation(DynamicAnimationsDemo.character, animationName);
+        }
+    }
 }

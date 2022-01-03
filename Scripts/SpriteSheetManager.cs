@@ -3,9 +3,9 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public abstract class SpriteSheetManager
+public static class SpriteSheetManager
 {
-    public static List<RenderInformation> renderInformation = new List<RenderInformation>();
+    public static List<RenderInformation> renderInformation = new();
 
     public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
@@ -25,7 +25,7 @@ public abstract class SpriteSheetManager
     public static Entity Instantiate(EntityArchetype archetype, SpriteSheetAnimator animator)
     {
         Entity e = EntityManager.CreateEntity(archetype);
-        animator.currentAnimationIndex = animator.defaultAnimationIndex;
+        // animator.currentAnimationIndex = animator.defaultAnimationIndex;
         SpriteSheetAnimationData startAnim = animator.animations[animator.defaultAnimationIndex];
         int maxSprites = startAnim.sprites.Length;
         Material material = SpriteSheetCache.Instance.GetMaterial(animator.animations[animator.defaultAnimationIndex].animationName);
@@ -37,7 +37,7 @@ public abstract class SpriteSheetManager
         EntityManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = maxSprites, play = startAnim.playOnStart, samples = startAnim.samples, repetition = startAnim.repetition });
         EntityManager.SetComponentData(e, new SpriteIndex { Value = startAnim.startIndex });
         EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
-        animator.managedEntity = e;
+        // animator.managedEntity = e;
         SpriteSheetCache.Instance.entityAnimator.Add(e, animator);
         return e;
     }
@@ -64,6 +64,19 @@ public abstract class SpriteSheetManager
         }
         EntityManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
         EntityManager.SetComponentData(e, new SpriteIndex { Value = animation.startIndex });
+    }
+    
+    public static void SetAnimation(Entity e, int animationIndex)
+    {
+        var animator = SpriteSheetCache.Instance.GetAnimator(e);
+        SetAnimation(e, animator.animations[animationIndex]);
+    }
+    
+    public static void SetAnimation(Entity e, string animationName)
+    {
+        var animator = SpriteSheetCache.Instance.GetAnimator(e);
+        int animationIndex = animator.GetAnimationIndex(animationName);        
+        SetAnimation(e, animator.animations[animationIndex]);
     }
 
     public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationData animation, BufferHook hook)
