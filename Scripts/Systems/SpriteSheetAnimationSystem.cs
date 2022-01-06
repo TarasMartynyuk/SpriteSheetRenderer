@@ -7,44 +7,45 @@ public class SpriteSheetAnimationSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((ref SpriteSheetAnimation AnimCmp, ref SpriteIndex spriteIndexCmp)
+        float elapsedTime = (float) Time.ElapsedTime;
+        
+        Entities.ForEach((ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
                 =>
             {
-                if (AnimCmp.play && AnimCmp.elapsedFrames % AnimCmp.samples == 0 && AnimCmp.elapsedFrames != 0)
-                {
-                    switch (AnimCmp.repetition)
-                    {
-                        case SpriteSheetAnimation.RepetitionType.Once:
-                            if (!NextWillReachEnd(AnimCmp, spriteIndexCmp))
-                            {
-                                spriteIndexCmp.Value += 1;
-                            }
-                            else
-                            {
-                                AnimCmp.play = false;
-                                AnimCmp.elapsedFrames = 0;
-                            }
+                if (!animCmp.isPlaying)
+                    return;
 
-                            break;
-                        case SpriteSheetAnimation.RepetitionType.Loop:
-                            if (NextWillReachEnd(AnimCmp, spriteIndexCmp))
-                                spriteIndexCmp.Value = 0;
-                            else
-                                spriteIndexCmp.Value += 1;
-                            break;
-                    }
+                float elapsedTimeThisFrame = elapsedTime - animCmp.frameStartTime;
+                if (elapsedTimeThisFrame < animCmp.frameDuration)
+                    return;
 
-                    AnimCmp.elapsedFrames = 0;
-                }
-                else if (AnimCmp.play)
+                switch (animCmp.repetition)
                 {
-                    AnimCmp.elapsedFrames += 1;
+                    case SpriteSheetAnimationComponent.RepetitionType.Once:
+                        if (!NextWillReachEnd(animCmp, spriteIndexCmp))
+                        {
+                            spriteIndexCmp.Value += 1;
+                        }
+                        else
+                        {
+                            animCmp.isPlaying = true;
+                        }
+
+                        break;
+                    case SpriteSheetAnimationComponent.RepetitionType.Loop:
+                        if (NextWillReachEnd(animCmp, spriteIndexCmp))
+                            spriteIndexCmp.Value = 0;
+                        else
+                            spriteIndexCmp.Value += 1;
+                        break;
                 }
+
+                animCmp.frameStartTime = elapsedTime;
             })
             .Schedule();
     }
 
-    static bool NextWillReachEnd(SpriteSheetAnimation anim, SpriteIndex sprite)
+    static bool NextWillReachEnd(SpriteSheetAnimationComponent anim, SpriteIndex sprite)
     {
         return sprite.Value + 1 >= anim.maxSprites;
     }

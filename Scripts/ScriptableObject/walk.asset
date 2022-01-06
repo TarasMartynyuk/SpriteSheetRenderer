@@ -20,5 +20,5 @@ MonoBehaviour:
   - {fileID: -3557554893070573299, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
   startIndex: 0
   playOnStart: 1
-  samples: 60
+  duration: 1
   repetition: 1

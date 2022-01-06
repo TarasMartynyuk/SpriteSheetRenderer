@@ -28,7 +28,7 @@ namespace SpriteSheetRendererExamples
                typeof(Scale),
                //required params
                typeof(SpriteIndex),
-               typeof(SpriteSheetAnimation),
+               typeof(SpriteSheetAnimationComponent),
                typeof(SpriteSheetMaterial),
                typeof(SpriteSheetColor),
                typeof(BufferHook)
@@ -52,7 +52,7 @@ namespace SpriteSheetRendererExamples
                 eManager.SetComponentData(e, new SpriteIndex { Value = rand.NextInt(0, cellCount) });
                 eManager.SetComponentData(e, new Scale { Value = 10 });
                 eManager.SetComponentData(e, new Translation { Value = new float3(rand.NextFloat2(area.min, area.max), 0) });
-                eManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = cellCount, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
+                eManager.SetComponentData(e, new SpriteSheetAnimationComponent { maxSprites = cellCount, isPlaying = true, repetition = SpriteSheetAnimationComponent.RepetitionType.Loop, frameDuration = .2f });
                 var color = UnityEngine.Random.ColorHSV(.15f, .75f);
                 SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
                 eManager.SetComponentData(e, col);

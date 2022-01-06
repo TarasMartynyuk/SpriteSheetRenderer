@@ -27,7 +27,7 @@ namespace SpriteSheetRendererExamples
                      typeof(NonUniformScale),
                      //required params
                      typeof(SpriteIndex),
-                     typeof(SpriteSheetAnimation),
+                     typeof(SpriteSheetAnimationComponent),
                      typeof(SpriteSheetMaterial),
                      typeof(SpriteSheetColor),
                      typeof(BufferHook)

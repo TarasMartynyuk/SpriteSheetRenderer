@@ -15,8 +15,8 @@ public static class SpriteSheetManager
         Material material = SpriteSheetCache.Instance.GetMaterial(spriteSheetName);
         int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
 
-        var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
-        BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
+        var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
+        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
         EntityManager.SetComponentData(e, bh);
         EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
         return e;
@@ -31,11 +31,13 @@ public static class SpriteSheetManager
         Material material = SpriteSheetCache.Instance.GetMaterial(animator.animations[animator.defaultAnimationIndex].animationName);
         int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
 
-        var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
-        BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
+        var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
+        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
         EntityManager.SetComponentData(e, bh);
-        EntityManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = maxSprites, play = startAnim.playOnStart, samples = startAnim.samples, repetition = startAnim.repetition });
-        EntityManager.SetComponentData(e, new SpriteIndex { Value = startAnim.startIndex });
+        EntityManager.SetComponentData(e,
+            new SpriteSheetAnimationComponent
+                {maxSprites = maxSprites, isPlaying = startAnim.playOnStart, frameDuration = startAnim.frameDuration, repetition = startAnim.repetition});
+        EntityManager.SetComponentData(e, new SpriteIndex {Value = startAnim.startIndex});
         EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
         // animator.managedEntity = e;
         SpriteSheetCache.Instance.entityAnimator.Add(e, animator);
@@ -51,31 +53,37 @@ public static class SpriteSheetManager
         if (animation.animationName != oldAnimation)
         {
             Material material = SpriteSheetCache.Instance.GetMaterial(animation.animationName);
-            var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
+            var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
 
             DynamicBufferManager.RemoveBuffer(oldMaterial, bufferID);
 
             //use new buffer
             bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-            BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
+            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
 
             EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
             EntityManager.SetComponentData(e, bh);
         }
-        EntityManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
-        EntityManager.SetComponentData(e, new SpriteIndex { Value = animation.startIndex });
+
+        EntityManager.SetComponentData(e,
+            new SpriteSheetAnimationComponent
+            {
+                maxSprites = animation.sprites.Length, isPlaying = animation.playOnStart, frameDuration = animation.frameDuration,
+                repetition = animation.repetition,
+            });
+        EntityManager.SetComponentData(e, new SpriteIndex {Value = animation.startIndex});
     }
-    
+
     public static void SetAnimation(Entity e, int animationIndex)
     {
         var animator = SpriteSheetCache.Instance.GetAnimator(e);
         SetAnimation(e, animator.animations[animationIndex]);
     }
-    
+
     public static void SetAnimation(Entity e, string animationName)
     {
         var animator = SpriteSheetCache.Instance.GetAnimator(e);
-        int animationIndex = animator.GetAnimationIndex(animationName);        
+        int animationIndex = animator.GetAnimationIndex(animationName);
         SetAnimation(e, animator.animations[animationIndex]);
     }
 
@@ -86,20 +94,26 @@ public static class SpriteSheetManager
         if (animation.animationName != oldAnimation)
         {
             Material material = SpriteSheetCache.Instance.GetMaterial(animation.animationName);
-            var spriteSheetMaterial = new SpriteSheetMaterial { material = material };
+            var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
 
             //clean old buffer
             DynamicBufferManager.RemoveBuffer(oldMaterial, hook.bufferID);
 
             //use new buffer
             int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-            BufferHook bh = new BufferHook { bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial) };
+            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
 
             commandBuffer.SetSharedComponent(e, spriteSheetMaterial);
             commandBuffer.SetComponent(e, bh);
         }
-        commandBuffer.SetComponent(e, new SpriteSheetAnimation { maxSprites = animation.sprites.Length, play = animation.playOnStart, samples = animation.samples, repetition = animation.repetition, elapsedFrames = 0 });
-        commandBuffer.SetComponent(e, new SpriteIndex { Value = animation.startIndex });
+
+        commandBuffer.SetComponent(e,
+            new SpriteSheetAnimationComponent
+            {
+                maxSprites = animation.sprites.Length, isPlaying = animation.playOnStart, frameDuration = animation.frameDuration,
+                repetition = animation.repetition
+            });
+        commandBuffer.SetComponent(e, new SpriteIndex {Value = animation.startIndex});
     }
 
     public static void DestroyEntity(Entity e, string materialName)
@@ -120,7 +134,7 @@ public static class SpriteSheetManager
     public static void RecordSpriteSheet(Sprite[] sprites, string spriteSheetName, int spriteCount = 0)
     {
         KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(sprites, spriteSheetName);
-        SpriteSheetMaterial material = new SpriteSheetMaterial { material = atlasData.Key };
+        SpriteSheetMaterial material = new SpriteSheetMaterial {material = atlasData.Key};
         DynamicBufferManager.GenerateBuffers(material, spriteCount);
         DynamicBufferManager.BakeUvBuffer(material, atlasData);
         renderInformation.Add(new RenderInformation(material.material, DynamicBufferManager.GetEntityBuffer(material.material)));
@@ -131,7 +145,7 @@ public static class SpriteSheetManager
         foreach (SpriteSheetAnimationData animation in animator.animations)
         {
             KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(animation.sprites, animation.animationName);
-            SpriteSheetMaterial material = new SpriteSheetMaterial { material = atlasData.Key };
+            SpriteSheetMaterial material = new SpriteSheetMaterial {material = atlasData.Key};
             DynamicBufferManager.GenerateBuffers(material);
             DynamicBufferManager.BakeUvBuffer(material, atlasData);
             renderInformation.Add(new RenderInformation(material.material, DynamicBufferManager.GetEntityBuffer(material.material)));
@@ -144,11 +158,13 @@ public static class SpriteSheetManager
             renderInformation[i].DestroyBuffers();
         renderInformation.Clear();
     }
+
     public static void ReleaseUvBuffer(int bufferID)
     {
         if (renderInformation[bufferID].uvBuffer != null)
             renderInformation[bufferID].uvBuffer.Release();
     }
+
     public static void ReleaseBuffer(int bufferID)
     {
         if (renderInformation[bufferID].matrixBuffer != null)
@@ -160,5 +176,4 @@ public static class SpriteSheetManager
         if (renderInformation[bufferID].indexBuffer != null)
             renderInformation[bufferID].indexBuffer.Release();
     }
-
 }

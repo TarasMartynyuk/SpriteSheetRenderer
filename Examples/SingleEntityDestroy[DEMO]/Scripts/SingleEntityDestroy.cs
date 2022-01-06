@@ -21,7 +21,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
             typeof(LifeTime),
             //required params
             typeof(SpriteIndex),
-            typeof(SpriteSheetAnimation),
+            typeof(SpriteSheetAnimationComponent),
             typeof(SpriteSheetMaterial),
             typeof(SpriteSheetColor),
             //typeof(SpriteMatrix),
@@ -43,7 +43,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
         //new Position2D { Value = UnityEngine.Random.insideUnitCircle * 7 },
         new Scale { Value = UnityEngine.Random.Range(0,3f) },
         new SpriteIndex { Value = UnityEngine.Random.Range(0, maxSprites) },
-        new SpriteSheetAnimation { maxSprites = maxSprites, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 },
+        // new SpriteSheetAnimationComponent { maxSprites = maxSprites, isPlaying = true, repetition = SpriteSheetAnimationComponent.RepetitionType.Loop, samples = 10 },
         new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) },
         new LifeTime{ Value = UnityEngine.Random.Range(5,15)}
       };
