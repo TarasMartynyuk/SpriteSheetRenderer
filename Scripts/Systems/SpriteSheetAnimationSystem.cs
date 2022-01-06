@@ -7,43 +7,45 @@ public class SpriteSheetAnimationSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((ref SpriteSheetAnimation AnimCmp, ref SpriteIndex spriteSheetCmp)
-        => {
-            if (AnimCmp.play && AnimCmp.elapsedFrames % AnimCmp.samples == 0 && AnimCmp.elapsedFrames != 0)
+        Entities.ForEach((ref SpriteSheetAnimation AnimCmp, ref SpriteIndex spriteIndexCmp)
+                =>
             {
-                switch (AnimCmp.repetition)
+                if (AnimCmp.play && AnimCmp.elapsedFrames % AnimCmp.samples == 0 && AnimCmp.elapsedFrames != 0)
                 {
-                case SpriteSheetAnimation.RepetitionType.Once:
-                    if (!NextWillReachEnd(AnimCmp, spriteSheetCmp))
+                    switch (AnimCmp.repetition)
                     {
-                        spriteSheetCmp.Value += 1;
+                        case SpriteSheetAnimation.RepetitionType.Once:
+                            if (!NextWillReachEnd(AnimCmp, spriteIndexCmp))
+                            {
+                                spriteIndexCmp.Value += 1;
+                            }
+                            else
+                            {
+                                AnimCmp.play = false;
+                                AnimCmp.elapsedFrames = 0;
+                            }
+
+                            break;
+                        case SpriteSheetAnimation.RepetitionType.Loop:
+                            if (NextWillReachEnd(AnimCmp, spriteIndexCmp))
+                                spriteIndexCmp.Value = 0;
+                            else
+                                spriteIndexCmp.Value += 1;
+                            break;
                     }
-                    else
-                    {
-                        AnimCmp.play = false;
-                        AnimCmp.elapsedFrames = 0;
-                    }
-                    break;
-                case SpriteSheetAnimation.RepetitionType.Loop:
-                    if (NextWillReachEnd(AnimCmp, spriteSheetCmp))
-                        spriteSheetCmp.Value = 0;
-                    else
-                        spriteSheetCmp.Value += 1;
-                    break;
+
+                    AnimCmp.elapsedFrames = 0;
                 }
-                AnimCmp.elapsedFrames = 0;
-            }
-            else if (AnimCmp.play)
-            {
-                AnimCmp.elapsedFrames += 1;
-            }
-        })
-        .Schedule();
-  }
+                else if (AnimCmp.play)
+                {
+                    AnimCmp.elapsedFrames += 1;
+                }
+            })
+            .Schedule();
+    }
 
     static bool NextWillReachEnd(SpriteSheetAnimation anim, SpriteIndex sprite)
     {
         return sprite.Value + 1 >= anim.maxSprites;
     }
 }
-
