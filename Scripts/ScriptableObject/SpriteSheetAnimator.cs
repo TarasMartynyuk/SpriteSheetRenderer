@@ -7,7 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class SpriteSheetAnimator : ScriptableObject
 {
-    public SpriteSheetAnimationData[] animations;
+    public SpriteSheetAnimationDataScriptable[] animations;
     public int defaultAnimationIndex;
 
     public string animationsPrefix;

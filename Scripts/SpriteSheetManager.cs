@@ -31,7 +31,7 @@ public static class SpriteSheetManager
 
     public static void Init(Entity spriteSheetEntity, SpriteSheetAnimator animator)
     {
-        SpriteSheetAnimationData startAnim = animator.animations[animator.defaultAnimationIndex];
+        SpriteSheetAnimationDataScriptable startAnim = animator.animations[animator.defaultAnimationIndex];
         int maxSprites = startAnim.sprites.Length;
         Material material = SpriteSheetCache.Instance.GetMaterial(animator.animations[animator.defaultAnimationIndex].fullName);
         int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
@@ -60,7 +60,7 @@ public static class SpriteSheetManager
         SetAnimation(e, animator.animations[animationIndex], animationIndex, keepProgress);
     }
 
-    public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationData animation, BufferHook hook)
+    public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationDataScriptable animation, BufferHook hook)
     {
         Material oldMaterial = DynamicBufferManager.GetMaterial(hook.bufferEnityID);
         string oldAnimation = SpriteSheetCache.Instance.GetMaterialName(oldMaterial);
@@ -116,7 +116,7 @@ public static class SpriteSheetManager
     public static void RecordAnimator(SpriteSheetAnimator animator)
     {
         animator.Init();
-        foreach (SpriteSheetAnimationData animation in animator.animations)
+        foreach (SpriteSheetAnimationDataScriptable animation in animator.animations)
         {
             KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(animation.sprites, animation.fullName);
             SpriteSheetMaterial material = new SpriteSheetMaterial {material = atlasData.Key};
@@ -151,7 +151,7 @@ public static class SpriteSheetManager
             renderInformation[bufferID].indexBuffer.Release();
     }
     
-    private static void SetAnimation(Entity e, SpriteSheetAnimationData animation, int animationIndex, bool keepProgress = false)
+    private static void SetAnimation(Entity e, SpriteSheetAnimationDataScriptable animation, int animationIndex, bool keepProgress = false)
     {
         int bufferEnityID = EntityManager.GetComponentData<BufferHook>(e).bufferEnityID;
         int bufferID = EntityManager.GetComponentData<BufferHook>(e).bufferID;
