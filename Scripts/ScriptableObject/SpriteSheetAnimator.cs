@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Unity.Entities;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SpriteSheetAnimator", menuName = "SpriteSheetRenderer/SpriteSheetAnimator", order = 0)]
-[System.Serializable]
-public class SpriteSheetAnimator : ScriptableObject
-{
+public class SpriteSheetAnimator: ScriptableObject {
+    
     public SpriteSheetAnimationDataScriptable[] animations;
     public int defaultAnimationIndex;
 
@@ -30,4 +27,5 @@ public class SpriteSheetAnimator : ScriptableObject
         }
         return -1;
     }
+    
 }
