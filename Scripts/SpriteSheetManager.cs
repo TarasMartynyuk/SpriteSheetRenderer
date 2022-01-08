@@ -15,10 +15,8 @@ public static class SpriteSheetManager
         Material material = SpriteSheetCache.Instance.GetMaterial(spriteSheetName);
         int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
 
-        var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
-        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
+        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material)};
         EntityManager.SetComponentData(e, bh);
-        EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
         return e;
     }
 
@@ -36,14 +34,12 @@ public static class SpriteSheetManager
         Material material = SpriteSheetCache.Instance.GetMaterial(animator.animations[animator.defaultAnimationIndex].animationName);
         int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
 
-        var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
-        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
+        BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material)};
         EntityManager.SetComponentData(spriteSheetEntity, bh);
         EntityManager.SetComponentData(spriteSheetEntity,
             new SpriteSheetAnimationComponent
                 {maxSprites = maxSprites, isPlaying = startAnim.playOnStart, frameDuration = startAnim.frameDuration, repetition = startAnim.repetition});
         EntityManager.SetComponentData(spriteSheetEntity, new SpriteIndex {Value = startAnim.startIndex});
-        EntityManager.SetSharedComponentData(spriteSheetEntity, spriteSheetMaterial);
         SpriteSheetCache.Instance.entityAnimator.Add(spriteSheetEntity, animator);
     }
 
@@ -67,16 +63,13 @@ public static class SpriteSheetManager
         if (animation.animationName != oldAnimation)
         {
             Material material = SpriteSheetCache.Instance.GetMaterial(animation.animationName);
-            var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
-
             //clean old buffer
             DynamicBufferManager.RemoveBuffer(oldMaterial, hook.bufferID);
 
             //use new buffer
             int bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
+            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material)};
 
-            commandBuffer.SetSharedComponent(e, spriteSheetMaterial);
             commandBuffer.SetComponent(e, bh);
         }
 
@@ -107,10 +100,10 @@ public static class SpriteSheetManager
     public static void RecordSpriteSheet(Sprite[] sprites, string spriteSheetName, int spriteCount = 0)
     {
         KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(sprites, spriteSheetName);
-        SpriteSheetMaterial material = new SpriteSheetMaterial {material = atlasData.Key};
-        DynamicBufferManager.GenerateBuffers(material, spriteCount);
-        DynamicBufferManager.BakeUvBuffer(material, atlasData);
-        renderInformation.Add(new RenderInformation(material.material, DynamicBufferManager.GetEntityBuffer(material.material)));
+        // Material  material = new Material  {material = atlasData.Key};
+        DynamicBufferManager.GenerateBuffers(atlasData.Key, spriteCount);
+        DynamicBufferManager.BakeUvBuffer(atlasData.Key, atlasData);
+        renderInformation.Add(new RenderInformation(atlasData.Key, DynamicBufferManager.GetEntityBuffer(atlasData.Key)));
     }
 
     public static void RecordAnimator(SpriteSheetAnimator animator)
@@ -118,10 +111,9 @@ public static class SpriteSheetManager
         foreach (SpriteSheetAnimationData animation in animator.animations)
         {
             KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(animation.sprites, animation.animationName);
-            SpriteSheetMaterial material = new SpriteSheetMaterial {material = atlasData.Key};
-            DynamicBufferManager.GenerateBuffers(material);
-            DynamicBufferManager.BakeUvBuffer(material, atlasData);
-            renderInformation.Add(new RenderInformation(material.material, DynamicBufferManager.GetEntityBuffer(material.material)));
+            DynamicBufferManager.GenerateBuffers(atlasData.Key);
+            DynamicBufferManager.BakeUvBuffer(atlasData.Key, atlasData);
+            renderInformation.Add(new RenderInformation(atlasData.Key, DynamicBufferManager.GetEntityBuffer(atlasData.Key)));
         }
     }
 
@@ -159,15 +151,13 @@ public static class SpriteSheetManager
         if (animation.animationName != oldAnimation)
         {
             Material material = SpriteSheetCache.Instance.GetMaterial(animation.animationName);
-            var spriteSheetMaterial = new SpriteSheetMaterial {material = material};
 
             DynamicBufferManager.RemoveBuffer(oldMaterial, bufferID);
 
             //use new buffer
             bufferID = DynamicBufferManager.AddDynamicBuffers(DynamicBufferManager.GetEntityBuffer(material), material);
-            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(spriteSheetMaterial)};
+            BufferHook bh = new BufferHook {bufferID = bufferID, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material)};
 
-            EntityManager.SetSharedComponentData(e, spriteSheetMaterial);
             EntityManager.SetComponentData(e, bh);
         }
 

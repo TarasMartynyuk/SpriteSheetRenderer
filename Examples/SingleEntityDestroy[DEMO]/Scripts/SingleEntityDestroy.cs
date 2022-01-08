@@ -22,7 +22,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
             //required params
             typeof(SpriteIndex),
             typeof(SpriteSheetAnimationComponent),
-            typeof(SpriteSheetMaterial),
+            typeof(Material ),
             typeof(SpriteSheetColor),
             //typeof(SpriteMatrix),
             typeof(BufferHook)

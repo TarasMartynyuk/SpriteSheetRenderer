@@ -45,41 +45,40 @@ public static class DynamicBufferManager
 
 
     //only use this when you didn't bake the uv yet
-    public static void BakeUvBuffer(SpriteSheetMaterial spriteSheetMaterial, KeyValuePair<Material, float4[]> atlasData)
+    public static void BakeUvBuffer(Material  spriteSheetMaterial, KeyValuePair<Material, float4[]> atlasData)
     {
-        Entity entity = GetEntityBuffer(spriteSheetMaterial.material);
+        Entity entity = GetEntityBuffer(spriteSheetMaterial);
         var buffer = EntityManager.GetBuffer<UvBuffer>(entity);
         for (int j = 0; j < atlasData.Value.Length; j++)
             buffer.Add(atlasData.Value[j]);
     }
 
-    public static void GenerateBuffers(SpriteSheetMaterial material, int entityCount = 0)
+    public static void GenerateBuffers(Material material, int entityCount = 0)
     {
-        if (!materialEntityBufferID.ContainsKey(material.material))
+        if (!materialEntityBufferID.ContainsKey(material))
         {
             CreateBuffersContainer(material);
-            availableEntityID.Add(material.material, new List<int>());
+            availableEntityID.Add(material, new List<int>());
             for (int i = 0; i < entityCount; i++)
-                availableEntityID[material.material].Add(i);
+                availableEntityID[material].Add(i);
             MassAddBuffers(bufferEntities.Last(), entityCount);
         }
     }
 
     //use this when it's the first time you are using that material
     //use this just to generate the buffers container
-    public static void CreateBuffersContainer(SpriteSheetMaterial material)
+    public static void CreateBuffersContainer(Material  material)
     {
         var archetype = EntityManager.CreateArchetype(
           typeof(SpriteIndexBuffer),
           typeof(MatrixBuffer),
           typeof(SpriteColorBuffer),
-          typeof(SpriteSheetMaterial),
+          typeof(Material ),
           typeof(UvBuffer)
         );
         Entity e = EntityManager.CreateEntity(archetype);
         bufferEntities.Add(e);
-        EntityManager.SetSharedComponentData(e, material);
-        materialEntityBufferID.Add(material.material, materialEntityBufferID.Count);
+        materialEntityBufferID.Add(material, materialEntityBufferID.Count);
     }
 
     //when u create a new entity you need a new buffer for him
@@ -112,14 +111,14 @@ public static class DynamicBufferManager
         return bufferId;
     }
 
-    public static BufferHook GetBufferHook(SpriteSheetMaterial material)
+    public static BufferHook GetBufferHook(Material  material)
     {
-        return new BufferHook { bufferEnityID = materialEntityBufferID[material.material], bufferID = NextIDForEntity(material.material) };
+        return new BufferHook { bufferEnityID = materialEntityBufferID[material], bufferID = NextIDForEntity(material) };
     }
 
-    public static int GetEntityBufferID(SpriteSheetMaterial material)
+    public static int GetEntityBufferID(Material  material)
     {
-        return materialEntityBufferID[material.material];
+        return materialEntityBufferID[material];
     }
 
     public static Entity GetEntityBuffer(Material material)

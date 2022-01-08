@@ -29,7 +29,7 @@ namespace SpriteSheetRendererExamples
                //required params
                typeof(SpriteIndex),
                typeof(SpriteSheetAnimationComponent),
-               typeof(SpriteSheetMaterial),
+               typeof(Material ),
                typeof(SpriteSheetColor),
                typeof(BufferHook)
             );
@@ -44,7 +44,7 @@ namespace SpriteSheetRendererExamples
             Rect area = GetSpawnArea();
             Random rand = new Random((uint) UnityEngine.Random.Range(0, int.MaxValue));
             int cellCount = SpriteSheetCache.Instance.GetLength("emoji");
-            SpriteSheetMaterial material = new SpriteSheetMaterial { material = SpriteSheetCache.Instance.GetMaterial("emoji") };
+            Material material = SpriteSheetCache.Instance.GetMaterial("emoji");
 
             for (int i = 0; i < entities.Length; i++)
             {
@@ -57,7 +57,6 @@ namespace SpriteSheetRendererExamples
                 SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
                 eManager.SetComponentData(e, col);
                 eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
-                eManager.SetSharedComponentData(e, material);
             }
         }
         private void OnDrawGizmosSelected()

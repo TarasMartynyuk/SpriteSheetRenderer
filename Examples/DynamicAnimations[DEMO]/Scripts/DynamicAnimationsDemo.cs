@@ -28,7 +28,7 @@ namespace SpriteSheetRendererExamples
                      //required params
                      typeof(SpriteIndex),
                      typeof(SpriteSheetAnimationComponent),
-                     typeof(SpriteSheetMaterial),
+                     typeof(Material),
                      typeof(SpriteSheetColor),
                      typeof(BufferHook)
             );
