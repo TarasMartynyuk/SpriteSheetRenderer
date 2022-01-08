@@ -11,12 +11,11 @@ public struct SpriteSheetAnimationComponent : IComponentData
 
     public RepetitionType repetition;
 
-    // public int elapsedFrames;
     public float frameDuration;
     public float frameStartTime;
-    
-    //how many frames does this animation takes to move to the next sprite
-    // public int samples;
+
+    // in animator list
+    public int animationIndex;
     public bool isPlaying;
     public int maxSprites;
 }

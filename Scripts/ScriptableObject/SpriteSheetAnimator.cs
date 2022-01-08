@@ -20,7 +20,7 @@ public class SpriteSheetAnimator : ScriptableObject
             animation.Init(this);
         }
     }
-    
+
     public int GetAnimationIndex(string animationName)
     {
         for (var i = 0; i < animations.Length; i++)

@@ -5,6 +5,8 @@ using UnityEngine;
 public abstract class SpriteSheetAnimationData : ScriptableObject
 {
     public Sprite[] sprites;
+    public Sprite SpriteSheet;
+    
     public int startIndex;
     public bool playOnStart = true;
     public float duration;
@@ -19,5 +21,10 @@ public abstract class SpriteSheetAnimationData : ScriptableObject
     public void Init(SpriteSheetAnimator parentAnimator)
     {
         fullName = $"{parentAnimator.animationsPrefix}_{animationName}";
+    }
+    
+    public void RetrieveSheetSprites()
+    {
+        
     }
 }
