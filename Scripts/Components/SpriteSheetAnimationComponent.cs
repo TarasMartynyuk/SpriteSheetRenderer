@@ -2,20 +2,13 @@
 
 public struct SpriteSheetAnimationComponent : IComponentData
 {
-    public enum RepetitionType
-    {
-        Once,
-        Loop,
-        PingPong
-    }
+    public Entity CurrentAnimation;
+    public float FrameStartTime;
+    public bool IsPlaying;
+    
+    
+    // public RepetitionType repetition;
 
-    public RepetitionType repetition;
-
-    public float frameDuration;
-    public float frameStartTime;
-
-    // in animator list
-    public int animationIndex;
-    public bool isPlaying;
-    public int maxSprites;
+    // public float frameDuration;
+    // public int maxSprites;
 }
