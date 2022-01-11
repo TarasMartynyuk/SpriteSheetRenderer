@@ -15,16 +15,14 @@ public enum RepetitionType
 public struct SpriteSheetAnimationDefinitionComponent : IComponentData
 {
     public int startIndex;
-    public bool playOnStart;
     public float duration;
     public RepetitionType repetition;
+    public int EventFrame;
+
     [HideInInspector]
     public float frameDuration;
     [HideInInspector]
     public int maxSprites;
-
-    public int EventFrame;
-
-    // in animator list
-    // public int animationIndex;
+    [HideInInspector]
+    public int IndexInAnimator;
 }

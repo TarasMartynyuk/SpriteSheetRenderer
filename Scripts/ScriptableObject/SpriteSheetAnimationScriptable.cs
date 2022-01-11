@@ -11,13 +11,14 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
     public Sprite[] sprites;
     public Sprite SpriteSheet;
     public string animationName;
-    public SpriteSheetAnimationDefinitionComponent definition;
-    
     public Entity definitionEntity { get; private set; }
+    
+    [SerializeField] SpriteSheetAnimationDefinitionComponent definition;
 
-    public void Init()
+    public void Init(int indexInAnimator)
     {
         definition.frameDuration = definition.duration / sprites.Length;
+        definition.IndexInAnimator = indexInAnimator;
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         definitionEntity = eManager.CreateEntity(SpriteSheetAnimationFactory.Instance.SpriteSheetAnimationDefinition.Archetype);
         eManager.SetComponentData(definitionEntity, definition);
