@@ -2,6 +2,7 @@
 using System;
 using Unity.Entities;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public enum RepetitionType
 {
@@ -14,15 +15,15 @@ public enum RepetitionType
 [Serializable]
 public struct SpriteSheetAnimationDefinitionComponent : IComponentData
 {
-    public int startIndex;
-    public float duration;
-    public RepetitionType repetition;
-    public int EventFrame;
-
+    public float Duration;
+    public RepetitionType Repetition;
+    
     [HideInInspector]
-    public float frameDuration;
+    public int? EventFrame;
     [HideInInspector]
-    public int maxSprites;
+    public float FrameDuration;
+    [HideInInspector]
+    public int SpriteCount;
     [HideInInspector]
     public int IndexInAnimator;
 }

@@ -3,25 +3,32 @@ using System.Linq;
 using Unity.Entities;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [System.Serializable]
 [CreateAssetMenu(fileName = "SpriteSheetAnimationData", menuName = "SpriteSheetRenderer/SpriteSheetAnimationData", order = 0)]
 public class SpriteSheetAnimationScriptable : ScriptableObject
 {
-    public Sprite[] sprites;
+    public Sprite[] Sprites;
     public Sprite SpriteSheet;
-    public string animationName;
-    public Entity definitionEntity { get; private set; }
+    public string AnimationName;
+    public Entity DefinitionEntity { get; private set; }
     
-    [SerializeField] SpriteSheetAnimationDefinitionComponent definition;
+    [SerializeField] SpriteSheetAnimationDefinitionComponent m_definition;
+    [SerializeField] SerializableNullable<int> m_eventFrame;
 
     public void Init(int indexInAnimator)
     {
-        definition.frameDuration = definition.duration / sprites.Length;
-        definition.IndexInAnimator = indexInAnimator;
+        Debug.Assert(m_definition.Duration != 0, $"duration == 0, {AnimationName}");
+
+        if (m_eventFrame.HasValue)
+            m_definition.EventFrame = m_eventFrame.Value;
+        m_definition.SpriteCount = Sprites.Length;
+        m_definition.FrameDuration = m_definition.Duration / Sprites.Length;
+        m_definition.IndexInAnimator = indexInAnimator;
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        definitionEntity = eManager.CreateEntity(SpriteSheetAnimationFactory.Instance.SpriteSheetAnimationDefinition.Archetype);
-        eManager.SetComponentData(definitionEntity, definition);
+        DefinitionEntity = eManager.CreateEntity(SpriteSheetAnimationFactory.Instance.SpriteSheetAnimationDefinition.Archetype);
+        eManager.SetComponentData(DefinitionEntity, m_definition);
     }
 
 
