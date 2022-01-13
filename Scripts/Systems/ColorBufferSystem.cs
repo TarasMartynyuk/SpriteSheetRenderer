@@ -18,13 +18,12 @@ public class ColorBufferSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
+        RenderGroupManager.CopyBufferEntities(m_bufferEntities);
         var bufferEntities = m_bufferEntities.AsArray();
-        var entityManager = EntityManager;
-        Entities.ForEach((in BufferHook hook, in SpriteSheetColor data) =>
+        Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
             {
-                var buffer = GetBuffer<SpriteColorBuffer>(bufferEntities[hook.bufferEnityID]);
-                buffer[hook.bufferID] = data.color;
+                var buffer = GetBuffer<SpriteColorBuffer>(bufferEntities[hook.IndexInRenderGroup]);
+                buffer[hook.IndexInRenderGroup] = data.color;
             })
             .WithReadOnly(bufferEntities)
             //.WithChangeFilter<SpriteSheetColor>()

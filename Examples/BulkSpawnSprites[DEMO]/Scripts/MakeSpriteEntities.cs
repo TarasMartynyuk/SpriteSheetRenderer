@@ -31,7 +31,7 @@ namespace SpriteSheetRendererExamples
                typeof(SpriteSheetAnimationComponent),
                typeof(Material ),
                typeof(SpriteSheetColor),
-               typeof(BufferHook)
+               typeof(SpriteSheetRenderGroupHookComponent)
             );
 
             NativeArray<Entity> entities = new NativeArray<Entity>(spriteCount, Allocator.Temp);
@@ -62,7 +62,7 @@ namespace SpriteSheetRendererExamples
                 var color = UnityEngine.Random.ColorHSV(.15f, .75f);
                 SpriteSheetColor col = new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) };
                 eManager.SetComponentData(e, col);
-                eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
+                eManager.SetComponentData(e, new SpriteSheetRenderGroupHookComponent { IndexInRenderGroup = i, bufferEnityID = RenderGroupManager.GetEntityBufferID(material) });
             }
         }
         private void OnDrawGizmosSelected()

@@ -18,14 +18,14 @@ public class SpriteSheetUvJobSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
+        RenderGroupManager.CopyBufferEntities(m_bufferEntities);
         var bufferEntities = m_bufferEntities.AsArray();
         var entityManager = EntityManager;
 
-        Entities.ForEach((in BufferHook hook, in SpriteIndex data) =>
+        Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in SpriteIndex data) =>
             {
-                var buffer = GetBuffer<SpriteIndexBuffer>(bufferEntities[hook.bufferEnityID]);
-                buffer[hook.bufferID] = data.Value;
+                var buffer = GetBuffer<SpriteIndexBuffer>(bufferEntities[hook.IndexInRenderGroup]);
+                buffer[hook.IndexInRenderGroup] = data.Value;
             })
             .WithReadOnly(bufferEntities)
             .WithChangeFilter<SpriteIndex>()

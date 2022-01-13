@@ -30,7 +30,7 @@ namespace SpriteSheetRendererExamples
                      typeof(SpriteSheetAnimationComponent),
                      typeof(Material),
                      typeof(SpriteSheetColor),
-                     typeof(BufferHook)
+                     typeof(SpriteSheetRenderGroupHookComponent)
             );
             SpriteSheetManager.RecordAnimator(animator);
 

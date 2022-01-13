@@ -15,14 +15,14 @@ public class MatrixBufferSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        DynamicBufferManager.CopyBufferEntities(m_bufferEntities);
+        RenderGroupManager.CopyBufferEntities(m_bufferEntities);
         var bufferEntities = m_bufferEntities.AsArray();
         var entityManager = EntityManager;
 
-        Entities.ForEach((Entity e, in BufferHook hook, in LocalToWorld localToWorld) =>
+        Entities.ForEach((Entity e, in SpriteSheetRenderGroupHookComponent hook, in LocalToWorld localToWorld) =>
         {
-            var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.bufferEnityID]);
-            buffer[hook.bufferID] = localToWorld.Value;
+            var buffer = GetBuffer<MatrixBuffer>(bufferEntities[hook.IndexInRenderGroup]);
+            buffer[hook.IndexInRenderGroup] = localToWorld.Value;
         })
         .WithReadOnly(bufferEntities)
         .WithChangeFilter<LocalToWorld>()

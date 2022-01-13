@@ -25,7 +25,7 @@ public class SingleEntityDestroy : MonoBehaviour, IConvertGameObjectToEntity {
             typeof(Material ),
             typeof(SpriteSheetColor),
             //typeof(SpriteMatrix),
-            typeof(BufferHook)
+            typeof(SpriteSheetRenderGroupHookComponent)
          );
     SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
   }

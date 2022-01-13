@@ -12,12 +12,12 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
     public Sprite[] Sprites;
     public Sprite SpriteSheet;
     public string AnimationName;
-    public Entity DefinitionEntity { get; private set; }
+    // public Entity DefinitionEntity { get; private set; }
     
     [SerializeField] SpriteSheetAnimationDefinitionComponent m_definition;
     [SerializeField] SerializableNullable<int> m_eventFrame;
 
-    public void Init(int indexInAnimator)
+    public void Init(int indexInAnimator, Entity animationRenderGroup)
     {
         Debug.Assert(m_definition.Duration != 0, $"duration == 0, {AnimationName}");
 
@@ -27,8 +27,7 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
         m_definition.FrameDuration = m_definition.Duration / Sprites.Length;
         m_definition.IndexInAnimator = indexInAnimator;
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        DefinitionEntity = eManager.CreateEntity(SpriteSheetAnimationFactory.Instance.SpriteSheetAnimationDefinition.Archetype);
-        eManager.SetComponentData(DefinitionEntity, m_definition);
+        eManager.SetComponentData(animationRenderGroup, m_definition);
     }
 
 
