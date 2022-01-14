@@ -10,6 +10,7 @@ namespace SpriteSheetRendererExamples
     public class SingleSpriteSheetSpawner : MonoBehaviour, IConvertGameObjectToEntity
     {
         public Sprite[] sprites;
+
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
             // 1) Create Archetype

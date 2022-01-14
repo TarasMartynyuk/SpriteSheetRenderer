@@ -6,10 +6,9 @@ using UnityEngine;
 
 public class SpriteSheetCache : SingletonBase<SpriteSheetCache>
 {
-    private Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new Dictionary<string, KeyValuePair<Material, int>>();
-    private Dictionary<Material, string> materialToName = new Dictionary<Material, string>();
-    public Dictionary<Entity, SpriteSheetAnimator> entityAnimator = new Dictionary<Entity, SpriteSheetAnimator>();
     Shader m_spriteSheetShader;
+    Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new();
+    Dictionary<Material, string> materialToName = new();
 
     public void Init(Shader spriteSheetShader)
     {
@@ -67,8 +66,6 @@ public class SpriteSheetCache : SingletonBase<SpriteSheetCache>
     public int GetLength(string spriteSheetName) => materialNameMaterial[spriteSheetName].Value;
     public Material GetMaterial(string spriteSheetName) => materialNameMaterial[spriteSheetName].Key;
 
-    public SpriteSheetAnimator GetAnimator(Entity e) => entityAnimator[e];
     public string GetMaterialName(Material material) => materialToName[material];
     public int GetLenght(Material material) => GetLength(GetMaterialName(material));
-
 }

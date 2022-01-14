@@ -17,13 +17,16 @@ public struct SpriteSheetAnimationDefinitionComponent : IComponentData
 {
     public float Duration;
     public RepetitionType Repetition;
-    
-    [HideInInspector]
-    public int? EventFrame;
+
     [HideInInspector]
     public float FrameDuration;
+
     [HideInInspector]
     public int SpriteCount;
+
     [HideInInspector]
     public int IndexInAnimator;
+
+    [HideInInspector]
+    public int? EventFrame;
 }

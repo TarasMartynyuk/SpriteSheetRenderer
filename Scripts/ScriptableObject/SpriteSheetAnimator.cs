@@ -3,7 +3,6 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "SpriteSheetAnimator", menuName = "SpriteSheetRenderer/SpriteSheetAnimator", order = 0)]
 public class SpriteSheetAnimator: ScriptableObject {
-    
     public SpriteSheetAnimationScriptable[] animations;
     public int defaultAnimationIndex;
 

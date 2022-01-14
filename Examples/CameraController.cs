@@ -7,15 +7,37 @@ namespace SpriteSheetRendererExamples
 {
 public class CameraController : MonoBehaviour
 {
-    public float zoomOutMin = 10;
-    public float zoomOutMax = 100;
-
-    public LayerMask IgnoreMe;
     public static bool isBuildingState = false;
 
-    [SerializeField] float Speed;
+    public LayerMask IgnoreMe;
+    public float zoomOutMax = 100;
+    public float zoomOutMin = 10;
+
+
+    public void MoveMainCamera(Vector3 touch)
+    {
+        Vector3 direction = touch - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Camera.main.transform.position += direction * Speed * Time.deltaTime;
+    }
+
+
+    private static void MoveScreenWhenCloseToBorder()
+    {
+
+        if ((Screen.width * 0.85 < Input.mousePosition.x) || (Input.mousePosition.x < Screen.width * 0.15))
+        {
+            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 1f * Time.deltaTime);
+        }
+        if ((Screen.height * 0.85 < Input.mousePosition.y) || (Input.mousePosition.y < Screen.height * 0.01))
+        {
+            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 1f * Time.deltaTime);
+        }
+    }
+
     [SerializeField] float MobileZoomSpeed;
     [SerializeField] float PCZoomSpeed;
+
+    [SerializeField] float Speed;
 
     float m_zoomSpeed;
     Vector3 touchStart;
@@ -72,27 +94,6 @@ public class CameraController : MonoBehaviour
     {
         increment *= Time.deltaTime * m_zoomSpeed;
         Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize - increment, zoomOutMin, zoomOutMax);
-    }
-
-
-    public void MoveMainCamera(Vector3 touch)
-    {
-        Vector3 direction = touch - Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Camera.main.transform.position += direction * Speed * Time.deltaTime;
-    }
-
-
-    private static void MoveScreenWhenCloseToBorder()
-    {
-
-        if ((Screen.width * 0.85 < Input.mousePosition.x) || (Input.mousePosition.x < Screen.width * 0.15))
-        {
-            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 1f * Time.deltaTime);
-        }
-        if ((Screen.height * 0.85 < Input.mousePosition.y) || (Input.mousePosition.y < Screen.height * 0.01))
-        {
-            Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.ScreenToWorldPoint(Input.mousePosition), 1f * Time.deltaTime);
-        }
     }
 }
 }

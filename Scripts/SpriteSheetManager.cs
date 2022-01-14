@@ -8,7 +8,7 @@ public static class SpriteSheetManager
 {
     public static List<RenderInformation> renderInformation = new();
 
-    public static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
+    static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
     // public static Entity Instantiate(EntityArchetype archetype, string spriteSheetName)
     // {
@@ -31,15 +31,12 @@ public static class SpriteSheetManager
     public static void Init(Entity spriteSheetEntity, SpriteSheetAnimator animator)
     {
         var startAnim = animator.animations[animator.defaultAnimationIndex];
-        SpriteSheetCache.Instance.entityAnimator.Add(spriteSheetEntity, animator);
-        throw new NotImplementedException();
-        // SetAnimation(spriteSheetEntity, startAnim, false, false);
+        SetAnimationInternal(spriteSheetEntity, startAnim.RenderGroup);
     }
 
     public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false)
     {
-        var animator = SpriteSheetCache.Instance.GetAnimator(e);
-        SetAnimation(e, animationRenderGroup, keepProgress);
+        SetAnimationInternal(e, animationRenderGroup, keepProgress);
     }
 
     // public static void SetAnimation(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetAnimationScriptable animation, BufferHook hook)
@@ -82,13 +79,13 @@ public static class SpriteSheetManager
         // DynamicBufferManager.RemoveBuffer(material, hook.bufferID);
     }
 
-    public static void RecordSpriteSheet(Sprite[] sprites, string spriteSheetName, int spriteCount = 0)
-    {
-        KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(sprites, spriteSheetName);
-        RenderGroupManager.GenerateBuffers(atlasData.Key, spriteCount);
-        RenderGroupManager.BakeUvBuffer(atlasData.Key, atlasData);
-        renderInformation.Add(new RenderInformation(atlasData.Key, RenderGroupManager.GerRenderGroup(atlasData.Key)));
-    }
+    // public static void RecordSpriteSheet(Sprite[] sprites, string spriteSheetName)
+    // {
+    //     KeyValuePair<Material, float4[]> atlasData = SpriteSheetCache.Instance.BakeSprites(sprites, spriteSheetName);
+    //     RenderGroupManager.CreateRenderGroup(atlasData.Key);
+    //     RenderGroupManager.BakeUvBuffer(atlasData.Key, atlasData);
+    //     renderInformation.Add(new RenderInformation(atlasData.Key, RenderGroupManager.GerRenderGroup(atlasData.Key)));
+    // }
 
     public static void RecordAnimator(SpriteSheetAnimator animator)
     {
@@ -96,10 +93,9 @@ public static class SpriteSheetManager
         {
             var animation = animator.animations[i];
             var atlasData = SpriteSheetCache.Instance.BakeSprites(animation.Sprites, animation.AnimationName);
-            RenderGroupManager.GenerateBuffers(atlasData.Key);
-            RenderGroupManager.BakeUvBuffer(atlasData.Key, atlasData);
-            var newRenderGroup = RenderGroupManager.GerRenderGroup(atlasData.Key);
+            var newRenderGroup = RenderGroupManager.CreateRenderGroup(atlasData.Key, atlasData.Value);
             animation.Init(i, newRenderGroup);
+
             renderInformation.Add(new RenderInformation(atlasData.Key, newRenderGroup));
         }
     }
@@ -129,28 +125,17 @@ public static class SpriteSheetManager
             renderInformation[bufferID].indexBuffer.Release();
     }
 
-    private static void SetAnimation(Entity e, Entity animationRenderGroup, ref SpriteSheetRenderGroupHookComponent bufferHookCmp,
-        bool keepProgress = false,
-        bool cleanOldBuffer = true)
+    private static void SetAnimationInternal(Entity e, Entity animationRenderGroup,
+        bool keepProgress = false)
     {
-        // int bufferEnityID = EntityManager.GetComponentData<BufferHook>(e).bufferEnityID;
-        //int bufferID = ; //EntityManager.GetComponentData<BufferHook>(e).bufferID;
-        // Material oldMaterial = DynamicBufferManager.GetMaterial(bufferEnityID);
+        var groupHookCmp = EntityManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(e);
 
-        // string oldAnimation = SpriteSheetCache.Instance.GetMaterialName(oldMaterial);
-
-        // Material material = SpriteSheetCache.Instance.GetMaterial(animation.AnimationName);
-
-        if (cleanOldBuffer)
-        {
-            var oldRenderGroup = bufferHookCmp.SpritesheetRenderGroup;
-            RenderGroupManager.RemoveFromRenderGroup(oldRenderGroup, bufferHookCmp.IndexInRenderGroup);
-        }
+        if (groupHookCmp.SpritesheetRenderGroup != Entity.Null)
+            RenderGroupManager.RemoveFromRenderGroup(groupHookCmp.SpritesheetRenderGroup, groupHookCmp.IndexInRenderGroup);
 
         //use new buffer
-        // Entity be = Entity.Null; // DynamicBufferManager.GetEntityBuffer(material)
         int indexInGroup = RenderGroupManager.AddDynamicBuffers(animationRenderGroup);
-        var groupHookCmp = new SpriteSheetRenderGroupHookComponent
+        groupHookCmp = new SpriteSheetRenderGroupHookComponent
             {IndexInRenderGroup = indexInGroup, SpritesheetRenderGroup = animationRenderGroup};
 
         EntityManager.SetComponentData(e, groupHookCmp);

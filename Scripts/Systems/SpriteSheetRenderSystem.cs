@@ -5,9 +5,6 @@ using Unity.Transforms;
 
 public class SpriteSheetRenderSystem : SystemBase
 {
-    private Mesh mesh;
-    ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new ShaderDebugBuffer<Matrix4x4>(3);
-
     protected override void OnCreate()
     {
         mesh = MeshExtension.Quad();
@@ -18,6 +15,7 @@ public class SpriteSheetRenderSystem : SystemBase
         SpriteSheetManager.CleanBuffers();
         m_debugBuffer.Dispose();
     }
+
     protected override void OnUpdate()
     {
 
@@ -61,6 +59,10 @@ public class SpriteSheetRenderSystem : SystemBase
             }
         }
     }
+
+    ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new ShaderDebugBuffer<Matrix4x4>(3);
+    private Mesh mesh;
+
     //we should only update the index of the changed datas for index buffer,matrixbuffer and color buffer inside a burst job to avoid overhead
     int UpdateBuffers(int renderIndex)
     {
@@ -97,5 +99,4 @@ public class SpriteSheetRenderSystem : SystemBase
         }
         return instanceCount;
     }
-
 }

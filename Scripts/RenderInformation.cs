@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class RenderInformation
 {
-    public ComputeBuffer matrixBuffer;
-    public ComputeBuffer argsBuffer;
-    public ComputeBuffer colorsBuffer;
-    public ComputeBuffer uvBuffer;
-    public ComputeBuffer indexBuffer;
-    public Entity bufferEntity;
-    public int spriteCount;
-    public Material material;
     public uint[] args;
+    public ComputeBuffer argsBuffer;
+    public Entity bufferEntity;
+    public ComputeBuffer colorsBuffer;
+    public ComputeBuffer indexBuffer;
+    public Material material;
+    public ComputeBuffer matrixBuffer;
+    public int spriteCount;
     public bool updateUvs;
+    public ComputeBuffer uvBuffer;
 
     public RenderInformation(Material material, Entity bufferEntity)
     {

@@ -5,12 +5,13 @@ using UnityEngine;
 namespace SpriteSheetRendererExamples
 {
 public class CameraZoom : MonoBehaviour {
-  float minFov = 20;
   float maxFov = 90f;
+  float minFov = 20;
 
   private void Start() {
     minFov = 0.000000001f;
   }
+
   void Update() {
     var fov = Camera.main.orthographicSize;
     fov += Input.GetAxis("Mouse ScrollWheel") * fov;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,7 +9,8 @@ namespace SpriteSheetRendererExamples
     {
         public void ChangeAnimation(string animationName)
         {
-            SpriteSheetManager.SetAnimation(DynamicAnimationsDemo.character, animationName);
+            throw new NotImplementedException();
+            // SpriteSheetManager.SetAnimation(DynamicAnimationsDemo.character, animationName);
         }
     }
 }

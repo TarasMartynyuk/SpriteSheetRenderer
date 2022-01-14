@@ -12,12 +12,11 @@ namespace SpriteSheetRendererExamples
     public class SpriteMovement : MonoBehaviour
     {
         public static Entity Sprite;
+        const float m_speed = 3.0f;
+        const float m_360RotationTime = 500;
 
         [SerializeField] bool m_moving;
         [SerializeField] bool m_rotating;
-
-        const float m_speed = 3.0f;
-        const float m_360RotationTime = 500;
         float3 m_startPosition;
 
         private void Start()

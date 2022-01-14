@@ -3,27 +3,18 @@ using UnityEngine;
 public class ShaderDebug : MonoBehaviour 
 {
 	public GameObject target;
-	
-	private Material material;	
 	private ComputeBuffer buffer;
 	private Vector4[] element;
 	private string label;
+
+	private Material material;
 	private Renderer render;
-	
-	void Load ()
-	{
-		buffer = new ComputeBuffer(1, 16, ComputeBufferType.Default);
-		element = new Vector4[1];
-		label = string.Empty;
-		render = target.GetComponent<Renderer>(); 
-		material = render.material;
-	}
-	
+
 	void Start () 
 	{
 		Load();
 	}
-	
+
 	void Update () 
 	{
 		Graphics.ClearRandomWriteTargets();
@@ -42,9 +33,18 @@ public class ShaderDebug : MonoBehaviour
 	//	style.fontSize = 32;
 	//	GUI.Label(new Rect(50, 50, 400, 100), label, style);
 	//}
-	
+
 	void OnDestroy()
 	{
 		buffer.Dispose();
+	}
+
+	void Load ()
+	{
+		buffer = new ComputeBuffer(1, 16, ComputeBufferType.Default);
+		element = new Vector4[1];
+		label = string.Empty;
+		render = target.GetComponent<Renderer>(); 
+		material = render.material;
 	}
 }

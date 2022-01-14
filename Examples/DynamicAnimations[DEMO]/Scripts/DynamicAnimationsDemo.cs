@@ -11,7 +11,7 @@ namespace SpriteSheetRendererExamples
     {
         public static Entity character;
         public SpriteSheetAnimator animator;
-        [SerializeField] Shader m_shader;
+
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
             SpriteSheetCache.Instance.Init(m_shader);
@@ -46,5 +46,7 @@ namespace SpriteSheetRendererExamples
 
             SpriteMovement.Sprite = character;
         }
+
+        [SerializeField] Shader m_shader;
     }
 }

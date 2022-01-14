@@ -9,15 +9,12 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "SpriteSheetAnimationData", menuName = "SpriteSheetRenderer/SpriteSheetAnimationData", order = 0)]
 public class SpriteSheetAnimationScriptable : ScriptableObject
 {
+    public string AnimationName;
     public Sprite[] Sprites;
     public Sprite SpriteSheet;
-    public string AnimationName;
-    // public Entity DefinitionEntity { get; private set; }
-    
-    [SerializeField] SpriteSheetAnimationDefinitionComponent m_definition;
-    [SerializeField] SerializableNullable<int> m_eventFrame;
+    public Entity RenderGroup { get; private set; }
 
-    public void Init(int indexInAnimator, Entity animationRenderGroup)
+    public void Init(int indexInAnimator, Entity renderGroup)
     {
         Debug.Assert(m_definition.Duration != 0, $"duration == 0, {AnimationName}");
 
@@ -27,10 +24,13 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
         m_definition.FrameDuration = m_definition.Duration / Sprites.Length;
         m_definition.IndexInAnimator = indexInAnimator;
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        eManager.SetComponentData(animationRenderGroup, m_definition);
+        eManager.SetComponentData(renderGroup, m_definition);
+        RenderGroup = renderGroup;
     }
+    // public Entity DefinitionEntity { get; private set; }
 
-
+    [SerializeField] SpriteSheetAnimationDefinitionComponent m_definition;
+    [SerializeField] SerializableNullable<int> m_eventFrame;
 }
 
 

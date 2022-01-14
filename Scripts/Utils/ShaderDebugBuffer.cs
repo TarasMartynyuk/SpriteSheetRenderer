@@ -20,6 +20,8 @@ namespace SpriteSheetRenderer
             m_debugBufferRetrieved = new T[size];
         }
 
+        public void Dispose() => ComputeBuffer.Release();
+
         public T[] GetBufferData()
         {
             Graphics.ClearRandomWriteTargets();
@@ -28,7 +30,5 @@ namespace SpriteSheetRenderer
             ComputeBuffer.GetData(m_debugBufferRetrieved);
             return m_debugBufferRetrieved;
         }
-
-        public void Dispose() => ComputeBuffer.Release();
     }
 }
