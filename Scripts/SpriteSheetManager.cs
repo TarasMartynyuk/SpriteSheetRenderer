@@ -134,7 +134,7 @@ public static class SpriteSheetManager
             RenderGroupManager.RemoveFromRenderGroup(groupHookCmp.SpritesheetRenderGroup, groupHookCmp.IndexInRenderGroup);
 
         //use new buffer
-        int indexInGroup = RenderGroupManager.AddDynamicBuffers(animationRenderGroup);
+        int indexInGroup = RenderGroupManager.AddToGroup(animationRenderGroup);
         groupHookCmp = new SpriteSheetRenderGroupHookComponent
             {IndexInRenderGroup = indexInGroup, SpritesheetRenderGroup = animationRenderGroup};
 
