@@ -7,10 +7,12 @@ public class SpriteSheetAnimationSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        float elapsedTime = (float) Time.ElapsedTime;
-
+        float elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
+        
         var entityToAnimationDefCmpRo = GetComponentDataFromEntity<SpriteSheetAnimationDefinitionComponent>(true);
-        Entities.ForEach((ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
+        Entities.ForEach((
+                    Entity e,
+                    ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
                 =>
             {
                 animCmp.IsAnimationEventTriggeredThisFrame = false;
@@ -47,13 +49,20 @@ public class SpriteSheetAnimationSystem : SystemBase
 
                 animCmp.IsAnimationEventTriggeredThisFrame =
                     animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame;
-
+                    
+                
+                DebugExtensions.LogVar(new
+                {
+                    i = spriteIndexCmp.Value,
+                    animCmp.FrameStartTime
+                }, "frame advance " + $"{e.Stringify()} anim: {animCmp.CurrentAnimation.Stringify()} ", true);
+                
                 animCmp.FrameStartTime = elapsedTime;
             })
             .WithReadOnly(entityToAnimationDefCmpRo)
-            // .WithoutBurst()
-            // .Run();
-        .Schedule();
+            .WithoutBurst()
+            .Run();
+        // .Schedule();
     }
 
     static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)

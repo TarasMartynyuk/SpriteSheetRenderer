@@ -21,12 +21,16 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
     {
         SpriteSheetCache.Instance.Init(spriteSheetShader);
         EntityManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
+
     }
 
     public void Init(Entity spriteSheetEntity, SpriteSheetAnimator animator)
     {
         var startAnim = animator.animations[animator.defaultAnimationIndex];
         SetAnimation(spriteSheetEntity, startAnim.RenderGroup);
+        
+        DebugExtensions.LogVar(new { spriteSheetEntity = spriteSheetEntity.Stringify(), animator }, "SpriteSheetManager.Init");
+
     }
 
     public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
@@ -58,7 +62,7 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         foreach (var animation in animator.animations)
         {
             var atlasData = SpriteSheetCache.Instance.BakeSprites(animation.Sprites, animation.AnimationName);
-            var newRenderGroup = RenderGroupManager.CreateRenderGroup(atlasData.Key, atlasData.Value);
+            var newRenderGroup = RenderGroupManager.CreateRenderGroup(atlasData.Value, animation.AnimationName);
             animation.Init(newRenderGroup);
 
             RenderInformation.Add(new RenderInformation(atlasData.Key, newRenderGroup));
@@ -84,8 +88,8 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
             RenderInformation[bufferID].matrixBuffer.Release();
         if (RenderInformation[bufferID].colorsBuffer != null)
             RenderInformation[bufferID].colorsBuffer.Release();
-        //if(renderInformation[bufferID].uvBuffer != null)
-        //renderInformation[bufferID].uvBuffer.Release();
+        // if(RenderInformation[bufferID].uvBuffer != null)
+        //     RenderInformation[bufferID].uvBuffer.Release();
         if (RenderInformation[bufferID].indexBuffer != null)
             RenderInformation[bufferID].indexBuffer.Release();
     }
@@ -117,11 +121,15 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         {
             eManager.SetComponentData(e, new SpriteIndex {Value = 0});
             animCmp.FrameStartTime = Time.realtimeSinceStartup;
+
+            DebugExtensions.LogVar(new { animCmp.FrameStartTime }, "anim change");
         }
 
         animCmp.Status = ESpriteSheetAnimationStatus.Playing;
         animCmp.CurrentAnimation = animationRenderGroup;
 
         eManager.SetComponentData(e, animCmp);
+        
+        DebugExtensions.LogVar(new { e = e.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
     }
 }

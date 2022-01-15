@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.Collections.LowLevel.Unsafe;
+using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -21,17 +22,24 @@ public class SpriteSheetRenderSystem : SystemBase
 
         for (int i = 0; i < SpriteSheetManager.Instance.RenderInformation.Count; i++)
         {
+            var renderInformation = SpriteSheetManager.Instance.RenderInformation[i];
+            
             if (i == 1)
             {
                 m_debugBuffer.Material = SpriteSheetManager.Instance.RenderInformation[i].material;
                 var debugData = m_debugBuffer.GetBufferData();
             }
+            
+            
 
             if (UpdateBuffers(i) > 0)
             {
                 // todo: allow setting dimensions (to the dimensions of map, e.g.), or to the frustrum bounds dynamically
                 var dimensions = new float3(1000);
                 var bounds = new Bounds(dimensions / 2, dimensions);
+
+                
+                
                 Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.Instance.RenderInformation[i].material, bounds, SpriteSheetManager.Instance.RenderInformation[i].argsBuffer);
             }
 
@@ -72,7 +80,14 @@ public class SpriteSheetRenderSystem : SystemBase
         int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Length;
         if (instanceCount > 0)
         {
+
+            bool b = renderInformation.bufferEntity.Stringify().EndsWith("Attack_D");
+        if (b)
+        {
+        }
             int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.Instance.GetLenght(renderInformation.material);
+
+
             if (renderInformation.updateUvs)
             {
                 SpriteSheetManager.Instance.ReleaseUvBuffer(renderIndex);
@@ -96,7 +111,32 @@ public class SpriteSheetRenderSystem : SystemBase
             renderInformation.colorsBuffer = new ComputeBuffer(instanceCount, 16);
             renderInformation.colorsBuffer.SetData(EntityManager.GetBuffer<SpriteColorBuffer>(renderInformation.bufferEntity).Reinterpret<float4>().AsNativeArray());
             renderInformation.material.SetBuffer("colorsBuffer", renderInformation.colorsBuffer);
+
+
+            if (b)
+            {
+                DebugExtensions.LogVar(new
+                {
+                    idxs = renderInformation.indexBuffer.GetData<int>().Stringify(),
+                    matrixB = renderInformation.matrixBuffer.GetData<float4x4>().Stringify(),
+                    uvs = UvBuffer.GetUV(renderInformation.bufferEntity).Stringify(),
+                    // args = renderInformation.argsBuffer.GetData<uint>(),
+                    colors = renderInformation.colorsBuffer.GetData<float4>().Stringify(),
+                });
+            }
         }
         return instanceCount;
+    }
+
+    
+}
+
+public static class E
+{
+    public static T[] GetData<T>(this ComputeBuffer computeBuffer)
+    {
+        var arr = new T[computeBuffer.count];
+        computeBuffer.GetData(arr);
+        return arr;
     }
 }

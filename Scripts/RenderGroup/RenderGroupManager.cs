@@ -11,11 +11,24 @@ public static class RenderGroupManager
 {
     static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
-    public static Entity CreateRenderGroup(Material material, float4[] uvs)
+    public static Entity CreateRenderGroup(float4[] uvs, string name)
     {
-        var renderGroup = CreateAnimationRenderGroup(material);
+        var archetype = EntityManager.CreateArchetype(
+            typeof(SpriteIndexBuffer),
+            typeof(MatrixBuffer),
+            typeof(SpriteColorBuffer),
+            typeof(Material),
+            typeof(UvBuffer),
+            typeof(SpriteSheetAnimationDefinitionComponent)
+        );
+        Entity renderGroup = EntityManager.CreateEntity(archetype);
+        
+        #if UNITY_EDITOR
+            EntityManager.SetNameIndexed(renderGroup, name);
+        #endif
+        
         UvBuffer.GetUV(renderGroup).CopyFrom(uvs);
-        AddEntryToBuffers(renderGroup);
+        // AddEntryToBuffers(renderGroup);
         return renderGroup;
     }
 
@@ -42,21 +55,4 @@ public static class RenderGroupManager
         EntityManager.GetBuffer<MatrixBuffer>(bufferEntity).Add(new MatrixBuffer());
         EntityManager.GetBuffer<SpriteColorBuffer>(bufferEntity).Add(new SpriteColorBuffer());
     }
-
-    //use this when it's the first time you are using that material
-    //use this just to generate the buffers container
-    private static Entity CreateAnimationRenderGroup(Material material)
-    {
-        var archetype = EntityManager.CreateArchetype(
-            typeof(SpriteIndexBuffer),
-            typeof(MatrixBuffer),
-            typeof(SpriteColorBuffer),
-            typeof(Material),
-            typeof(UvBuffer),
-            typeof(SpriteSheetAnimationDefinitionComponent)
-        );
-        Entity renderGroup = EntityManager.CreateEntity(archetype);
-        return renderGroup;
-    }
-
 }

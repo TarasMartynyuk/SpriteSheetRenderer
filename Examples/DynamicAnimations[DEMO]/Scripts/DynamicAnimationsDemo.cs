@@ -16,7 +16,7 @@ namespace SpriteSheetRendererExamples
         {
             SpriteSheetCache.Instance.Init(m_shader);
             //eManager.SetNameInd(entity, "CONVERt ENTITY");
-
+            
 
 
             // 1) Create Archetype
