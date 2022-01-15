@@ -12,11 +12,13 @@ public class ColorBufferSystem : SystemBase
     {
         Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
             {
-                var buffer = GetBuffer<SpriteColorBuffer>(hook.SpritesheetRenderGroup);
-                buffer[hook.IndexInRenderGroup] = data.color;
+                var buffer = GetBuffer<SpriteColorBufferElement>(hook.SpritesheetRenderGroup);
+                buffer[hook.IndexInRenderGroup] = data.Value;
             })
             //.WithChangeFilter<SpriteSheetColor>()
-            .Schedule();
+            .WithoutBurst()
+            .Run();
+            // .Schedule();
     }
 }
 

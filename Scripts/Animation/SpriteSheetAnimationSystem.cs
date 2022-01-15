@@ -11,9 +11,8 @@ public class SpriteSheetAnimationSystem : SystemBase
         
         var entityToAnimationDefCmpRo = GetComponentDataFromEntity<SpriteSheetAnimationDefinitionComponent>(true);
         Entities.ForEach((
-                    Entity e,
-                    ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
-                =>
+                    // Entity e,
+                    ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp) =>
             {
                 animCmp.IsAnimationEventTriggeredThisFrame = false;
 
@@ -50,19 +49,18 @@ public class SpriteSheetAnimationSystem : SystemBase
                 animCmp.IsAnimationEventTriggeredThisFrame =
                     animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame;
                     
-                
-                DebugExtensions.LogVar(new
-                {
-                    i = spriteIndexCmp.Value,
-                    animCmp.FrameStartTime
-                }, "frame advance " + $"{e.Stringify()} anim: {animCmp.CurrentAnimation.Stringify()} ", true);
+                // DebugExtensions.LogVar(new
+                // {
+                //     i = spriteIndexCmp.Value,
+                //     animCmp.FrameStartTime
+                // }, "frame advance " + $"{e.Stringify()} anim: {animCmp.CurrentAnimation.Stringify()} ", true);
                 
                 animCmp.FrameStartTime = elapsedTime;
             })
             .WithReadOnly(entityToAnimationDefCmpRo)
-            .WithoutBurst()
-            .Run();
-        // .Schedule();
+            // .WithoutBurst()
+            // .Run();
+        .Schedule();
     }
 
     static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)

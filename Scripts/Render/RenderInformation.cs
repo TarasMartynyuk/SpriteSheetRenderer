@@ -5,7 +5,7 @@ public class RenderInformation
 {
     public uint[] args;
     public ComputeBuffer argsBuffer;
-    public Entity bufferEntity;
+    public Entity renderGroup;
     public ComputeBuffer colorsBuffer;
     public ComputeBuffer indexBuffer;
     public Material material;
@@ -14,11 +14,11 @@ public class RenderInformation
     public bool updateUvs;
     public ComputeBuffer uvBuffer;
 
-    public RenderInformation(Material material, Entity bufferEntity)
+    public RenderInformation(Material material, Entity renderGroup)
     {
         this.material = material;
         spriteCount = SpriteSheetCache.Instance.GetLenght(material);
-        this.bufferEntity = bufferEntity;
+        this.renderGroup = renderGroup;
         args = new uint[5] {0, 0, 0, 0, 0};
         argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);
         //thoose args are always the same since we always use the same mesh

@@ -52,7 +52,7 @@ namespace SpriteSheetRendererExamples
                     new Scale {Value = UnityEngine.Random.Range(0, 3f)},
                     new SpriteIndex {Value = UnityEngine.Random.Range(0, maxSprites)},
                     // new SpriteSheetAnimationComponent { maxSprites = maxSprites, isPlaying = true, repetition = SpriteSheetAnimationComponent.RepetitionType.Loop, samples = 10 },
-                    new SpriteSheetColor {color = new float4(color.r, color.g, color.b, color.a)},
+                    new SpriteSheetColor {Value = new float4(color.r, color.g, color.b, color.a)},
                     new LifeTime {Value = UnityEngine.Random.Range(5, 15)}
                 };
 

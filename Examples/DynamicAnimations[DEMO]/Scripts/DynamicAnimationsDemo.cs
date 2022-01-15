@@ -42,7 +42,7 @@ namespace SpriteSheetRendererExamples
             var color = Color.white;
             eManager.AddComponentData(character, new Translation { Value = new float3(15) });
             eManager.AddComponentData(character, new NonUniformScale { Value = new float3(-3, 7, 0) });
-            eManager.AddComponentData(character, new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) });
+            eManager.AddComponentData(character, new SpriteSheetColor { Value = new float4(color.r, color.g, color.b, color.a) });
 
             SpriteMovement.Sprite = character;
         }

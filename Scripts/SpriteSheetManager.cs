@@ -29,7 +29,7 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         var startAnim = animator.animations[animator.defaultAnimationIndex];
         SetAnimation(spriteSheetEntity, startAnim.RenderGroup);
         
-        DebugExtensions.LogVar(new { spriteSheetEntity = spriteSheetEntity.Stringify(), animator }, "SpriteSheetManager.Init");
+        // DebugExtensions.LogVar(new { spriteSheetEntity = spriteSheetEntity.Stringify(), animator }, "SpriteSheetManager.Init");
 
     }
 
@@ -94,23 +94,28 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
             RenderInformation[bufferID].indexBuffer.Release();
     }
     
-    private static void SetAnimationInternal(Entity e, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
+    private static void SetAnimationInternal(Entity entity, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
     {
-        var groupHookCmp = eManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(e);
+        var groupHookCmp = eManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(entity);
 
         if (groupHookCmp.SpritesheetRenderGroup != Entity.Null)
             RenderGroupManager.RemoveFromRenderGroup(groupHookCmp.SpritesheetRenderGroup, groupHookCmp.IndexInRenderGroup);
 
         //use new buffer
-        int indexInGroup = RenderGroupManager.AddToGroup(animationRenderGroup);
+        int indexInGroup = RenderGroupManager.AddToGroup(animationRenderGroup, entity);
         groupHookCmp = new SpriteSheetRenderGroupHookComponent
             {IndexInRenderGroup = indexInGroup, SpritesheetRenderGroup = animationRenderGroup};
 
-        eManager.SetComponentData(e, groupHookCmp);
+        if (indexInGroup > 1)
+        {
+            
+        }
+
+        eManager.SetComponentData(entity, groupHookCmp);
 
         var animDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animationRenderGroup);
 
-        var animCmp = eManager.GetComponentData<SpriteSheetAnimationComponent>(e);
+        var animCmp = eManager.GetComponentData<SpriteSheetAnimationComponent>(entity);
         if (keepProgress)
         {
             var currentAnimDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animCmp.CurrentAnimation);
@@ -119,17 +124,15 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         }
         else
         {
-            eManager.SetComponentData(e, new SpriteIndex {Value = 0});
+            eManager.SetComponentData(entity, new SpriteIndex {Value = 0});
             animCmp.FrameStartTime = Time.realtimeSinceStartup;
-
-            DebugExtensions.LogVar(new { animCmp.FrameStartTime }, "anim change");
         }
 
         animCmp.Status = ESpriteSheetAnimationStatus.Playing;
         animCmp.CurrentAnimation = animationRenderGroup;
 
-        eManager.SetComponentData(e, animCmp);
+        eManager.SetComponentData(entity, animCmp);
         
-        DebugExtensions.LogVar(new { e = e.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
+        // DebugExtensions.LogVar(new { e = entity.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
     }
 }

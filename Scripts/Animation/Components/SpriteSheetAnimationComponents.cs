@@ -8,13 +8,15 @@ public struct SpriteIndex : IComponentData
 
 public struct SpriteSheetColor : IComponentData
 {
-    public float4 color;
+    public float4 Value;
 }
 
 public struct SpriteSheetRenderGroupHookComponent : IComponentData
 {
     public int IndexInRenderGroup;
     public Entity SpritesheetRenderGroup;
+
+    public override string ToString() => $"I: {IndexInRenderGroup}, Group: {SpritesheetRenderGroup.Stringify()}";
 }
 
 public struct SpriteSheetAnimationComponent : IComponentData

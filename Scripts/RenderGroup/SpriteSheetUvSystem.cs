@@ -15,7 +15,9 @@ public class SpriteSheetUvJobSystem : SystemBase
                 var buffer = GetBuffer<SpriteIndexBuffer>(hook.SpritesheetRenderGroup);
                 buffer[hook.IndexInRenderGroup] = data.Value;
             })
-            .WithChangeFilter<SpriteIndex>()
-            .Schedule();
+            // .WithChangeFilter<SpriteIhndex>()
+            // .Schedule();
+            .WithoutBurst()
+            .Run();
     }
 }

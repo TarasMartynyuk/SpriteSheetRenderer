@@ -1,4 +1,5 @@
-﻿using Unity.Collections.LowLevel.Unsafe;
+﻿using System.Text;
+using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,11 +25,11 @@ public class SpriteSheetRenderSystem : SystemBase
         {
             var renderInformation = SpriteSheetManager.Instance.RenderInformation[i];
             
-            if (i == 1)
-            {
-                m_debugBuffer.Material = SpriteSheetManager.Instance.RenderInformation[i].material;
-                var debugData = m_debugBuffer.GetBufferData();
-            }
+            // if (i == 1)
+            // {
+            //     m_debugBuffer.Material = SpriteSheetManager.Instance.RenderInformation[i].material;
+            //     var debugData = m_debugBuffer.GetBufferData();
+            // }
             
             
 
@@ -45,7 +46,7 @@ public class SpriteSheetRenderSystem : SystemBase
 
 
             //this is w.i.p to clean the old buffers
-            DynamicBuffer<SpriteIndexBuffer> indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.Instance.RenderInformation[i].bufferEntity);
+            DynamicBuffer<SpriteIndexBuffer> indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.Instance.RenderInformation[i].renderGroup);
             int size = indexBuffer.Length - 1;
             int toRemove = 0;
             for (int j = size; j >= 0; j--)
@@ -61,11 +62,21 @@ public class SpriteSheetRenderSystem : SystemBase
             }
             if (toRemove > 0)
             {
-                EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.Instance.RenderInformation[i].bufferEntity).RemoveRange(size + 1 - toRemove, toRemove);
-                EntityManager.GetBuffer<MatrixBuffer>(SpriteSheetManager.Instance.RenderInformation[i].bufferEntity).RemoveRange(size + 1 - toRemove, toRemove);
-                EntityManager.GetBuffer<SpriteColorBuffer>(SpriteSheetManager.Instance.RenderInformation[i].bufferEntity).RemoveRange(size + 1 - toRemove, toRemove);
+                EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.Instance.RenderInformation[i].renderGroup).RemoveRange(size + 1 - toRemove, toRemove);
+                EntityManager.GetBuffer<MatrixBuffer>(SpriteSheetManager.Instance.RenderInformation[i].renderGroup).RemoveRange(size + 1 - toRemove, toRemove);
+                EntityManager.GetBuffer<SpriteColorBufferElement>(SpriteSheetManager.Instance.RenderInformation[i].renderGroup).RemoveRange(size + 1 - toRemove, toRemove);
             }
         }
+        
+        // var sb = new StringBuilder();
+        // Entities.ForEach((Entity e, in SpriteSheetRenderGroupHookComponent hook) =>
+        //     {
+        //         sb.Append($"{e.Stringify()}: {hook}");
+        //     })
+        //     .WithoutBurst()
+        //     .Run();
+        //
+        // Debug.Log($"hooks : {sb}");
     }
 
     ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new ShaderDebugBuffer<Matrix4x4>(3);
@@ -77,14 +88,10 @@ public class SpriteSheetRenderSystem : SystemBase
         SpriteSheetManager.Instance.ReleaseBuffer(renderIndex);
 
         RenderInformation renderInformation = SpriteSheetManager.Instance.RenderInformation[renderIndex];
-        int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Length;
+        int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Length;
         if (instanceCount > 0)
         {
 
-            bool b = renderInformation.bufferEntity.Stringify().EndsWith("Attack_D");
-        if (b)
-        {
-        }
             int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.Instance.GetLenght(renderInformation.material);
 
 
@@ -92,38 +99,40 @@ public class SpriteSheetRenderSystem : SystemBase
             {
                 SpriteSheetManager.Instance.ReleaseUvBuffer(renderIndex);
                 renderInformation.uvBuffer = new ComputeBuffer(instanceCount, stride);
-                renderInformation.uvBuffer.SetData(EntityManager.GetBuffer<UvBuffer>(renderInformation.bufferEntity).Reinterpret<float4>().AsNativeArray());
+                renderInformation.uvBuffer.SetData(EntityManager.GetBuffer<UvBuffer>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
                 renderInformation.material.SetBuffer("uvBuffer", renderInformation.uvBuffer);
                 renderInformation.updateUvs = false;
             }
 
             renderInformation.indexBuffer = new ComputeBuffer(instanceCount, sizeof(int));
-            renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.bufferEntity).Reinterpret<int>().AsNativeArray());
+            renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Reinterpret<int>().AsNativeArray());
             renderInformation.material.SetBuffer("indexBuffer", renderInformation.indexBuffer);
 
             renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, MatrixBuffer.SizeOf());
-            renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.bufferEntity).AsNativeArray());
+            renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.renderGroup).AsNativeArray());
             renderInformation.material.SetBuffer("matrixBuffer", renderInformation.matrixBuffer);
 
             renderInformation.args[1] = (uint) instanceCount;
             renderInformation.argsBuffer.SetData(renderInformation.args);
 
             renderInformation.colorsBuffer = new ComputeBuffer(instanceCount, 16);
-            renderInformation.colorsBuffer.SetData(EntityManager.GetBuffer<SpriteColorBuffer>(renderInformation.bufferEntity).Reinterpret<float4>().AsNativeArray());
+            renderInformation.colorsBuffer.SetData(EntityManager.GetBuffer<SpriteColorBufferElement>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
             renderInformation.material.SetBuffer("colorsBuffer", renderInformation.colorsBuffer);
 
-
-            if (b)
-            {
-                DebugExtensions.LogVar(new
-                {
-                    idxs = renderInformation.indexBuffer.GetData<int>().Stringify(),
-                    matrixB = renderInformation.matrixBuffer.GetData<float4x4>().Stringify(),
-                    uvs = UvBuffer.GetUV(renderInformation.bufferEntity).Stringify(),
-                    // args = renderInformation.argsBuffer.GetData<uint>(),
-                    colors = renderInformation.colorsBuffer.GetData<float4>().Stringify(),
-                });
-            }
+            // if (renderInformation.renderGroup.Stringify().Contains("Legion"))
+            // {
+            //     DebugExtensions.LogVar(new
+            //     {
+            //         anim = renderInformation.renderGroup.Stringify(),
+            //         idxs = renderInformation.indexBuffer.GetData<int>().Stringify(),
+            //         matrixB = renderInformation.matrixBuffer.GetData<float4x4>().Stringify(),
+            //         uvs = UvBuffer.GetUV(renderInformation.renderGroup).Stringify(),
+            //         // args = renderInformation.argsBuffer.GetData<uint>(),
+            //         colors = renderInformation.colorsBuffer.GetData<float4>().Stringify(),
+            //     });
+            //     
+            // }
+            
         }
         return instanceCount;
     }
