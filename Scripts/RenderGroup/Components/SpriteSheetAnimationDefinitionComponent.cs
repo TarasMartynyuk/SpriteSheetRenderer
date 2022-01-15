@@ -20,13 +20,8 @@ public struct SpriteSheetAnimationDefinitionComponent : IComponentData
 
     [HideInInspector]
     public float FrameDuration;
-
     [HideInInspector]
     public int SpriteCount;
-
-    [HideInInspector]
-    public int IndexInAnimator;
-
     [HideInInspector]
     public int? EventFrame;
 }

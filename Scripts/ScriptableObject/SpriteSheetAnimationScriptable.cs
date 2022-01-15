@@ -14,7 +14,7 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
     public Sprite SpriteSheet;
     public Entity RenderGroup { get; private set; }
 
-    public void Init(int indexInAnimator, Entity renderGroup)
+    public void Init(Entity renderGroup)
     {
         Debug.Assert(m_definition.Duration != 0, $"duration == 0, {AnimationName}");
 
@@ -22,7 +22,6 @@ public class SpriteSheetAnimationScriptable : ScriptableObject
             m_definition.EventFrame = m_eventFrame.Value;
         m_definition.SpriteCount = Sprites.Length;
         m_definition.FrameDuration = m_definition.Duration / Sprites.Length;
-        m_definition.IndexInAnimator = indexInAnimator;
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         eManager.SetComponentData(renderGroup, m_definition);
         RenderGroup = renderGroup;

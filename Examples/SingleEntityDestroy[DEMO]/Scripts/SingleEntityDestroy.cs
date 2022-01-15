@@ -29,7 +29,7 @@ namespace SpriteSheetRendererExamples
                 //typeof(SpriteMatrix),
                 typeof(SpriteSheetRenderGroupHookComponent)
             );
-            // SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
+            // SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
         }
 
         EntityArchetype archetype;
@@ -56,7 +56,7 @@ namespace SpriteSheetRendererExamples
                     new LifeTime {Value = UnityEngine.Random.Range(5, 15)}
                 };
 
-                // SpriteSheetManager.Instantiate(archetype, "emoji");
+                // SpriteSheetManager.Instance.Instantiate(archetype, "emoji");
             }
         }
     }

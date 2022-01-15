@@ -16,7 +16,7 @@ namespace SpriteSheetRendererExamples
             {
                 if (lifetime.Value < 0)
                 {
-                    // SpriteSheetManager.DestroyEntity(entity, "emoji");
+                    // SpriteSheetManager.Instance.DestroyEntity(entity, "emoji");
                 }
                 else
                 {

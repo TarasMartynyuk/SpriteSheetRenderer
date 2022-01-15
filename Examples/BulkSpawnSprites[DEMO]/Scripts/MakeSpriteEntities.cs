@@ -35,7 +35,7 @@ namespace SpriteSheetRendererExamples
             eManager.CreateEntity(archetype, entities);
 
             //only needed for the first time to bake the material and create the uv map
-            // SpriteSheetManager.RecordSpriteSheet(sprites, "emoji", entities.Length);
+            // SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji", entities.Length);
 
 
             Rect area = GetSpawnArea();

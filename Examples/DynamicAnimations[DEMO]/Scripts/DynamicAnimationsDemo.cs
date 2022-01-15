@@ -32,11 +32,11 @@ namespace SpriteSheetRendererExamples
                      typeof(SpriteSheetColor),
                      typeof(SpriteSheetRenderGroupHookComponent)
             );
-            SpriteSheetManager.RecordAnimator(animator);
+            SpriteSheetManager.Instance.RecordAnimator(animator);
 
 
             // 4) Instantiate the entity
-            character = SpriteSheetManager.Instantiate(archetype, animator);
+            character = SpriteSheetManager.Instance.Instantiate(archetype, animator);
             //eManager.SetName(character, "DynamicAnimationsDemo");
             // 3) Populate components
             var color = Color.white;

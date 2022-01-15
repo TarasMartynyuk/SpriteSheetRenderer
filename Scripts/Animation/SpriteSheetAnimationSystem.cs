@@ -10,12 +10,11 @@ public class SpriteSheetAnimationSystem : SystemBase
         float elapsedTime = (float) Time.ElapsedTime;
 
         var entityToAnimationDefCmpRo = GetComponentDataFromEntity<SpriteSheetAnimationDefinitionComponent>(true);
-        Entities.ForEach((Entity e, ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
+        Entities.ForEach((ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp)
                 =>
             {
-                if (animCmp.IsAnimationEventTriggeredThisFrame)
-                    animCmp.IsAnimationEventTriggeredThisFrame = false;
-                
+                animCmp.IsAnimationEventTriggeredThisFrame = false;
+
                 if (animCmp.Status == ESpriteSheetAnimationStatus.Paused)
                     return;
 
@@ -24,7 +23,7 @@ public class SpriteSheetAnimationSystem : SystemBase
                 float elapsedTimeThisFrame = elapsedTime - animCmp.FrameStartTime;
                 if (elapsedTimeThisFrame < animationDefCmp.FrameDuration)
                     return;
-                
+
                 switch (animationDefCmp.Repetition)
                 {
                     case RepetitionType.Once:
@@ -46,17 +45,15 @@ public class SpriteSheetAnimationSystem : SystemBase
                         break;
                 }
 
-                if (animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame)
-                {
-                    animCmp.IsAnimationEventTriggeredThisFrame = true;
-                }
+                animCmp.IsAnimationEventTriggeredThisFrame =
+                    animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame;
 
                 animCmp.FrameStartTime = elapsedTime;
             })
             .WithReadOnly(entityToAnimationDefCmpRo)
-            .WithoutBurst()
-            .Run();
-        // .Schedule();
+            // .WithoutBurst()
+            // .Run();
+        .Schedule();
     }
 
     static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)

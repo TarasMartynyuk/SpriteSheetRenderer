@@ -28,13 +28,13 @@ namespace SpriteSheetRendererExamples
             //      );
 
             //// 2) Record and bake this spritesheet(only once)
-            //SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
+            //SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
 
             //int maxSprites = SpriteSheetCache.Instance.GetLength("emoji");
             //var color = UnityEngine.Random.ColorHSV(.35f, .85f);
 
             //// 4) Instantiate the entity
-            //Entity e = SpriteSheetManager.Instantiate(archetype, "emoji");
+            //Entity e = SpriteSheetManager.Instance.Instantiate(archetype, "emoji");
 
             //// 3) Populate components
             //eManager.AddComponentData(e, new Position2D { Value = float2.zero });

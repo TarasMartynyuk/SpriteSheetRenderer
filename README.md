@@ -25,7 +25,7 @@ EntityArchetype archetype = eManager.CreateArchetype(
 * 2- Record and bake this spritesheet(only once)
 
 ```sh
-SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
+SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
 ```
 * 3- Populate components
 
@@ -42,19 +42,19 @@ List<IComponentData> components = new List<IComponentData> {
 * 4- Instantiate the entity
 
 ```sh 
-Entity e = SpriteSheetManager.Instantiate(archetype, components, "emoji");
+Entity e = SpriteSheetManager.Instance.Instantiate(archetype, components, "emoji");
 ```
  
 * Update the entity
 
 ```sh 
-Entity e = SpriteSheetManager.UpdateEntity(e, new Position2D { Value = float2.zero});
+Entity e = SpriteSheetManager.Instance.UpdateEntity(e, new Position2D { Value = float2.zero});
 ``` 
 
 * Destroy the entity
 
 ```sh 
-Entity e = SpriteSheetManager.DestroyEntity(e, "emoji");
+Entity e = SpriteSheetManager.Instance.DestroyEntity(e, "emoji");
 ``` 
 
 ### How to use (BULK INSTANTIATE):
@@ -86,7 +86,7 @@ eManager.CreateEntity(archetype, entities);
 * 2- Record and bake this spritesheet(only once)
 
 ```sh
-SpriteSheetManager.RecordSpriteSheet(sprites, "emoji");
+SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
 ```
 
 * 3- Populate components
