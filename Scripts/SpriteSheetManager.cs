@@ -10,51 +10,27 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
 
     static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
-    public Entity Instantiate(EntityArchetype archetype, SpriteSheetAnimator animator)
+    public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
+        SetAnimationInternal(e, animationRenderGroup, EntityManager, keepProgress);
+
+    public static void ChangeRenderGroup(Entity entity, Entity animationRenderGroup, EntityManager eManager)
     {
-        Entity e = EntityManager.CreateEntity(archetype);
-        Init(e, animator);
-        return e;
+        var groupHookCmp = eManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(entity);
+
+        if (groupHookCmp.SpritesheetRenderGroup != Entity.Null)
+            RenderGroupManager.RemoveFromRenderGroup(entity);
+
+        int indexInGroup = RenderGroupManager.AddToGroup(animationRenderGroup, entity);
+        groupHookCmp = new SpriteSheetRenderGroupHookComponent
+            {IndexInRenderGroup = indexInGroup, SpritesheetRenderGroup = animationRenderGroup};
+
+        eManager.SetComponentData(entity, groupHookCmp);
     }
 
     public void Init(Shader spriteSheetShader)
     {
         SpriteSheetCache.Instance.Init(spriteSheetShader);
         EntityManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
-
-    }
-
-    public void Init(Entity spriteSheetEntity, SpriteSheetAnimator animator)
-    {
-        var startAnim = animator.animations[animator.defaultAnimationIndex];
-        SetAnimation(spriteSheetEntity, startAnim.RenderGroup);
-        
-        // DebugExtensions.LogVar(new { spriteSheetEntity = spriteSheetEntity.Stringify(), animator }, "SpriteSheetManager.Init");
-
-    }
-
-    public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
-        SetAnimation(e, animationRenderGroup, EntityManager, keepProgress);
-    
-    
-    public static void SetAnimation(Entity e, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
-    {
-        SetAnimationInternal(e, animationRenderGroup, eManager, keepProgress);
-
-    }
-
-    public void DestroyEntity(Entity e)
-    {
-        RenderGroupManager.RemoveFromRenderGroup(EntityManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(e));
-        EntityManager.DestroyEntity(e);
-    }
-
-    public void DestroyEntity(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetRenderGroupHookComponent hook)
-    {
-        throw new NotImplementedException();
-        // commandBuffer.DestroyEntity(e);
-        // Material material = DynamicBufferManager.GetMaterial(hook.bufferEnityID);
-        // DynamicBufferManager.RemoveBuffer(material, hook.bufferID);
     }
 
     public void RecordAnimator(SpriteSheetAnimator animator)
@@ -68,6 +44,29 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
             RenderInformation.Add(new RenderInformation(atlasData.Key, newRenderGroup));
         }
     }
+
+    public void RecordStaticSprite(StaticSpriteScriptable sprite)
+    {
+        var atlasData = SpriteSheetCache.Instance.BakeSprite(sprite.Sprite, sprite.name);
+        var renderGroup = RenderGroupManager.CreateRenderGroup(atlasData.Value, sprite.name);
+        sprite.Init(renderGroup);
+        RenderInformation.Add(new RenderInformation(atlasData.Key, renderGroup));
+    }
+
+    public void DestroyEntity(Entity e)
+    {
+        RenderGroupManager.RemoveFromRenderGroup(e);
+        EntityManager.DestroyEntity(e);
+    }
+
+    public void DestroyEntity(EntityCommandBuffer commandBuffer, Entity e, SpriteSheetRenderGroupHookComponent hook)
+    {
+        throw new NotImplementedException();
+        // commandBuffer.DestroyEntity(e);
+        // Material material = DynamicBufferManager.GetMaterial(hook.bufferEnityID);
+        // DynamicBufferManager.RemoveBuffer(material, hook.bufferID);
+    }
+
 
     public void CleanBuffers()
     {
@@ -93,25 +92,10 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         if (RenderInformation[bufferID].indexBuffer != null)
             RenderInformation[bufferID].indexBuffer.Release();
     }
-    
+
     private static void SetAnimationInternal(Entity entity, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
     {
-        var groupHookCmp = eManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(entity);
-
-        if (groupHookCmp.SpritesheetRenderGroup != Entity.Null)
-            RenderGroupManager.RemoveFromRenderGroup(groupHookCmp.SpritesheetRenderGroup, groupHookCmp.IndexInRenderGroup);
-
-        //use new buffer
-        int indexInGroup = RenderGroupManager.AddToGroup(animationRenderGroup, entity);
-        groupHookCmp = new SpriteSheetRenderGroupHookComponent
-            {IndexInRenderGroup = indexInGroup, SpritesheetRenderGroup = animationRenderGroup};
-
-        if (indexInGroup > 1)
-        {
-            
-        }
-
-        eManager.SetComponentData(entity, groupHookCmp);
+        ChangeRenderGroup(entity, animationRenderGroup, eManager);
 
         var animDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animationRenderGroup);
 
@@ -132,7 +116,7 @@ public class SpriteSheetManager : SingletonBase<SpriteSheetManager>
         animCmp.CurrentAnimation = animationRenderGroup;
 
         eManager.SetComponentData(entity, animCmp);
-        
+
         // DebugExtensions.LogVar(new { e = entity.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
     }
 }

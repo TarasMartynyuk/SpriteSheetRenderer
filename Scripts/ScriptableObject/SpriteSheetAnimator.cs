@@ -8,7 +8,6 @@ public class SpriteSheetAnimator : ScriptableObject
 {
     public SpriteSheetAnimationScriptable[] animations;
     public int defaultAnimationIndex;
-    public float Radius;
 
     public SpriteSheetAnimationScriptable GetAnimation(Entity renderGroup) => 
         Array.Find(animations, a => a.RenderGroup == renderGroup);

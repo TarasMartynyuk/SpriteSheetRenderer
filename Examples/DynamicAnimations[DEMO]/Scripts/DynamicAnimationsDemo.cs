@@ -36,7 +36,8 @@ namespace SpriteSheetRendererExamples
 
 
             // 4) Instantiate the entity
-            character = SpriteSheetManager.Instance.Instantiate(archetype, animator);
+            character = eManager.CreateEntity(archetype);
+            SpriteSheetFactory.Instance.InitAnimatedSprite(character, animator);
             //eManager.SetName(character, "DynamicAnimationsDemo");
             // 3) Populate components
             var color = Color.white;

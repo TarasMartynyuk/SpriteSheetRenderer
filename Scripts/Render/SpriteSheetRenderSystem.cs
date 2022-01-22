@@ -25,14 +25,6 @@ public class SpriteSheetRenderSystem : SystemBase
         {
             var renderInformation = SpriteSheetManager.Instance.RenderInformation[i];
             
-            // if (i == 1)
-            // {
-            //     m_debugBuffer.Material = SpriteSheetManager.Instance.RenderInformation[i].material;
-            //     var debugData = m_debugBuffer.GetBufferData();
-            // }
-            
-            
-
             if (UpdateBuffers(i) > 0)
             {
                 // todo: allow setting dimensions (to the dimensions of map, e.g.), or to the frustrum bounds dynamically
@@ -43,7 +35,6 @@ public class SpriteSheetRenderSystem : SystemBase
                 
                 Graphics.DrawMeshInstancedIndirect(mesh, 0, SpriteSheetManager.Instance.RenderInformation[i].material, bounds, SpriteSheetManager.Instance.RenderInformation[i].argsBuffer);
             }
-
 
             //this is w.i.p to clean the old buffers
             DynamicBuffer<SpriteIndexBuffer> indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(SpriteSheetManager.Instance.RenderInformation[i].renderGroup);
@@ -87,53 +78,48 @@ public class SpriteSheetRenderSystem : SystemBase
     {
         SpriteSheetManager.Instance.ReleaseBuffer(renderIndex);
 
-        RenderInformation renderInformation = SpriteSheetManager.Instance.RenderInformation[renderIndex];
+        var renderInformation = SpriteSheetManager.Instance.RenderInformation[renderIndex];
         int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Length;
-        if (instanceCount > 0)
+        if (instanceCount <= 0) 
+            return instanceCount;
+        
+        int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.Instance.GetLenght(renderInformation.material);
+        if (renderInformation.updateUvs)
         {
-
-            int stride = instanceCount >= 16 ? 16 : 16 * SpriteSheetCache.Instance.GetLenght(renderInformation.material);
-
-
-            if (renderInformation.updateUvs)
-            {
-                SpriteSheetManager.Instance.ReleaseUvBuffer(renderIndex);
-                renderInformation.uvBuffer = new ComputeBuffer(instanceCount, stride);
-                renderInformation.uvBuffer.SetData(EntityManager.GetBuffer<UvBuffer>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
-                renderInformation.material.SetBuffer("uvBuffer", renderInformation.uvBuffer);
-                renderInformation.updateUvs = false;
-            }
-
-            renderInformation.indexBuffer = new ComputeBuffer(instanceCount, sizeof(int));
-            renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Reinterpret<int>().AsNativeArray());
-            renderInformation.material.SetBuffer("indexBuffer", renderInformation.indexBuffer);
-
-            renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, MatrixBuffer.SizeOf());
-            renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.renderGroup).AsNativeArray());
-            renderInformation.material.SetBuffer("matrixBuffer", renderInformation.matrixBuffer);
-
-            renderInformation.args[1] = (uint) instanceCount;
-            renderInformation.argsBuffer.SetData(renderInformation.args);
-
-            renderInformation.colorsBuffer = new ComputeBuffer(instanceCount, 16);
-            renderInformation.colorsBuffer.SetData(EntityManager.GetBuffer<SpriteColorBufferElement>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
-            renderInformation.material.SetBuffer("colorsBuffer", renderInformation.colorsBuffer);
-
-            // if (renderInformation.renderGroup.Stringify().Contains("Legion"))
-            // {
-            //     DebugExtensions.LogVar(new
-            //     {
-            //         anim = renderInformation.renderGroup.Stringify(),
-            //         idxs = renderInformation.indexBuffer.GetData<int>().Stringify(),
-            //         matrixB = renderInformation.matrixBuffer.GetData<float4x4>().Stringify(),
-            //         uvs = UvBuffer.GetUV(renderInformation.renderGroup).Stringify(),
-            //         // args = renderInformation.argsBuffer.GetData<uint>(),
-            //         colors = renderInformation.colorsBuffer.GetData<float4>().Stringify(),
-            //     });
-            //     
-            // }
-            
+            SpriteSheetManager.Instance.ReleaseUvBuffer(renderIndex);
+            renderInformation.uvBuffer = new ComputeBuffer(instanceCount, stride);
+            renderInformation.uvBuffer.SetData(EntityManager.GetBuffer<UvBuffer>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
+            renderInformation.material.SetBuffer("uvBuffer", renderInformation.uvBuffer);
+            renderInformation.updateUvs = false;
         }
+
+        renderInformation.indexBuffer = new ComputeBuffer(instanceCount, sizeof(int));
+        renderInformation.indexBuffer.SetData(EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Reinterpret<int>().AsNativeArray());
+        renderInformation.material.SetBuffer("indexBuffer", renderInformation.indexBuffer);
+
+        renderInformation.matrixBuffer = new ComputeBuffer(instanceCount, MatrixBuffer.SizeOf());
+        renderInformation.matrixBuffer.SetData(MatrixBuffer.GetMatrixBuffer(renderInformation.renderGroup).AsNativeArray());
+        renderInformation.material.SetBuffer("matrixBuffer", renderInformation.matrixBuffer);
+
+        renderInformation.args[1] = (uint) instanceCount;
+        renderInformation.argsBuffer.SetData(renderInformation.args);
+
+        renderInformation.colorsBuffer = new ComputeBuffer(instanceCount, 16);
+        renderInformation.colorsBuffer.SetData(EntityManager.GetBuffer<SpriteColorBufferElement>(renderInformation.renderGroup).Reinterpret<float4>().AsNativeArray());
+        renderInformation.material.SetBuffer("colorsBuffer", renderInformation.colorsBuffer);
+
+        // if (renderInformation.renderGroup.Stringify().Contains("Select"))
+        // {
+        //     DebugExtensions.LogVar(new
+        //     {
+        //         anim = renderInformation.renderGroup.Stringify(),
+        //         idxs = renderInformation.indexBuffer.GetData<int>().Stringify(),
+        //         matrixB = renderInformation.matrixBuffer.GetData<float4x4>().Stringify(),
+        //         uvs = UvBuffer.GetUV(renderInformation.renderGroup).Stringify(),
+        //         // args = renderInformation.argsBuffer.GetData<uint>(),
+        //         colors = renderInformation.colorsBuffer.GetData<float4>().Stringify(),
+        //     });
+        // }
         return instanceCount;
     }
 

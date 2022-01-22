@@ -10,7 +10,7 @@ public class ColorBufferSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
+        Entities.ForEach((Entity e, in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
             {
                 var buffer = GetBuffer<SpriteColorBufferElement>(hook.SpritesheetRenderGroup);
                 buffer[hook.IndexInRenderGroup] = data.Value;

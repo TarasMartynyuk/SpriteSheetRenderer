@@ -47,24 +47,24 @@ public static class RenderGroupManager
         return RenderedEntityBufferElement.GetRenderedEntities(spritesheetRenderGroup).LastIndex();
     }
 
-
-    public static void RemoveFromRenderGroup(Entity spritesheetRenderGroup, int bufferID)
+    public static void RemoveFromRenderGroup(Entity entity)
     {
-        AssertBuffersSameLength(spritesheetRenderGroup);
+        using var hookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(entity);
+        ref var hookCmp = ref hookCmpRef.Value();
+        AssertBuffersSameLength(hookCmp.SpritesheetRenderGroup);
         
-        var renderedEntities = RenderedEntityBufferElement.GetRenderedEntities(spritesheetRenderGroup);
+        var renderedEntities = RenderedEntityBufferElement.GetRenderedEntities(hookCmp.SpritesheetRenderGroup);
         var swapped = renderedEntities[^1];
-        using (var hookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(swapped))
-            hookCmpRef.Value().IndexInRenderGroup = bufferID;
+        using (var swappedHookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(swapped))
+            swappedHookCmpRef.Value().IndexInRenderGroup = hookCmp.IndexInRenderGroup;
 
-        renderedEntities.RemoveAtSwapBack(bufferID);
-        EntityManager.GetBuffer<SpriteIndexBuffer>(spritesheetRenderGroup).RemoveAtSwapBack(bufferID);
-        EntityManager.GetBuffer<MatrixBuffer>(spritesheetRenderGroup).RemoveAtSwapBack(bufferID);
-        EntityManager.GetBuffer<SpriteColorBufferElement>(spritesheetRenderGroup).RemoveAtSwapBack(bufferID);
+        renderedEntities.RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
+        EntityManager.GetBuffer<SpriteIndexBuffer>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
+        EntityManager.GetBuffer<MatrixBuffer>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
+        EntityManager.GetBuffer<SpriteColorBufferElement>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
+        
+        hookCmp.SpritesheetRenderGroup = Entity.Null;
     }
-
-    public static void RemoveFromRenderGroup(SpriteSheetRenderGroupHookComponent groupHookCmp) =>
-        RemoveFromRenderGroup(groupHookCmp.SpritesheetRenderGroup, groupHookCmp.IndexInRenderGroup);
 
     private static int GetLength<T>(DynamicBuffer<T> b)
         where T : struct => b.Length;
