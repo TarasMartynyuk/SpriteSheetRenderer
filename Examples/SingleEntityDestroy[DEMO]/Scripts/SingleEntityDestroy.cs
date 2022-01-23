@@ -38,7 +38,7 @@ namespace SpriteSheetRendererExamples
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                int maxSprites = SpriteSheetCache.Instance.GetLength("emoji");
+                // int maxSprites = SpriteSheetCache.Instance.GetLength("emoji");
                 var color = UnityEngine.Random.ColorHSV(.35f, .85f);
 
 
@@ -50,7 +50,7 @@ namespace SpriteSheetRendererExamples
                     //new Position2D { Value = UnityEngine.Random.insideUnitCircle * 7 },
                     //new Position2D { Value = UnityEngine.Random.insideUnitCircle * 7 },
                     new Scale {Value = UnityEngine.Random.Range(0, 3f)},
-                    new SpriteIndex {Value = UnityEngine.Random.Range(0, maxSprites)},
+                    // new SpriteIndex {Value = UnityEngine.Random.Range(0, maxSprites)},
                     // new SpriteSheetAnimationComponent { maxSprites = maxSprites, isPlaying = true, repetition = SpriteSheetAnimationComponent.RepetitionType.Loop, samples = 10 },
                     new SpriteSheetColor {Value = new float4(color.r, color.g, color.b, color.a)},
                     new LifeTime {Value = UnityEngine.Random.Range(5, 15)}

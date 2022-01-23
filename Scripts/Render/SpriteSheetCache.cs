@@ -5,7 +5,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class SpriteSheetCache : SingletonBase<SpriteSheetCache>
+public class SpriteSheetCache
 {
     Shader m_spriteSheetShader;
     Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new();
@@ -73,5 +73,5 @@ public class SpriteSheetCache : SingletonBase<SpriteSheetCache>
     public Material GetMaterial(string spriteSheetName) => materialNameMaterial[spriteSheetName].Key;
 
     public string GetMaterialName(Material material) => materialToName[material];
-    public int GetLenght(Material material) => GetLength(GetMaterialName(material));
+    public int GetLength(Material material) => GetLength(GetMaterialName(material));
 }

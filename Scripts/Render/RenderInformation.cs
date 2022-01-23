@@ -14,10 +14,10 @@ public class RenderInformation
     public bool updateUvs;
     public ComputeBuffer uvBuffer;
 
-    public RenderInformation(Material material, Entity renderGroup)
+    public RenderInformation(Material material, int materialLength, Entity renderGroup)
     {
         this.material = material;
-        spriteCount = SpriteSheetCache.Instance.GetLenght(material);
+        spriteCount = materialLength;
         this.renderGroup = renderGroup;
         args = new uint[5] {0, 0, 0, 0, 0};
         argsBuffer = new ComputeBuffer(1, args.Length * sizeof(uint), ComputeBufferType.IndirectArguments);

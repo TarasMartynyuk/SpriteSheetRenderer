@@ -14,7 +14,7 @@ namespace SpriteSheetRendererExamples
 
         public void Convert(Entity entity, EntityManager eManager, GameObjectConversionSystem conversionSystem)
         {
-            SpriteSheetCache.Instance.Init(m_shader);
+            // SpriteSheetCache.Instance.Init(m_shader);
             //eManager.SetNameInd(entity, "CONVERt ENTITY");
             
 
@@ -32,7 +32,7 @@ namespace SpriteSheetRendererExamples
                      typeof(SpriteSheetColor),
                      typeof(SpriteSheetRenderGroupHookComponent)
             );
-            SpriteSheetManager.Instance.RecordAnimator(animator);
+            // SpriteSheetManager.Instance.RecordAnimator(animator);
 
 
             // 4) Instantiate the entity

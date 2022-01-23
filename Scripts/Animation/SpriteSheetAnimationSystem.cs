@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class SpriteSheetAnimationSystem : SystemBase
 {
+    public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
+        SetAnimationInternal(e, animationRenderGroup, World.DefaultGameObjectInjectionWorld.EntityManager, keepProgress);
+    
     protected override void OnUpdate()
     {
         float elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
@@ -66,5 +69,32 @@ public class SpriteSheetAnimationSystem : SystemBase
     static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)
     {
         return sprite.Value + 1 >= animationDefCmp.SpriteCount;
+    }
+    
+    private static void SetAnimationInternal(Entity entity, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
+    {
+        RenderGroup.AddToNewRenderGroup(entity, animationRenderGroup);
+
+        var animDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animationRenderGroup);
+
+        var animCmp = eManager.GetComponentData<SpriteSheetAnimationComponent>(entity);
+        if (keepProgress)
+        {
+            var currentAnimDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animCmp.CurrentAnimation);
+            Debug.Assert(currentAnimDefCmp.SpriteCount == animDefCmp.SpriteCount);
+            Debug.Assert(Mathf.Approximately(currentAnimDefCmp.Duration, animDefCmp.Duration));
+        }
+        else
+        {
+            eManager.SetComponentData(entity, new SpriteIndex {Value = 0});
+            animCmp.FrameStartTime = UnityEngine.Time.realtimeSinceStartup;
+        }
+
+        animCmp.Status = ESpriteSheetAnimationStatus.Playing;
+        animCmp.CurrentAnimation = animationRenderGroup;
+
+        eManager.SetComponentData(entity, animCmp);
+
+        // DebugExtensions.LogVar(new { e = entity.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
     }
 }

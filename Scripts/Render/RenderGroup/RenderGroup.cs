@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Unity.Assertions;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;
-using System;
-using System.Linq;
-using Unity.Collections;
 using Unity.Transforms;
-using UnityEditor;
+using Assert = UnityEngine.Assertions.Assert;
 
-public static class RenderGroupManager
+public static class RenderGroup
 {
     static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
@@ -31,28 +27,31 @@ public static class RenderGroupManager
 #endif
 
         UvBuffer.GetUV(renderGroup).CopyFrom(uvs);
-        // AddEntryToBuffers(renderGroup);
         return renderGroup;
     }
 
-    public static int AddToGroup(Entity spritesheetRenderGroup, Entity entity)
+    // public static void ReAddToGroup(Entity entity)
+    // {
+    //     var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+    //     var groupHookCmp = eManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(entity);
+    //     AddToGroup(groupHookCmp.SpritesheetRenderGroup, entity);
+    // }
+
+    public static void AddToNewRenderGroup(Entity entity, Entity renderGroup)
     {
-        AssertBuffersSameLength(spritesheetRenderGroup);
+        var groupHookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(entity);
 
-        RenderedEntityBufferElement.GetRenderedEntities(spritesheetRenderGroup).Add(entity);
-        SpriteIndexBuffer.GetSpriteIndices(spritesheetRenderGroup).Add(EntityManager.GetComponentData<SpriteIndex>(entity).Value);
-        MatrixBuffer.GetMatrixBuffer(spritesheetRenderGroup).Add(EntityManager.GetComponentData<LocalToWorld>(entity).Value);
-        SpriteColorBufferElement.GetColors(spritesheetRenderGroup).Add(EntityManager.GetComponentData<SpriteSheetColor>(entity).Value);
+        if (groupHookCmpRef.Value().SpritesheetRenderGroup != Entity.Null)
+            RemoveFromRenderGroup(entity);
 
-        return RenderedEntityBufferElement.GetRenderedEntities(spritesheetRenderGroup).LastIndex();
+        AddToGroup(renderGroup, entity);
     }
 
     public static void RemoveFromRenderGroup(Entity entity)
     {
-        using var hookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(entity);
-        ref var hookCmp = ref hookCmpRef.Value();
+        var hookCmp = EntityManager.GetComponentData<SpriteSheetRenderGroupHookComponent>(entity);
         AssertBuffersSameLength(hookCmp.SpritesheetRenderGroup);
-        
+
         var renderedEntities = RenderedEntityBufferElement.GetRenderedEntities(hookCmp.SpritesheetRenderGroup);
         var swapped = renderedEntities[^1];
         using (var swappedHookCmpRef = new ComponentReference<SpriteSheetRenderGroupHookComponent>(swapped))
@@ -62,12 +61,29 @@ public static class RenderGroupManager
         EntityManager.GetBuffer<SpriteIndexBuffer>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
         EntityManager.GetBuffer<MatrixBuffer>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
         EntityManager.GetBuffer<SpriteColorBufferElement>(hookCmp.SpritesheetRenderGroup).RemoveAtSwapBack(hookCmp.IndexInRenderGroup);
-        
+
         hookCmp.SpritesheetRenderGroup = Entity.Null;
+        EntityManager.SetComponentData(entity, hookCmp);
     }
 
-    private static int GetLength<T>(DynamicBuffer<T> b)
-        where T : struct => b.Length;
+    private static void AddToGroup(Entity renderGroup, Entity entity)
+    {
+        AssertBuffersSameLength(renderGroup);
+        var renderedEntities = RenderedEntityBufferElement.GetRenderedEntities(renderGroup);
+        Assert.IsFalse(renderedEntities.Contains(entity));
+
+        renderedEntities.Add(entity);
+        SpriteIndexBuffer.GetSpriteIndices(renderGroup).Add(EntityManager.GetComponentData<SpriteIndex>(entity).Value);
+        MatrixBuffer.GetMatrixBuffer(renderGroup).Add(EntityManager.GetComponentData<LocalToWorld>(entity).Value);
+        SpriteColorBufferElement.GetColors(renderGroup).Add(EntityManager.GetComponentData<SpriteSheetColor>(entity).Value);
+
+        int index = renderedEntities.LastIndex();
+        var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        eManager.SetComponentData(entity,
+            new SpriteSheetRenderGroupHookComponent
+                {IndexInRenderGroup = index, SpritesheetRenderGroup = renderGroup});
+    }
+
 
     private static void AssertBuffersSameLength(Entity renderGroup)
     {
@@ -75,10 +91,10 @@ public static class RenderGroupManager
         var spriteIndices = SpriteIndexBuffer.GetSpriteIndices(renderGroup);
         var matrices = MatrixBuffer.GetMatrixBuffer(renderGroup);
         var colors = SpriteColorBufferElement.GetColors(renderGroup);
-        
-        int length = GetLength(renderedEntities);
-        Debug.Assert(GetLength(spriteIndices) == length &&
-                     GetLength(matrices) == length &&
-                     GetLength(colors) == length);
+
+        int length = renderedEntities.Length;
+        Debug.Assert(spriteIndices.Length == length &&
+                     matrices.Length == length &&
+                     colors.Length == length);
     }
 }

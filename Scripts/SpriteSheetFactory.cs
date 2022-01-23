@@ -25,7 +25,7 @@ public class SpriteSheetFactory : SingletonBase<SpriteSheetFactory>
         if (animator != null)
         {
             var startAnim = animator.animations[animator.defaultAnimationIndex];
-            SpriteSheetManager.SetAnimation(entity, startAnim.RenderGroup);
+            SpriteSheetAnimationSystem.SetAnimation(entity, startAnim.RenderGroup);
             // DebugExtensions.LogVar(new { spriteSheetEntity = spriteSheetEntity.Stringify(), animator }, "SpriteSheetManager.Init");
         }
 
@@ -35,7 +35,7 @@ public class SpriteSheetFactory : SingletonBase<SpriteSheetFactory>
     public void InitStaticSprite(Entity spriteSheetEntity, StaticSpriteScriptable staticSprite)
     {
         Entity3DFactory.Instance.Init3DEntity(spriteSheetEntity);
-        SpriteSheetManager.ChangeRenderGroup(spriteSheetEntity, staticSprite.RenderGroup, EntityManager);
+        RenderGroup.AddToNewRenderGroup(spriteSheetEntity, staticSprite.RenderGroup);
         InitSprite(spriteSheetEntity);
     }
 

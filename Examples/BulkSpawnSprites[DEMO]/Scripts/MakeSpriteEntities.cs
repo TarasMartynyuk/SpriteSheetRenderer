@@ -19,48 +19,6 @@ namespace SpriteSheetRendererExamples
         {
             throw new NotImplementedException();
             
-            EntityArchetype archetype = eManager.CreateArchetype(
-               typeof(LocalToWorld),
-               typeof(Translation),
-               typeof(Scale),
-               //required params
-               typeof(SpriteIndex),
-               typeof(SpriteSheetAnimationComponent),
-               typeof(Material ),
-               typeof(SpriteSheetColor),
-               typeof(SpriteSheetRenderGroupHookComponent)
-            );
-
-            NativeArray<Entity> entities = new NativeArray<Entity>(spriteCount, Allocator.Temp);
-            eManager.CreateEntity(archetype, entities);
-
-            //only needed for the first time to bake the material and create the uv map
-            // SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji", entities.Length);
-
-
-            Rect area = GetSpawnArea();
-            Random rand = new Random((uint) UnityEngine.Random.Range(0, int.MaxValue));
-            int cellCount = SpriteSheetCache.Instance.GetLength("emoji");
-            Material material = SpriteSheetCache.Instance.GetMaterial("emoji");
-
-            for (int i = 0; i < entities.Length; i++)
-            {
-                Entity e = entities[i];
-                eManager.SetComponentData(e, new SpriteIndex { Value = rand.NextInt(0, cellCount) });
-                eManager.SetComponentData(e, new Scale { Value = 10 });
-                eManager.SetComponentData(e, new Translation { Value = new float3(rand.NextFloat2(area.min, area.max), 0) });
-                // eManager.SetComponentData(e, new SpriteSheetAnimationComponent
-                // {
-                //     maxSprites = cellCount, 
-                //     IsPlaying = true, 
-                //     repetition = SpriteSheetAnimationComponent.RepetitionType.Loop, 
-                //     frameDuration = .2f
-                // });
-                var color = UnityEngine.Random.ColorHSV(.15f, .75f);
-                SpriteSheetColor col = new SpriteSheetColor { Value = new float4(color.r, color.g, color.b, color.a) };
-                eManager.SetComponentData(e, col);
-                // eManager.SetComponentData(e, new SpriteSheetRenderGroupHookComponent { IndexInRenderGroup = i, bufferEnityID = RenderGroupManager.GetEntityBufferID(material) });
-            }
         }
 
         private void OnDrawGizmosSelected()
