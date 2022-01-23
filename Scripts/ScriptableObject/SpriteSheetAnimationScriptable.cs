@@ -9,14 +9,13 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "SpriteSheetAnimationData", menuName = "SpriteSheetRenderer/SpriteSheetAnimationData", order = 0)]
 public class SpriteSheetAnimationScriptable : ScriptableObject
 {
-    public string AnimationName;
     public Sprite[] Sprites;
     public Sprite SpriteSheet;
     public Entity RenderGroup { get; private set; }
 
     public void Init(Entity renderGroup)
     {
-        Debug.Assert(m_definition.Duration != 0, $"duration == 0, {AnimationName}");
+        Debug.Assert(m_definition.Duration != 0, $"duration == 0, {name}");
 
         if (m_eventFrame.HasValue)
             m_definition.EventFrame = m_eventFrame.Value;

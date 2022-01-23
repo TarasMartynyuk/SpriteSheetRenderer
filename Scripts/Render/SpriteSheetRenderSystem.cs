@@ -23,8 +23,8 @@ public class SpriteSheetRenderSystem : SystemBase
     {
         foreach (var animation in animator.animations)
         {
-            var atlasData = m_spriteSheetCache.BakeSprites(animation.Sprites, animation.AnimationName);
-            var newRenderGroup = RenderGroup.CreateRenderGroup(atlasData.Value, animation.AnimationName);
+            var atlasData = m_spriteSheetCache.BakeSprites(animation.Sprites, animation.name);
+            var newRenderGroup = RenderGroup.CreateRenderGroup(atlasData.Value, animation.name);
             animation.Init(newRenderGroup);
 
             RenderInformation.Add(new RenderInformation(atlasData.Key, m_spriteSheetCache.GetLength(atlasData.Key), newRenderGroup));

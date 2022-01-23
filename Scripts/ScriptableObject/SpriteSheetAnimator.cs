@@ -16,7 +16,7 @@ public class SpriteSheetAnimator : ScriptableObject
     {
         for (var i = 0; i < animations.Length; i++)
         {
-            if (animations[i].AnimationName == animationName)
+            if (animations[i].name == animationName)
                 return i;
         }
 

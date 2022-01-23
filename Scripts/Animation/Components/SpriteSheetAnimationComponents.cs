@@ -26,7 +26,7 @@ public struct SpriteSheetAnimationComponent : IComponentData
 
     public ESpriteSheetAnimationStatus Status;
 
-    // true for the first frame when the animation sprite(keyframe) is rendered
+    // true for the first frame when the animation event sprite(keyframe) is rendered
     public bool IsAnimationEventTriggeredThisFrame;
 }
 
