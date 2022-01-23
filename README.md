@@ -1,111 +1,68 @@
 # SpriteSheetRenderer
-A powerful Unity ECS system to render massive numbers of animated sprites using DynamicBuffers and ComputeBuffer:
-##### 1 million animated sprites were rendered at 60fps on a Mid-2015 MacBook Pro.
-![N|Solid](https://forum.unity.com/proxy.php?image=https%3A%2F%2Fi.imgur.com%2FzRSWhy0.png&hash=754bc4b4187e2d72ce0eb2c578b996dc)
-## C# 4 required
+Original 
 
-### How to use (SINGLE INSTANTIATE):
-* 1- Create the Archetype:
+##### How to use
 
-```sh
-EntityArchetype archetype = eManager.CreateArchetype(
-    typeof(Position2D),
-    typeof(Rotation2D),
-    typeof(Scale),
-    //required params
-    typeof(SpriteIndex),
-    typeof(SpriteSheetAnimation),
-    typeof(SpriteSheetMaterial),
-    typeof(SpriteSheetColor),
-    typeof(SpriteMatrix),
-    typeof(BufferHook)
-);
+* 1- Create Animation/Static Sprite ScriptableObject assert in editor:
+* 2 - Init Renderer in your entry point:
+```        
+SpriteSheetRendererInit.Init(m_spriteSheetShader);
+```    
+* 3 - Record your spritesheet (bakes spritesheet texture, once for each asset)
+```
+var renderSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystem<SpriteSheetRenderSystem>();
+renderSystem.RecordAnimator(animator); // another overload for static sprite
+animator.RenderGroup // now stores a runtime render group that will be used to render all entities that use this spritesheet. It is used to identify animation in unmanaged ECS, and contains non-instanced, constant animation definition data 
+```
+* 3- Create animated entity
+
+Add required components to your entity:
+
+    // SpriteSheetRenderer - static Sprite
+    - SpriteIndex
+    - SpriteSheetColor 
+    - SpriteSheetRenderGroupHookComponent
+    
+    // for animation - 
+    - SpriteSheetAnimationComponent
+        
+    // 3D positioning:
+    - LocalToWorld    
+    (You will most likely use Translation, Rotation & NonUniformScale to work with LocalToWorld. It is required for SpriteSheetFactory.Init(), but you can init manually and work with LTW only.
+
+    These component lists are defined and stored in SpriteSheetFactory.
+
+Add entity to render group:
+```
+SpriteSheetFactory.InitAnimatedSprite(entity, animation);
 ```
 
-* 2- Record and bake this spritesheet(only once)
+* 4 Working with animated sprite
+* 
+You can work with entity as you would with any other 3D entity - modifying LocalToWorld or it's components, using Parent + LocalToParent + Child for hierarchy etc.
 
-```sh
-SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
+**To Change animation**:
 ```
-* 3- Populate components
-
-```sh
-List<IComponentData> components = new List<IComponentData> {
-    new Position2D { Value = float2.zero },
-    new Scale { Value = 15 },
-    new SpriteIndex { Value = UnityEngine.Random.Range(0, maxSprites) },
-    new SpriteSheetAnimation { maxSprites = maxSprites, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 },
-    new SpriteSheetColor { color = new float4(color.r, color.g, color.b, color.a) }
-};
+static SpriteSheetAnimationSystem.SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false);
 ```
+It is burst-compatible and does not incur a structural change, so you could do this operation inside a job, however the job-version is not provided since it is: 
+1) too verbose
+2) widely used, so would add a write dependency on RenderGroupHookCmp to all your jobs, probably not allowing rendering jobs to run in parallel with simulation.
 
-* 4- Instantiate the entity
-
-```sh 
-Entity e = SpriteSheetManager.Instance.Instantiate(archetype, components, "emoji");
+Instead, inside the jobs, you should add a deferred animation change command - they are applied in batch each frame:
 ```
- 
-* Update the entity
-
-```sh 
-Entity e = SpriteSheetManager.Instance.UpdateEntity(e, new Position2D { Value = float2.zero});
-``` 
-
-* Destroy the entity
-
-```sh 
-Entity e = SpriteSheetManager.Instance.DestroyEntity(e, "emoji");
-``` 
-
-### How to use (BULK INSTANTIATE):
-
-* 1- Create the Archetype:
-
-```sh
-EntityArchetype archetype = eManager.CreateArchetype(
-    typeof(Position2D),
-    typeof(Rotation2D),
-    typeof(Scale),
-    //required params
-    typeof(SpriteIndex),
-    typeof(SpriteSheetAnimation),
-    typeof(SpriteSheetMaterial),
-    typeof(SpriteSheetColor),
-    typeof(SpriteMatrix),
-    typeof(BufferHook)
-);
+// animChangeCommands is a singleton created in Init
+GetBuffer<AnimationChangeCommandBufferElement>(animChangeCommands).
+                        Add(new AnimationChangeCommandBufferElement {Target = entity, RenderGroupToSet = attackAnim});
 ```
 
-* 2- Bulk instantiate entities
-
-```sh
-NativeArray<Entity> entities = new NativeArray<Entity>(spriteCount, Allocator.Temp);
-eManager.CreateEntity(archetype, entities);
+**Check if animation event was triggered** (e.g hit frame for attack animation):
+```
+// in SpriteSheetAnimationComponent
+// true for the first frame when the animation event sprite(keyframe) is rendered
+public bool IsAnimationEventTriggeredThisFrame;
 ```
 
-* 2- Record and bake this spritesheet(only once)
 
-```sh
-SpriteSheetManager.Instance.RecordSpriteSheet(sprites, "emoji");
-```
+##### Fork changes compared to original 
 
-* 3- Populate components
-
-```sh
-for(int i = 0; i < entities.Length; i++) {
-  Entity e = entities[i];
-  eManager.SetComponentData(e, new SpriteIndex { Value = 0});
-  eManager.SetComponentData(e, new Scale { Value = 10 });
-  eManager.SetComponentData(e, new Position2D { Value = RANDOM_VECTOR });
-  eManager.SetComponentData(e, new SpriteSheetAnimation { maxSprites = MAX_SPRITES, play = true, repetition = SpriteSheetAnimation.RepetitionType.Loop, samples = 10 });
-  SpriteSheetColor col = new SpriteSheetColor { color = A_COLOR };
-  eManager.SetComponentData(e, col);
-  eManager.SetComponentData(e, new BufferHook { bufferID = i, bufferEnityID = DynamicBufferManager.GetEntityBufferID(material) });
-  eManager.SetSharedComponentData(e, material);
-}
-```
-
-# Support
-### SpriteSheetRenderer is an open-source project that I am developing in my free time. If you like it you can support me by donating.
-
-Buy Me A Coffee: https://www.buymeacoffee.com/LRTk8rn
