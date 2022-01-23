@@ -68,7 +68,7 @@ public bool IsAnimationEventTriggeredThisFrame;
 
 
 ## Fork changes compared to original
-Features:
+
 * Using default unity 3D transforms (LocalToWorld). Allowes parenting of entities (hierarchical transforms). This also means that we are using full float4x4 matrix as opposed to a smaller float3x2 in original. Possible to optimize this back later.
 * Flipping sprites
 * Static sprites - separate scriptable object and workflow
@@ -76,7 +76,7 @@ Features:
 * Deferred animation change for jobs.
 * Scriptable objects refactor: duration property, easier init, removed duplicate name.
 * Upgraded entities to 17.042.
-* Refactored everything 
+* Refactor: 
     - removed unnecessary mapping collections, 
     - consolidated multiple static data into main system and factory singleton.
     - rewrote "next free render group index" logic to use RemoveAtSwapBack.
