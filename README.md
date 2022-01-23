@@ -76,6 +76,7 @@ public bool IsAnimationEventTriggeredThisFrame;
 * Deferred animation change for jobs.
 * Scriptable objects refactor: duration property, easier init, removed duplicate name.
 * Upgraded entities to 17.042.
+* Has a dependency on my [Utils package](https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils)  
 * Refactor: 
     - removed unnecessary mapping collections, 
     - consolidated multiple static data into main system and factory singleton.
