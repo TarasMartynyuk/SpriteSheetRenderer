@@ -1,9 +1,12 @@
 # SpriteSheetRenderer
-Original 
 
-##### How to use
+## How to use
 
 * 1- Create Animation/Static Sprite ScriptableObject assert in editor:
+
+![This is an image](/AnimationScriptable.png)
+(You can use InitFromSpriteSheet button to retrieve the sub-sprites array automatically. (Sprite mode must be "multiple").
+
 * 2 - Init Renderer in your entry point:
 ```        
 SpriteSheetRendererInit.Init(m_spriteSheetShader);
@@ -14,7 +17,7 @@ var renderSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystem<Sprit
 renderSystem.RecordAnimator(animator); // another overload for static sprite
 animator.RenderGroup // now stores a runtime render group that will be used to render all entities that use this spritesheet. It is used to identify animation in unmanaged ECS, and contains non-instanced, constant animation definition data 
 ```
-* 3- Create animated entity
+* 4 - Create animated entity
 
 Add required components to your entity:
 
@@ -37,8 +40,8 @@ Add entity to render group:
 SpriteSheetFactory.InitAnimatedSprite(entity, animation);
 ```
 
-* 4 Working with animated sprite
-* 
+* 5 - Working with animated sprite
+
 You can work with entity as you would with any other 3D entity - modifying LocalToWorld or it's components, using Parent + LocalToParent + Child for hierarchy etc.
 
 **To Change animation**:
@@ -64,5 +67,17 @@ public bool IsAnimationEventTriggeredThisFrame;
 ```
 
 
-##### Fork changes compared to original 
+## Fork changes compared to original
+Features:
+* Using default unity 3D transforms (LocalToWorld). Allowes parenting of entities (hierarchical transforms). This also means that we are using full float4x4 matrix as opposed to a smaller float3x2 in original. Possible to optimize this back later.
+* Flipping sprites
+* Static sprites - separate scriptable object and workflow
+* Animation definition data stored in burstable, unmanaged ECS. (Also separated from per-instance data). Managed objects are now required only for first-time recording.
+* Deferred animation change for jobs.
+* Scriptable objects refactor: duration property, easier init, removed duplicate name.
+* Upgraded entities to 17.042.
+* Refactored everything 
+    - removed unnecessary mapping collections, 
+    - consolidated multiple static data into main system and factory singleton.
+    - rewrote "next free render group index" logic to use RemoveAtSwapBack.
 
