@@ -6,6 +6,7 @@ High performance way to render sprite-sheet animations in Unity ECS. Entities ar
 * 1- Create Animation/Static Sprite ScriptableObject assert in editor:
 
 ![This is an image](/AnimationScriptable.png)
+
 (You can use InitFromSpriteSheet button to retrieve the sub-sprites array automatically. (Sprite mode must be "multiple").
 
 * 2 - Init Renderer in your entry point:
