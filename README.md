@@ -1,5 +1,5 @@
 # SpriteSheetRenderer
-High performance way to render sprite-sheet animations in Unity ECS. Entities are rendered with DrawMeshInstancedIndirect + ComputeBuffers, resulting in a single DrawCall for each animation. Jobs are used for gathering gameplay data before render.
+High performance way to render 2D sprite-sheet animations in Unity ECS. Entities are rendered with DrawMeshInstancedIndirect + ComputeBuffers, resulting in a single DrawCall for each animation. Jobs are used for gathering gameplay data before render.
 
 ## How to use
 
