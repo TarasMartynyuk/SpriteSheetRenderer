@@ -1,4 +1,5 @@
 # SpriteSheetRenderer
+High performance way to render sprite-sheet animations in Unity ECS. Entities are rendered with DrawMeshInstancedIndirect + ComputeBuffers, resulting in a single DrawCall for each animation. Jobs are used for gathering gameplay data before render.
 
 ## How to use
 
@@ -76,6 +77,7 @@ public bool IsAnimationEventTriggeredThisFrame;
 * Deferred animation change for jobs.
 * Scriptable objects refactor: duration property, easier init, removed duplicate name.
 * Upgraded entities to 17.042.
+* Organized as a unity package
 * Has a dependency on my [Utils package](https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils)  
 * Refactor: 
     - removed unnecessary mapping collections, 
