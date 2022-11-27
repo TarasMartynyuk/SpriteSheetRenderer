@@ -1,0 +1,9 @@
+{
+  "name": "tm.spritesheetrenderer",
+  "displayName": "SpriteSheetRenderer",
+  "unity": "2022.2",
+  "description": "SpriteSheetRenderer",
+  "version": "1.0.0",
+    "dependencies": {
+    }
+}

@@ -1,0 +1,3 @@
+[submodule "Modules/TMUtils"]
+	path = Modules/TMUtils
+	url = https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils.git
