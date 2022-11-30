@@ -5,7 +5,8 @@
     "com.unity.ide.visualstudio": "2.0.16",
     "com.unity.ide.vscode": "1.2.5",
     "com.unity.test-framework": "1.1.33",
-    "mt-utils": "file:../Modules/TMUtils/Assets",
+    "com.unity.ugui": "1.0.0",
+    "tm.utils": "file:../Modules/tmutils-ecs/Assets",
     "com.unity.modules.audio": "1.0.0"
   }
 }

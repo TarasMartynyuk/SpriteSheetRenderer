@@ -96,6 +96,13 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
+    "com.unity.nuget.newtonsoft-json": {
+      "version": "3.0.2",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.platforms": {
       "version": "1.0.0-exp.6",
       "depth": 1,
@@ -166,11 +173,37 @@
       },
       "url": "https://packages.unity.com"
     },
-    "mt-utils": {
-      "version": "file:../Modules/TMUtils/Assets",
+    "com.unity.textmeshpro": {
+      "version": "3.0.6",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.ugui": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "tm.utils": {
+      "version": "file:../Modules/tmutils-ecs/Assets",
       "depth": 0,
       "source": "local",
-      "dependencies": {}
+      "dependencies": {
+        "com.unity.mathematics": "1.2.6",
+        "com.unity.nuget.newtonsoft-json": "3.0.2",
+        "com.unity.textmeshpro": "3.0.6",
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.entities": "1.0.0-exp.12"
+      }
     },
     "com.unity.modules.assetbundle": {
       "version": "1.0.0",
@@ -196,9 +229,15 @@
       "source": "builtin",
       "dependencies": {}
     },
+    "com.unity.modules.physics": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.modules.ui": {
       "version": "1.0.0",
-      "depth": 3,
+      "depth": 1,
       "source": "builtin",
       "dependencies": {}
     },
