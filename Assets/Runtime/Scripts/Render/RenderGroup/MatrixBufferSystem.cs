@@ -1,9 +1,9 @@
-﻿using Unity.Collections;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
 
-public class MatrixBufferSystem : SystemBase
+public partial class MatrixBufferSystem : SystemBase
 {
     protected override void OnUpdate()
     {

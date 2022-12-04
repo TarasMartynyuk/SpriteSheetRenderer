@@ -12,10 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d000e9c4364d3764c89516aaf73c46ea, type: 3}
   m_Name: square
   m_EditorClassIdentifier: 
-  animationName: slash
-  sprites:
+  Sprites:
   - {fileID: -997972493423046422, guid: 252e73463dc5649eca48720230253e81, type: 3}
-  startIndex: 0
-  playOnStart: 1
-  samples: 32
-  repetition: 0
+  - {fileID: -199644854353079308, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: -217455086581007235, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: 4335250483284255847, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: -983156657889264743, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: -2850093654693141264, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: 9093825842685103111, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: 3150387745278999259, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  - {fileID: 3210994475073176143, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  SpriteSheet: {fileID: -997972493423046422, guid: 252e73463dc5649eca48720230253e81, type: 3}
+  m_definition:
+    Duration: 5
+    Repetition: 0
+    FrameDuration: 0
+    SpriteCount: 0
+  m_eventFrame:
+    Value: 0
+    HasValue: 0

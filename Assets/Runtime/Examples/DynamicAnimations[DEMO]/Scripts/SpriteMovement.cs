@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using TMUtilsEcs.DOTS.Ecs;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
@@ -27,6 +28,8 @@ namespace SpriteSheetRendererExamples
 
         void Update()
         {
+            // MY_CMP_ERROR
+            
             var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 
             if (m_rotating)
@@ -36,7 +39,7 @@ namespace SpriteSheetRendererExamples
                 var angle = 360.0f * rotationPercent;
                 var rot = quaternion.RotateZ(angle);
 
-                eManager.SetComponentData(Sprite, new Rotation { Value = rot });
+                // eManager.SetComponentData(Sprite, new Rotation { Value = rot });
             }
 
             if (!m_moving)
@@ -45,7 +48,9 @@ namespace SpriteSheetRendererExamples
             float percent = (Time.realtimeSinceStartup % 1.0f);
             float2 offset = new float2(1) * ((percent * m_speed) - m_speed / 2);
             float3 pos = m_startPosition + new float3(offset, 0);
-            eManager.SetComponentData(Sprite, new Translation { Value = pos });
+
+            var transform = new ComponentReference<LocalTransform>(Sprite);
+            transform.Value().Position = pos;
         }
     }
 }

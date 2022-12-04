@@ -1,7 +1,7 @@
-﻿using Unity.Entities;
+using Unity.Entities;
 using UnityEngine;
 
-public class SpriteSheetAnimationDeferredChangeSystem : SystemBase
+public partial class SpriteSheetAnimationDeferredChangeSystem : SystemBase
 {
     protected override void OnUpdate()
     {

@@ -1,4 +1,5 @@
-﻿using Unity.Assertions;
+﻿using TMUtilsEcs.DOTS.Ecs;
+using Unity.Assertions;
 using Unity.Entities;
 using UnityEngine;
 using Unity.Mathematics;

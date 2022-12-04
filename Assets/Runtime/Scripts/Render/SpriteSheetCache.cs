@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMUtils.Singletons;
 using Unity.Assertions;
 using Unity.Entities;
 using Unity.Mathematics;

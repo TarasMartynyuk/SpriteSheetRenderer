@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst;
 using Unity.Collections;
@@ -6,7 +6,7 @@ using Unity.Entities;
 using Unity.Jobs;
 using UnityEngine;
 
-public class ColorBufferSystem : SystemBase
+public partial class ColorBufferSystem : SystemBase
 {
     protected override void OnUpdate()
     {

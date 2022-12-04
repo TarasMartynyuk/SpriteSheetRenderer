@@ -1,9 +1,9 @@
-﻿using Unity.Entities;
+using Unity.Entities;
 using Unity.Burst;
 using Unity.Jobs;
 using UnityEngine;
 
-public class SpriteSheetAnimationSystem : SystemBase
+public partial class SpriteSheetAnimationSystem : SystemBase
 {
     public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
         SetAnimationInternal(e, animationRenderGroup, World.DefaultGameObjectInjectionWorld.EntityManager, keepProgress);
@@ -12,7 +12,7 @@ public class SpriteSheetAnimationSystem : SystemBase
     {
         float elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
         
-        var entityToAnimationDefCmpRo = GetComponentDataFromEntity<SpriteSheetAnimationDefinitionComponent>(true);
+        var entityToAnimationDefCmpRo = GetComponentLookup<SpriteSheetAnimationDefinitionComponent>(true);
         Entities.ForEach((
                     // Entity e,
                     ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp) =>

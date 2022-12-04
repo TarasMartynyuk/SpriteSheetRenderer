@@ -1,24 +1,36 @@
-﻿using Unity.Entities;
+﻿using TMUtils.Utils.Collections;
+using TMUtilsEcs.DOTS.Factories;
+using Unity.Entities;
 using UnityEngine;
 
-public class SpriteSheetFactory : SingletonBase<SpriteSheetFactory>
+public class SpriteSheetFactory
 {
+    private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
+    private readonly Entity3DFactory _entity3DFactory;
+    
     public ComponentType[] AnimatedSpriteComponentTypes { get; private set; }
     public ComponentType[] StaticSpriteComponentTypes { get; private set; }
-    public Entity3DDefinition AnimatedSprite3DDefinition { get; private set; }
-    public Entity3DDefinition StaticSpriteArchetype { get; private set; }
-    EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
-    
-    public void Init()
+    public EntityDefinition AnimatedSprite3DDefinition { get; private set; }
+    public EntityDefinition StaticSpriteArchetype { get; private set; }
+
+    public SpriteSheetFactory(Entity3DFactory entity3DFactory)
     {
+        _entity3DFactory = entity3DFactory;
         StaticSpriteComponentTypes = new ComponentType[]
         {
             typeof(SpriteIndex), typeof(SpriteSheetColor), typeof(SpriteSheetRenderGroupHookComponent)
         };
         AnimatedSpriteComponentTypes = StaticSpriteComponentTypes.Concat(typeof(SpriteSheetAnimationComponent));
-        AnimatedSprite3DDefinition = new Entity3DDefinition(AnimatedSpriteComponentTypes);
-        StaticSpriteArchetype = new Entity3DDefinition(StaticSpriteComponentTypes); 
+        AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(AnimatedSpriteComponentTypes));
+        StaticSpriteArchetype = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(StaticSpriteComponentTypes)); 
     }
+    
+    
+    
+    // public void Init()
+    // {
+    //     
+    // }
 
     public void InitAnimatedSprite(Entity entity, SpriteSheetAnimator animator = null)
     {
@@ -34,14 +46,14 @@ public class SpriteSheetFactory : SingletonBase<SpriteSheetFactory>
     
     public void InitStaticSprite(Entity spriteSheetEntity, StaticSpriteScriptable staticSprite)
     {
-        Entity3DFactory.Instance.Init3DEntity(spriteSheetEntity);
+        _entity3DFactory.Init3DEntity(spriteSheetEntity);
         RenderGroup.AddToNewRenderGroup(spriteSheetEntity, staticSprite.RenderGroup);
         InitSprite(spriteSheetEntity);
     }
 
     private void InitSprite(Entity sprite)
     {
-        Entity3DFactory.Instance.Init3DEntity(sprite);
+        _entity3DFactory.Init3DEntity(sprite);
         EntityManager.SetComponentData(sprite, new SpriteSheetColor {Value = (Vector4) Color.white});
     }
 }

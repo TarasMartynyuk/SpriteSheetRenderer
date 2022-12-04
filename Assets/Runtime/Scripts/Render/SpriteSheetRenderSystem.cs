@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Text;
+using SpriteSheetRenderer;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 using Unity.Entities;
@@ -7,7 +8,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 
 [DisableAutoCreation]
-public class SpriteSheetRenderSystem : SystemBase
+public partial class SpriteSheetRenderSystem : SystemBase
 {
     List<RenderInformation> RenderInformation { get; } = new();
     SpriteSheetCache m_spriteSheetCache = new();
