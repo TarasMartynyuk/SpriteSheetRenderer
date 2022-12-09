@@ -34,8 +34,8 @@ namespace SpriteSheetRendererExamples
 
             if (m_rotating)
             {
-                float timePassed = (Time.realtimeSinceStartup % m_360RotationTime);
-                float rotationPercent = timePassed / m_360RotationTime;
+                var timePassed = (Time.realtimeSinceStartup % m_360RotationTime);
+                var rotationPercent = timePassed / m_360RotationTime;
                 var angle = 360.0f * rotationPercent;
                 var rot = quaternion.RotateZ(angle);
 
@@ -45,11 +45,11 @@ namespace SpriteSheetRendererExamples
             if (!m_moving)
                 return;
 
-            float percent = (Time.realtimeSinceStartup % 1.0f);
-            float2 offset = new float2(1) * ((percent * m_speed) - m_speed / 2);
-            float3 pos = m_startPosition + new float3(offset, 0);
+            var percent = (Time.realtimeSinceStartup % 1.0f);
+            var offset = new float2(1) * ((percent * m_speed) - m_speed / 2);
+            var pos = m_startPosition + new float3(offset, 0);
 
-            var transform = new ComponentReference<LocalTransform>(Sprite);
+            using var transform = new ComponentReference<LocalTransform>(Sprite);
             transform.Value().Position = pos;
         }
     }

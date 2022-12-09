@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities;
 using UnityEngine;
 
 namespace SpriteSheetRendererExamples
@@ -9,8 +10,8 @@ namespace SpriteSheetRendererExamples
     {
         public void ChangeAnimation(string animationName)
         {
-            throw new NotImplementedException();
-            // SpriteSheetManager.SetAnimation(DynamicAnimationsDemo.character, animationName);
         }
+
+        // SpriteSheetAnimationSystem.SetAnimation(DynamicAnimationsDemoInit.character, animationName);
     }
 }

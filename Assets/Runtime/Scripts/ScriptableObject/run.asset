@@ -12,13 +12,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d000e9c4364d3764c89516aaf73c46ea, type: 3}
   m_Name: run
   m_EditorClassIdentifier: 
-  sprites:
+  Sprites:
   - {fileID: 3083089168873209362, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
   - {fileID: -517894308114096243, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
   - {fileID: 7755224123621818408, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
   - {fileID: -3557554893070573299, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
-  startIndex: 0
-  playOnStart: 1
-  duration: 1
-  animationName: run
-  repetition: 1
+  - {fileID: -4256427906160430202, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: -6066236442320969475, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: 1893670189769602202, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: -5691007311618604778, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: -417436994572597314, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: -7232779301871914677, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  - {fileID: 7729768860333772239, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  SpriteSheet: {fileID: 3083089168873209362, guid: 57f6b6fe96601a14694379954154ba7c, type: 3}
+  m_definition:
+    Duration: 5
+    Repetition: 2
+    FrameDuration: 0
+    SpriteCount: 0
+  m_eventFrame:
+    Value: 0
+    HasValue: 0

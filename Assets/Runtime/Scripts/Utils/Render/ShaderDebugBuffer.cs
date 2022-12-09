@@ -14,7 +14,7 @@ namespace SpriteSheetRenderer
 
         public ShaderDebugBuffer(int size)
         {
-            int stride = UnsafeUtility.SizeOf<T>();
+            var stride = UnsafeUtility.SizeOf<T>();
 
             ComputeBuffer = new ComputeBuffer(size, stride, ComputeBufferType.Default);
             m_debugBufferRetrieved = new T[size];

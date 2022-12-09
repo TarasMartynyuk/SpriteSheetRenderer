@@ -8,31 +8,34 @@ using UnityEngine;
 
 public class SpriteSheetCache
 {
-    Shader m_spriteSheetShader;
-    Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new();
-    Dictionary<Material, string> materialToName = new();
+    readonly Shader m_spriteSheetShader;
+    readonly Dictionary<string, KeyValuePair<Material, int>> materialNameMaterial = new();
+    readonly Dictionary<Material, string> materialToName = new();
 
-    public void Init(Shader spriteSheetShader) { m_spriteSheetShader = spriteSheetShader; }
+    public SpriteSheetCache(Shader spriteSheetShader)
+    {
+        m_spriteSheetShader = spriteSheetShader;
+    }
 
     public KeyValuePair<Material, float4[]> BakeSprites(Sprite[] sprites, string materialName)
     {
-        Material material = new Material(m_spriteSheetShader);
+        var material = new Material(m_spriteSheetShader);
         Texture texture = sprites[0].texture;
         material.mainTexture = texture;
 
         if (sprites.Length == 1)
             return BakeSprite(sprites[0], materialName);
-        
+
         float w = texture.width;
         float h = texture.height;
-        float4[] uvs = new float4[sprites.Length];
-        int i = 0;
-        foreach (Sprite s in sprites)
+        var uvs = new float4[sprites.Length];
+        var i = 0;
+        foreach (var s in sprites)
         {
-            float tilingX = 1f / (w / s.rect.width);
-            float tilingY = 1f / (h / s.rect.height);
-            float OffsetX = tilingX * (s.rect.x / s.rect.width);
-            float OffsetY = tilingY * (s.rect.y / s.rect.height);
+            var tilingX = 1f / (w / s.rect.width);
+            var tilingY = 1f / (h / s.rect.height);
+            var OffsetX = tilingX * (s.rect.x / s.rect.width);
+            var OffsetY = tilingY * (s.rect.y / s.rect.height);
             uvs[i].x = tilingX;
             uvs[i].y = tilingY;
             uvs[i].z = OffsetX;
@@ -47,7 +50,7 @@ public class SpriteSheetCache
 
     public KeyValuePair<Material, float4[]> BakeSprite(Sprite sprite, string materialName)
     {
-        Material material = new Material(m_spriteSheetShader);
+        var material = new Material(m_spriteSheetShader);
         Texture texture = sprite.texture;
         material.mainTexture = texture;
         float w = texture.width;
@@ -55,10 +58,10 @@ public class SpriteSheetCache
 
         const int length = 1;
         var uvs = new float4[length];
-        float tilingX = 1f / (w / sprite.rect.width);
-        float tilingY = 1f / (h / sprite.rect.height);
-        float OffsetX = tilingX * (sprite.rect.x / sprite.rect.width);
-        float OffsetY = tilingY * (sprite.rect.y / sprite.rect.height);
+        var tilingX = 1f / (w / sprite.rect.width);
+        var tilingY = 1f / (h / sprite.rect.height);
+        var OffsetX = tilingX * (sprite.rect.x / sprite.rect.width);
+        var OffsetY = tilingY * (sprite.rect.y / sprite.rect.height);
         uvs[0].x = tilingX;
         uvs[0].y = tilingY;
         uvs[0].z = OffsetX;

@@ -6,9 +6,9 @@ namespace TMUtilsEcs.DOTS.Ecs
     {
         public static T CreateSimulationSystem<T>()
             where T : ComponentSystemBase, new()
-            => CreateSystem<T, SimulationSystemGroup>();
+            => CreateSystemManaged<T, SimulationSystemGroup>();
         
-        public static T CreateSystem<T, TSystemGroup>()
+        public static T CreateSystemManaged<T, TSystemGroup>()
             where T : ComponentSystemBase, new()
             where TSystemGroup : ComponentSystemGroup
         {
@@ -26,7 +26,7 @@ namespace TMUtilsEcs.DOTS.Ecs
             where T : ComponentSystemBase
             where TSystemGroup : ComponentSystemGroup
         {
-            World defaultWorld = World.DefaultGameObjectInjectionWorld;
+            var defaultWorld = World.DefaultGameObjectInjectionWorld;
             var systemGroup = defaultWorld.GetOrCreateSystemManaged<TSystemGroup>();
             systemGroup.AddSystemToUpdateList(system);
         }

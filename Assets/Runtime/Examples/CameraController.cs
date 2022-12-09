@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour
 
     public void MoveMainCamera(Vector3 touch)
     {
-        Vector3 direction = touch - Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        var direction = touch - Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Camera.main.transform.position += direction * Speed * Time.deltaTime;
     }
 
@@ -63,16 +63,16 @@ public class CameraController : MonoBehaviour
 
         if (Input.touchCount == 2)
         {
-            Touch touchZero = Input.GetTouch(0);
-            Touch touchOne = Input.GetTouch(1);
+            var touchZero = Input.GetTouch(0);
+            var touchOne = Input.GetTouch(1);
 
-            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+            var touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            var touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
 
-            float prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-            float currentMagnitude = (touchZero.position - touchOne.position).magnitude;
+            var prevMagnitude = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            var currentMagnitude = (touchZero.position - touchOne.position).magnitude;
 
-            float difference = currentMagnitude - prevMagnitude;
+            var difference = currentMagnitude - prevMagnitude;
 
             zoom(difference * 0.1f);
         }

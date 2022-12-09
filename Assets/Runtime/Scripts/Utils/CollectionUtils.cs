@@ -14,13 +14,13 @@ namespace TMUtils.Utils.Collections
 
         public static void AddRange<T>(this List<T> list, int count, T element = default)
         {
-            int newCount = list.Count + count;
+            var newCount = list.Count + count;
             if (newCount > list.Capacity)
             {
                 list.Capacity = newCount;
             }
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 list.Add(element);
             }
@@ -28,7 +28,7 @@ namespace TMUtils.Utils.Collections
 
         public static void Resize<T>(this List<T> list, int size, T element = default)
         {
-            int count = list.Count;
+            var count = list.Count;
 
             if (size < count)
             {
@@ -64,7 +64,7 @@ namespace TMUtils.Utils.Collections
 
         public static T[] Concat<T>(this T[] a1, T[] a2, T[] a3)
         {
-            int resultSize = a1.Length + a2.Length + a3.Length;
+            var resultSize = a1.Length + a2.Length + a3.Length;
             var result = new T[resultSize];
             a1.CopyTo(result, 0);
             a2.CopyTo(result, a1.Length);

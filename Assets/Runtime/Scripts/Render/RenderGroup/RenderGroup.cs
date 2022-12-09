@@ -21,7 +21,7 @@ public static class RenderGroup
             typeof(RenderedEntityBufferElement),
             typeof(SpriteSheetAnimationDefinitionComponent)
         );
-        Entity renderGroup = EntityManager.CreateEntity(archetype);
+        var renderGroup = EntityManager.CreateEntity(archetype);
 
 #if UNITY_EDITOR
         EntityManager.SetNameIndexed(renderGroup, name);
@@ -78,7 +78,7 @@ public static class RenderGroup
         MatrixBuffer.GetMatrixBuffer(renderGroup).Add(EntityManager.GetComponentData<LocalToWorld>(entity).Value);
         SpriteColorBufferElement.GetColors(renderGroup).Add(EntityManager.GetComponentData<SpriteSheetColor>(entity).Value);
 
-        int index = renderedEntities.LastIndex();
+        var index = renderedEntities.LastIndex();
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         eManager.SetComponentData(entity,
             new SpriteSheetRenderGroupHookComponent
@@ -93,7 +93,7 @@ public static class RenderGroup
         var matrices = MatrixBuffer.GetMatrixBuffer(renderGroup);
         var colors = SpriteColorBufferElement.GetColors(renderGroup);
 
-        int length = renderedEntities.Length;
+        var length = renderedEntities.Length;
         Debug.Assert(spriteIndices.Length == length &&
                      matrices.Length == length &&
                      colors.Length == length);

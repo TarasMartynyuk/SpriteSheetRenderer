@@ -11,13 +11,13 @@ using Unity.Transforms;
 public partial class SpriteSheetRenderSystem : SystemBase
 {
     List<RenderInformation> RenderInformation { get; } = new();
-    SpriteSheetCache m_spriteSheetCache = new();
+    private SpriteSheetCache m_spriteSheetCache;
     Mesh mesh;
     ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new(3);
 
     public void Init(Shader spriteSheetShader)
     {
-        m_spriteSheetCache.Init(spriteSheetShader);
+        m_spriteSheetCache = new SpriteSheetCache(spriteSheetShader);
     }
     
     public void RecordAnimator(SpriteSheetAnimator animator)
@@ -57,7 +57,7 @@ public partial class SpriteSheetRenderSystem : SystemBase
     protected override void OnUpdate()
     {
 
-        for (int i = 0; i < RenderInformation.Count; i++)
+        for (var i = 0; i < RenderInformation.Count; i++)
         {
             var renderInformation = RenderInformation[i];
             
@@ -73,10 +73,10 @@ public partial class SpriteSheetRenderSystem : SystemBase
             }
 
             //this is w.i.p to clean the old buffers
-            DynamicBuffer<SpriteIndexBuffer> indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(RenderInformation[i].renderGroup);
-            int size = indexBuffer.Length - 1;
-            int toRemove = 0;
-            for (int j = size; j >= 0; j--)
+            var indexBuffer = EntityManager.GetBuffer<SpriteIndexBuffer>(RenderInformation[i].renderGroup);
+            var size = indexBuffer.Length - 1;
+            var toRemove = 0;
+            for (var j = size; j >= 0; j--)
             {
                 if (indexBuffer[j].index == -1)
                 {
@@ -112,11 +112,11 @@ public partial class SpriteSheetRenderSystem : SystemBase
         ReleaseBuffer(renderIndex);
 
         var renderInformation = RenderInformation[renderIndex];
-        int instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Length;
+        var instanceCount = EntityManager.GetBuffer<SpriteIndexBuffer>(renderInformation.renderGroup).Length;
         if (instanceCount <= 0) 
             return instanceCount;
         
-        int stride = instanceCount >= 16 ? 16 : 16 * m_spriteSheetCache.GetLength(renderInformation.material);
+        var stride = instanceCount >= 16 ? 16 : 16 * m_spriteSheetCache.GetLength(renderInformation.material);
         if (renderInformation.updateUvs)
         {
             ReleaseUvBuffer(renderIndex);

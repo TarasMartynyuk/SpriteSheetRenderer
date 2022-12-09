@@ -11,6 +11,6 @@ public static class SpriteSheetRendererInit
     {
         var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         eManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
-        EcsSystemUtils.CreateSystem<SpriteSheetRenderSystem, PresentationSystemGroup>().Init(spriteSheetShader);
+        EcsSystemUtils.CreateSystemManaged<SpriteSheetRenderSystem, PresentationSystemGroup>().Init(spriteSheetShader);
     }
 }

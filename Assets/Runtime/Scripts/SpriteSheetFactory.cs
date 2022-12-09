@@ -8,21 +8,19 @@ public class SpriteSheetFactory
     private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
     private readonly Entity3DFactory _entity3DFactory;
     
-    public ComponentType[] AnimatedSpriteComponentTypes { get; private set; }
-    public ComponentType[] StaticSpriteComponentTypes { get; private set; }
     public EntityDefinition AnimatedSprite3DDefinition { get; private set; }
     public EntityDefinition StaticSpriteArchetype { get; private set; }
 
     public SpriteSheetFactory(Entity3DFactory entity3DFactory)
     {
         _entity3DFactory = entity3DFactory;
-        StaticSpriteComponentTypes = new ComponentType[]
+        var staticSpriteComponentTypes = new ComponentType[]
         {
             typeof(SpriteIndex), typeof(SpriteSheetColor), typeof(SpriteSheetRenderGroupHookComponent)
         };
-        AnimatedSpriteComponentTypes = StaticSpriteComponentTypes.Concat(typeof(SpriteSheetAnimationComponent));
-        AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(AnimatedSpriteComponentTypes));
-        StaticSpriteArchetype = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(StaticSpriteComponentTypes)); 
+        var animatedSpriteComponentTypes = staticSpriteComponentTypes.Concat(typeof(SpriteSheetAnimationComponent));
+        AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(animatedSpriteComponentTypes));
+        StaticSpriteArchetype = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(staticSpriteComponentTypes)); 
     }
     
     

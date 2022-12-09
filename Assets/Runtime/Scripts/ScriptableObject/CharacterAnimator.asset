@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: CharacterAnimator
   m_EditorClassIdentifier: 
   animations:
-  - {fileID: 11400000, guid: 5301783caef01f248a02cb3c57ed9a44, type: 2}
+  - {fileID: 11400000, guid: c97bcd39e938a40478a57bc9169e64a1, type: 2}
   defaultAnimationIndex: 0

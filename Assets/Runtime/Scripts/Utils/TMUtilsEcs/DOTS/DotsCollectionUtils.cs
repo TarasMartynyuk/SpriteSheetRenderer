@@ -84,7 +84,7 @@ public static class DotsCollectionUtils
 
     public static int FindIndex<T>(this NativeSlice<T> slice, Predicate<T> predicate, int startIndex = 0) where T : unmanaged
     {
-        for (int i = startIndex; i < slice.Length; i++)
+        for (var i = startIndex; i < slice.Length; i++)
         {
             if (predicate(slice[i]))
             {
@@ -108,7 +108,7 @@ public static class DotsCollectionUtils
             startIndex = slice.Length - 1;
         }
 
-        for (int i = startIndex; i >= 0; i--)
+        for (var i = startIndex; i >= 0; i--)
         {
             if (predicate(slice[i]))
             {
@@ -127,7 +127,7 @@ public static class DotsCollectionUtils
 
     public static T Find<T>(this DynamicBuffer<T> buffer, Predicate<T> predicate) where T : unmanaged
     {
-        int index = buffer.FindIndex(predicate);
+        var index = buffer.FindIndex(predicate);
         if (index == -1)
         {
             Debug.LogError("No element found");
@@ -155,7 +155,7 @@ public static class DotsCollectionUtils
     public static void Fill<T>(this NativeArray<T> array, T value)
         where T : unmanaged
     {
-        for (int i = 0; i < array.Length; i++)
+        for (var i = 0; i < array.Length; i++)
         {
             array[i] = value;
         }
@@ -168,7 +168,7 @@ public static class DotsCollectionUtils
     public static int Sum<T>(this NativeArray<T> array, Func<T, int> selector)
       where T : unmanaged
     {
-        int sum = 0;
+        var sum = 0;
         foreach (var item in array)
         {
             sum += selector(item);
@@ -183,7 +183,7 @@ public static class DotsCollectionUtils
     public static int Count<T>(this NativeArray<T> array, Predicate<T> predicate)
         where T : unmanaged
     {
-        int count = 0;
+        var count = 0;
         foreach (var element in array)
         {
             if (predicate(element))
@@ -202,7 +202,7 @@ public static class DotsCollectionUtils
         where T : unmanaged
     {
         buffer.Capacity += count;
-        for (int i = 0; i < count; i++)
+        for (var i = 0; i < count; i++)
         {
             buffer.Add(element);
         }
@@ -261,8 +261,8 @@ public static class DotsCollectionUtils
         where T : unmanaged
     {
         buffer.ResizeUninitialized(length);
-        T elementRaw = element.GetValueOrDefault();
-        for (int i = 0; i < length; i++)
+        var elementRaw = element.GetValueOrDefault();
+        for (var i = 0; i < length; i++)
         {
             buffer[i] = elementRaw;
         }

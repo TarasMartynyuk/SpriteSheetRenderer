@@ -10,7 +10,7 @@ public partial class SpriteSheetAnimationSystem : SystemBase
     
     protected override void OnUpdate()
     {
-        float elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
+        var elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
         
         var entityToAnimationDefCmpRo = GetComponentLookup<SpriteSheetAnimationDefinitionComponent>(true);
         Entities.ForEach((
@@ -24,7 +24,7 @@ public partial class SpriteSheetAnimationSystem : SystemBase
 
                 var animationDefCmp = entityToAnimationDefCmpRo[animCmp.CurrentAnimation];
 
-                float elapsedTimeThisFrame = elapsedTime - animCmp.FrameStartTime;
+                var elapsedTimeThisFrame = elapsedTime - animCmp.FrameStartTime;
                 if (elapsedTimeThisFrame < animationDefCmp.FrameDuration)
                     return;
 
