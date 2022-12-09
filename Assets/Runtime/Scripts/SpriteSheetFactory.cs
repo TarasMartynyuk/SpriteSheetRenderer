@@ -19,8 +19,8 @@ public class SpriteSheetFactory
             typeof(SpriteIndex), typeof(SpriteSheetColor), typeof(SpriteSheetRenderGroupHookComponent)
         };
         var animatedSpriteComponentTypes = staticSpriteComponentTypes.Concat(typeof(SpriteSheetAnimationComponent));
-        AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(animatedSpriteComponentTypes));
-        StaticSpriteArchetype = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(staticSpriteComponentTypes)); 
+        AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.Definition.ComponentTypes.Concat(animatedSpriteComponentTypes));
+        StaticSpriteArchetype = new EntityDefinition(entity3DFactory.Definition.ComponentTypes.Concat(staticSpriteComponentTypes)); 
     }
     
     
