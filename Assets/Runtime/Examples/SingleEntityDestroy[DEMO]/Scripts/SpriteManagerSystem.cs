@@ -1,12 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Unity.Jobs;
-using Unity.Entities;
-using Unity.Transforms;
-using Unity.Mathematics;
-
-namespace SpriteSheetRendererExamples
+﻿namespace SpriteSheetRendererExamples
 {
     // public class SpriteManagerSystem : ComponentSystem
     // {

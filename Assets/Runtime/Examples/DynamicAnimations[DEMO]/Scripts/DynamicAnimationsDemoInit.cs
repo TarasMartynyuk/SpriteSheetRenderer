@@ -2,9 +2,6 @@
 using SmokGnu.SpriteSheetRenderer.Render;
 using SmokGnu.SpriteSheetRenderer.ScriptableObject;
 using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;

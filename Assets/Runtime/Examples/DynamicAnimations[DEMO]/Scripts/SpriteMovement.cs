@@ -1,12 +1,8 @@
 using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace SpriteSheetRendererExamples
 {
