@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-namespace TMUtilsEcs.DOTS.Ecs
+namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public static class EcsSystemUtils
     {

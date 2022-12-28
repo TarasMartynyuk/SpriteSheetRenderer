@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace TMUtils.Utils.Collections
+namespace SmokGnu.SpriteSheetRenderer.Utils
 {
     public static class CollectionUtils
     {

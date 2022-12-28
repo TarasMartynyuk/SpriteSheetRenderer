@@ -1,9 +1,12 @@
 ﻿using System;
 
-[Serializable]
-public struct SerializableNullable<T>
-    where T : unmanaged
+namespace SmokGnu.SpriteSheetRenderer.Utils
 {
-    public T Value;
-    public bool HasValue;
+    [Serializable]
+    public struct SerializableNullable<T>
+        where T : unmanaged
+    {
+        public T Value;
+        public bool HasValue;
+    }
 }

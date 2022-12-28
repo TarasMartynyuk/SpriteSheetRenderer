@@ -1,8 +1,11 @@
 ﻿using Unity.Entities;
 
-public struct AnimationChangeCommandBufferElement : IBufferElementData
+namespace SmokGnu.SpriteSheetRenderer.Animation.Components
 {
-    public Entity Target;
-    public Entity RenderGroupToSet;
-    public bool KeepProgress;
+    public struct AnimationChangeCommandBufferElement : IBufferElementData
+    {
+        public Entity Target;
+        public Entity RenderGroupToSet;
+        public bool KeepProgress;
+    }
 }

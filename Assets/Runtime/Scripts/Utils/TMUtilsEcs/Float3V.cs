@@ -1,6 +1,6 @@
 ﻿using Unity.Mathematics;
 
-namespace TMUtils.Utils.Math
+namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public static class Float3V
     {

@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using TMUtilsEcs.DOTS.Ecs;
+﻿using SmokGnu.SpriteSheetRenderer.Animation.Components;
+using SmokGnu.SpriteSheetRenderer.Render;
+using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs;
+using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs.DOTS;
 using Unity.Entities;
-using Unity.Mathematics;
 using UnityEngine;
 
-public static class SpriteSheetRendererInit
+namespace SmokGnu.SpriteSheetRenderer
 {
-    public static void Init(Shader spriteSheetShader)
+    public static class SpriteSheetRendererInit
     {
-        var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-        eManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
-        EcsSystemUtils.CreateSystemManaged<SpriteSheetRenderSystem, PresentationSystemGroup>().Init(spriteSheetShader);
+        public static void Init(Shader spriteSheetShader)
+        {
+            var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            eManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
+            EcsSystemUtils.CreateSystemManaged<SpriteSheetRenderSystem, PresentationSystemGroup>().Init(spriteSheetShader);
+        }
     }
 }

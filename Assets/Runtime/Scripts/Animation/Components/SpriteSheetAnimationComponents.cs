@@ -1,39 +1,43 @@
-﻿using Unity.Entities;
+﻿using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs.DOTS;
+using Unity.Entities;
 using Unity.Mathematics;
 
-public struct SpriteIndex : IComponentData
+namespace SmokGnu.SpriteSheetRenderer.Animation.Components
 {
-    public int Value;
-}
+    public struct SpriteIndex : IComponentData
+    {
+        public int Value;
+    }
 
-public struct SpriteSheetColor : IComponentData
-{
-    public float4 Value;
-}
+    public struct SpriteSheetColor : IComponentData
+    {
+        public float4 Value;
+    }
 
-public struct SpriteSheetRenderGroupHookComponent : IComponentData
-{
-    public int IndexInRenderGroup;
-    public Entity SpritesheetRenderGroup;
+    public struct SpriteSheetRenderGroupHookComponent : IComponentData
+    {
+        public int IndexInRenderGroup;
+        public Entity SpritesheetRenderGroup;
 
-    public override string ToString() => $"I: {IndexInRenderGroup}, Group: {SpritesheetRenderGroup.Stringify()}";
-}
+        public override string ToString() => $"I: {IndexInRenderGroup}, Group: {SpritesheetRenderGroup.Stringify()}";
+    }
 
-public struct SpriteSheetAnimationComponent : IComponentData
-{
-    public Entity CurrentAnimation;
-    public float FrameStartTime;
+    public struct SpriteSheetAnimationComponent : IComponentData
+    {
+        public Entity CurrentAnimation;
+        public float FrameStartTime;
 
-    public ESpriteSheetAnimationStatus Status;
+        public ESpriteSheetAnimationStatus Status;
 
-    // true for the first frame when the animation event sprite(keyframe) is rendered
-    public bool IsAnimationEventTriggeredThisFrame;
-}
+        // true for the first frame when the animation event sprite(keyframe) is rendered
+        public bool IsAnimationEventTriggeredThisFrame;
+    }
 
-public enum ESpriteSheetAnimationStatus
-{
-    Invalid,
-    Playing,
-    Paused,
-    Ended
+    public enum ESpriteSheetAnimationStatus
+    {
+        Invalid,
+        Playing,
+        Paused,
+        Ended
+    }
 }

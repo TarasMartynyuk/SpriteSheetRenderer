@@ -1,6 +1,6 @@
 ﻿using Unity.Entities;
 
-namespace TMUtilsEcs.DOTS.Factories
+namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public struct EntityDefinition
     {

@@ -1,7 +1,7 @@
+using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using TMUtilsEcs.DOTS.Ecs;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;

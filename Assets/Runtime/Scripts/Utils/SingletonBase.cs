@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace TMUtils.Singletons
+﻿namespace SmokGnu.SpriteSheetRenderer.Utils
 {
     public class SingletonBase<T> where T 
         : class, new()

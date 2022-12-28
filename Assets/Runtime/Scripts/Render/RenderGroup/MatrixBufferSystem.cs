@@ -1,18 +1,21 @@
-using Unity.Collections;
+using SmokGnu.SpriteSheetRenderer.Animation.Components;
+using SmokGnu.SpriteSheetRenderer.Render.RenderGroup.Components;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Transforms;
 
-public partial class MatrixBufferSystem : SystemBase
+namespace SmokGnu.SpriteSheetRenderer.Render.RenderGroup
 {
-    protected override void OnUpdate()
+    public partial class MatrixBufferSystem : SystemBase
     {
-
-        Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in LocalToWorld localToWorld) =>
+        protected override void OnUpdate()
         {
-            var buffer = GetBuffer<MatrixBuffer>(hook.SpritesheetRenderGroup);
-            buffer[hook.IndexInRenderGroup] = localToWorld.Value;
-        })
-        .Schedule();
+
+            Entities.ForEach((in SpriteSheetRenderGroupHookComponent hook, in LocalToWorld localToWorld) =>
+                {
+                    var buffer = GetBuffer<MatrixBuffer>(hook.SpritesheetRenderGroup);
+                    buffer[hook.IndexInRenderGroup] = localToWorld.Value;
+                })
+                .Schedule();
+        }
     }
 }

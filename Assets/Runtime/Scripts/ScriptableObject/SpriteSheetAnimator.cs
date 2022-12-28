@@ -1,25 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using Unity.Entities;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SpriteSheetAnimator", menuName = "SpriteSheetRenderer/SpriteSheetAnimator", order = 0)]
-public class SpriteSheetAnimator : ScriptableObject
+namespace SmokGnu.SpriteSheetRenderer.ScriptableObject
 {
-    public SpriteSheetAnimationScriptable[] animations;
-    public int defaultAnimationIndex;
-
-    public SpriteSheetAnimationScriptable GetAnimation(Entity renderGroup) => 
-        Array.Find(animations, a => a.RenderGroup == renderGroup);
-
-    public int GetAnimationIndex(string animationName)
+    [CreateAssetMenu(fileName = "SpriteSheetAnimator", menuName = "SpriteSheetRenderer/SpriteSheetAnimator", order = 0)]
+    public class SpriteSheetAnimator : UnityEngine.ScriptableObject
     {
-        for (var i = 0; i < animations.Length; i++)
-        {
-            if (animations[i].name == animationName)
-                return i;
-        }
+        public SpriteSheetAnimationScriptable[] animations;
+        public int defaultAnimationIndex;
 
-        return -1;
+        public SpriteSheetAnimationScriptable GetAnimation(Entity renderGroup) => 
+            Array.Find(animations, a => a.RenderGroup == renderGroup);
+
+        public int GetAnimationIndex(string animationName)
+        {
+            for (var i = 0; i < animations.Length; i++)
+            {
+                if (animations[i].name == animationName)
+                    return i;
+            }
+
+            return -1;
+        }
     }
 }

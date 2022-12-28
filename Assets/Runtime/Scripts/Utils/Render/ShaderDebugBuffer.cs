@@ -1,8 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
 using Unity.Collections.LowLevel.Unsafe;
-using System;
+using UnityEngine;
 
-namespace SpriteSheetRenderer
+namespace SmokGnu.SpriteSheetRenderer.Utils.Render
 {
     public class ShaderDebugBuffer<T> : IDisposable
         where T : struct

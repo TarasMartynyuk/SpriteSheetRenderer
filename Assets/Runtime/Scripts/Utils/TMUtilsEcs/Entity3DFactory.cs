@@ -1,11 +1,9 @@
-﻿using TMUtils.Singletons;
-using TMUtils.Utils.Collections;
-using TMUtils.Utils.Math;
+﻿using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs.DOTS;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 
-namespace TMUtilsEcs.DOTS.Factories
+namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public class Entity3DFactory
     {

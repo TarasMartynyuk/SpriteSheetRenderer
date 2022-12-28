@@ -1,7 +1,7 @@
 ﻿using Unity.Collections.LowLevel.Unsafe;
 using Unity.Entities;
 
-namespace TMUtilsEcs.DOTS.Ecs
+namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public ref struct ComponentReference<T> where T : unmanaged, IComponentData
     {

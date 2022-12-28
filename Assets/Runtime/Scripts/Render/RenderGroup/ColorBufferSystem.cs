@@ -1,33 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Burst;
+using SmokGnu.SpriteSheetRenderer.Animation.Components;
+using SmokGnu.SpriteSheetRenderer.Render.RenderGroup.Components;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
-using UnityEngine;
 
-public partial class ColorBufferSystem : SystemBase
+namespace SmokGnu.SpriteSheetRenderer.Render.RenderGroup
 {
-    protected override void OnUpdate()
+    public partial class ColorBufferSystem : SystemBase
     {
-        Entities.ForEach((Entity e, in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
-            {
-                var buffer = GetBuffer<SpriteColorBufferElement>(hook.SpritesheetRenderGroup);
-                buffer[hook.IndexInRenderGroup] = data.Value;
-            })
-            //.WithChangeFilter<SpriteSheetColor>()
-            .WithoutBurst()
-            .Run();
+        protected override void OnUpdate()
+        {
+            Entities.ForEach((Entity e, in SpriteSheetRenderGroupHookComponent hook, in SpriteSheetColor data) =>
+                {
+                    var buffer = GetBuffer<SpriteColorBufferElement>(hook.SpritesheetRenderGroup);
+                    buffer[hook.IndexInRenderGroup] = data.Value;
+                })
+                //.WithChangeFilter<SpriteSheetColor>()
+                .WithoutBurst()
+                .Run();
             // .Schedule();
+        }
     }
-}
 
-public static class JobSystemUtils
-{
-    public static NativeArray<T> SingleElementInputArray<T>(T element, Allocator allocator = Allocator.TempJob) where T : struct
+    public static class JobSystemUtils
     {
-        var result = new NativeArray<T>(1, allocator);
-        result[0] = element;
-        return result;
+        public static NativeArray<T> SingleElementInputArray<T>(T element, Allocator allocator = Allocator.TempJob) where T : struct
+        {
+            var result = new NativeArray<T>(1, allocator);
+            result[0] = element;
+            return result;
+        }
     }
 }

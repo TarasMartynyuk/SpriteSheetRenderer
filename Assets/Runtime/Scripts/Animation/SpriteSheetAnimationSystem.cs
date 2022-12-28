@@ -1,35 +1,38 @@
+using SmokGnu.SpriteSheetRenderer.Animation.Components;
+using SmokGnu.SpriteSheetRenderer.Render.RenderGroup;
+using SmokGnu.SpriteSheetRenderer.Render.RenderGroup.Components;
 using Unity.Entities;
-using Unity.Burst;
-using Unity.Jobs;
 using UnityEngine;
 
-public partial class SpriteSheetAnimationSystem : SystemBase
+namespace SmokGnu.SpriteSheetRenderer.Animation
 {
-    public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
-        SetAnimationInternal(e, animationRenderGroup, World.DefaultGameObjectInjectionWorld.EntityManager, keepProgress);
-    
-    protected override void OnUpdate()
+    public partial class SpriteSheetAnimationSystem : SystemBase
     {
-        var elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
+        public static void SetAnimation(Entity e, Entity animationRenderGroup, bool keepProgress = false) =>
+            SetAnimationInternal(e, animationRenderGroup, World.DefaultGameObjectInjectionWorld.EntityManager, keepProgress);
+    
+        protected override void OnUpdate()
+        {
+            var elapsedTime = (float) UnityEngine.Time.realtimeSinceStartup;
         
-        var entityToAnimationDefCmpRo = GetComponentLookup<SpriteSheetAnimationDefinitionComponent>(true);
-        Entities.ForEach((
+            var entityToAnimationDefCmpRo = GetComponentLookup<SpriteSheetAnimationDefinitionComponent>(true);
+            Entities.ForEach((
                     // Entity e,
                     ref SpriteSheetAnimationComponent animCmp, ref SpriteIndex spriteIndexCmp) =>
-            {
-                animCmp.IsAnimationEventTriggeredThisFrame = false;
-
-                if (animCmp.Status == ESpriteSheetAnimationStatus.Paused)
-                    return;
-
-                var animationDefCmp = entityToAnimationDefCmpRo[animCmp.CurrentAnimation];
-
-                var elapsedTimeThisFrame = elapsedTime - animCmp.FrameStartTime;
-                if (elapsedTimeThisFrame < animationDefCmp.FrameDuration)
-                    return;
-
-                switch (animationDefCmp.Repetition)
                 {
+                    animCmp.IsAnimationEventTriggeredThisFrame = false;
+
+                    if (animCmp.Status == ESpriteSheetAnimationStatus.Paused)
+                        return;
+
+                    var animationDefCmp = entityToAnimationDefCmpRo[animCmp.CurrentAnimation];
+
+                    var elapsedTimeThisFrame = elapsedTime - animCmp.FrameStartTime;
+                    if (elapsedTimeThisFrame < animationDefCmp.FrameDuration)
+                        return;
+
+                    switch (animationDefCmp.Repetition)
+                    {
                     case RepetitionType.Once:
                         if (!NextWillReachEnd(animationDefCmp, spriteIndexCmp))
                         {
@@ -47,54 +50,55 @@ public partial class SpriteSheetAnimationSystem : SystemBase
                         else
                             spriteIndexCmp.Value += 1;
                         break;
-                }
+                    }
 
-                animCmp.IsAnimationEventTriggeredThisFrame =
-                    animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame;
+                    animCmp.IsAnimationEventTriggeredThisFrame =
+                        animationDefCmp.EventFrame.HasValue && spriteIndexCmp.Value == animationDefCmp.EventFrame;
                     
-                // DebugExtensions.LogVar(new
-                // {
-                //     i = spriteIndexCmp.Value,
-                //     animCmp.FrameStartTime
-                // }, "frame advance " + $"{e.Stringify()} anim: {animCmp.CurrentAnimation.Stringify()} ", true);
+                    // DebugExtensions.LogVar(new
+                    // {
+                    //     i = spriteIndexCmp.Value,
+                    //     animCmp.FrameStartTime
+                    // }, "frame advance " + $"{e.Stringify()} anim: {animCmp.CurrentAnimation.Stringify()} ", true);
                 
-                animCmp.FrameStartTime = elapsedTime;
-            })
-            .WithReadOnly(entityToAnimationDefCmpRo)
-            // .WithoutBurst()
-            // .Run();
-        .Schedule();
-    }
+                    animCmp.FrameStartTime = elapsedTime;
+                })
+                .WithReadOnly(entityToAnimationDefCmpRo)
+                // .WithoutBurst()
+                // .Run();
+                .Schedule();
+        }
 
-    static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)
-    {
-        return sprite.Value + 1 >= animationDefCmp.SpriteCount;
-    }
+        static bool NextWillReachEnd(in SpriteSheetAnimationDefinitionComponent animationDefCmp, SpriteIndex sprite)
+        {
+            return sprite.Value + 1 >= animationDefCmp.SpriteCount;
+        }
     
-    private static void SetAnimationInternal(Entity entity, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
-    {
-        RenderGroup.AddToNewRenderGroup(entity, animationRenderGroup);
-
-        var animDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animationRenderGroup);
-
-        var animCmp = eManager.GetComponentData<SpriteSheetAnimationComponent>(entity);
-        if (keepProgress)
+        private static void SetAnimationInternal(Entity entity, Entity animationRenderGroup, EntityManager eManager, bool keepProgress = false)
         {
-            var currentAnimDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animCmp.CurrentAnimation);
-            Debug.Assert(currentAnimDefCmp.SpriteCount == animDefCmp.SpriteCount);
-            Debug.Assert(Mathf.Approximately(currentAnimDefCmp.Duration, animDefCmp.Duration));
+            RenderGroup.AddToNewRenderGroup(entity, animationRenderGroup);
+
+            var animDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animationRenderGroup);
+
+            var animCmp = eManager.GetComponentData<SpriteSheetAnimationComponent>(entity);
+            if (keepProgress)
+            {
+                var currentAnimDefCmp = eManager.GetComponentData<SpriteSheetAnimationDefinitionComponent>(animCmp.CurrentAnimation);
+                Debug.Assert(currentAnimDefCmp.SpriteCount == animDefCmp.SpriteCount);
+                Debug.Assert(Mathf.Approximately(currentAnimDefCmp.Duration, animDefCmp.Duration));
+            }
+            else
+            {
+                eManager.SetComponentData(entity, new SpriteIndex {Value = 0});
+                animCmp.FrameStartTime = UnityEngine.Time.realtimeSinceStartup;
+            }
+
+            animCmp.Status = ESpriteSheetAnimationStatus.Playing;
+            animCmp.CurrentAnimation = animationRenderGroup;
+
+            eManager.SetComponentData(entity, animCmp);
+
+            // DebugExtensions.LogVar(new { e = entity.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
         }
-        else
-        {
-            eManager.SetComponentData(entity, new SpriteIndex {Value = 0});
-            animCmp.FrameStartTime = UnityEngine.Time.realtimeSinceStartup;
-        }
-
-        animCmp.Status = ESpriteSheetAnimationStatus.Playing;
-        animCmp.CurrentAnimation = animationRenderGroup;
-
-        eManager.SetComponentData(entity, animCmp);
-
-        // DebugExtensions.LogVar(new { e = entity.Stringify(), anim = animationRenderGroup.Stringify() }, "Anim change", addCurrFrame:true);
     }
 }
