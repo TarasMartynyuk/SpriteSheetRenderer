@@ -4,12 +4,12 @@ namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
 {
     public static class EcsSystemUtils
     {
-        public static T CreateSimulationSystem<T>()
-            where T : ComponentSystemBase, new()
+        public static T CreateSimulationSystemManaged<T>()
+            where T : SystemBase, new()
             => CreateSystemManaged<T, SimulationSystemGroup>();
         
         public static T CreateSystemManaged<T, TSystemGroup>()
-            where T : ComponentSystemBase, new()
+            where T : SystemBase, new()
             where TSystemGroup : ComponentSystemGroup
         {
             var system = World.DefaultGameObjectInjectionWorld.CreateSystemManaged<T>();
@@ -23,7 +23,7 @@ namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
             => system.GetBuffer<T>(entity).Reinterpret<TReinterpret>();
 
         private static void AddSystemForUpdate<T, TSystemGroup>(T system)
-            where T : ComponentSystemBase
+            where T : SystemBase
             where TSystemGroup : ComponentSystemGroup
         {
             var defaultWorld = World.DefaultGameObjectInjectionWorld;
