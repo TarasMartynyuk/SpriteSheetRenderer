@@ -4,7 +4,7 @@ using Unity.Entities;
 
 namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs.DOTS
 {
-    public static class EntityManagerNameExtensions
+    internal static class EntityManagerNameExtensions
     {
         private const string kBaseEntityIndexName = "{0}: "; // 0 is entity index
         private const string Null = "Null";
