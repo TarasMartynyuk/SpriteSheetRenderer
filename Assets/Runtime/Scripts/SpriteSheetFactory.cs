@@ -11,8 +11,6 @@ namespace SmokGnu.SpriteSheetRenderer
 {
     public class SpriteSheetFactory
     {
-        public static SpriteSheetFactory Instance;
-        
         private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
         private readonly Entity3DFactory _entity3DFactory;
     

@@ -1,4 +1,5 @@
-﻿using SmokGnu.SpriteSheetRenderer.Animation.Components;
+﻿using SmokGnu.SpriteSheetRenderer.Animation;
+using SmokGnu.SpriteSheetRenderer.Animation.Components;
 using SmokGnu.SpriteSheetRenderer.Render;
 using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs;
 using SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs.DOTS;
@@ -14,6 +15,7 @@ namespace SmokGnu.SpriteSheetRenderer
             var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             eManager.CreateEntity("SpriteSheetAnimationSingleton", typeof(AnimationChangeCommandBufferElement));
             EcsSystemUtils.CreateSystemManaged<SpriteSheetRenderSystem, PresentationSystemGroup>().Init(spriteSheetShader);
+            EcsSystemUtils.CreateSimulationSystemManaged<SpriteSheetAnimationDeferredChangeSystem>();
         }
     }
 }
