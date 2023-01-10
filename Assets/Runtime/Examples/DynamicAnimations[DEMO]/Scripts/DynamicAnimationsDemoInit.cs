@@ -18,6 +18,7 @@ namespace SpriteSheetRendererExamples
         public static Entity character;
         public SpriteSheetAnimator animator;
         public Shader Shader => _shader;
+        private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
 
         private void Awake()
         {
@@ -35,13 +36,13 @@ namespace SpriteSheetRendererExamples
             // character = eManager.CreateEntity(archetype);
 
 
-            var eManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            character = eManager.CreateEntity(sFactory.AnimatedSprite3DDefinition.Archetype);
+            character = EntityManager.CreateEntity(sFactory.AnimatedSprite3DDefinition.Archetype);
             sFactory.InitAnimatedSprite(character, animator);
             //eManager.SetName(character, "DynamicAnimationsDemo");
             // 3) Populate components
             var trs = LocalTransform.FromPositionRotationScale(new float3(15), quaternion.identity, 1);
-            eManager.AddComponentData(character, trs);
+            EntityManager.AddComponentData(character, trs);
+            EntityManager.AddComponentData(character, new PostTransformScale() { Value = float3x3.Scale(1) });
             // var color = Color.white;
             // eManager.AddComponentData(character, new Translation { Value = new float3(15) });
             // cmp_err

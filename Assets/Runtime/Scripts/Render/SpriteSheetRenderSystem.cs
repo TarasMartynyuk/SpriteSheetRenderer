@@ -55,6 +55,16 @@ namespace SmokGnu.SpriteSheetRenderer.Render
             m_debugBuffer.Dispose();
         }
 
+        class Base
+        {
+            
+        }
+        
+        class MyClass : Base
+        {
+            
+        }
+
         protected override void OnUpdate()
         {
 
