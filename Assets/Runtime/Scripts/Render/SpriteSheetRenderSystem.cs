@@ -12,33 +12,33 @@ namespace SmokGnu.SpriteSheetRenderer.Render
     public partial class SpriteSheetRenderSystem : SystemBase
     {
         List<RenderInformation> RenderInformation { get; } = new();
-        private SpriteSheetCache m_spriteSheetCache;
+        private SpriteSheetCache _spriteSheetCache;
         Mesh mesh;
-        ShaderDebugBuffer<Matrix4x4> m_debugBuffer = new(3);
+        ShaderDebugBuffer<Matrix4x4> _debugBuffer = new(3);
 
         public void Init(Shader spriteSheetShader)
         {
-            m_spriteSheetCache = new SpriteSheetCache(spriteSheetShader);
+            _spriteSheetCache = new SpriteSheetCache(spriteSheetShader);
         }
     
         public void RecordAnimator(SpriteSheetAnimator animator)
         {
             foreach (var animation in animator.animations)
             {
-                var atlasData = m_spriteSheetCache.BakeSprites(animation.Sprites, animation.name);
+                var atlasData = _spriteSheetCache.BakeSprites(animation.Sprites, animation.name);
                 var newRenderGroup = RenderGroup.RenderGroup.CreateRenderGroup(atlasData.Value, animation.name);
                 animation.Init(newRenderGroup);
 
-                RenderInformation.Add(new RenderInformation(atlasData.Key, m_spriteSheetCache.GetLength(atlasData.Key), newRenderGroup));
+                RenderInformation.Add(new RenderInformation(atlasData.Key, _spriteSheetCache.GetLength(atlasData.Key), newRenderGroup));
             }
         }
 
         public void RecordStaticSprite(StaticSpriteScriptable sprite)
         {
-            var atlasData = m_spriteSheetCache.BakeSprite(sprite.Sprite, sprite.name);
+            var atlasData = _spriteSheetCache.BakeSprite(sprite.Sprite, sprite.name);
             var renderGroup = RenderGroup.RenderGroup.CreateRenderGroup(atlasData.Value, sprite.name);
             sprite.Init(renderGroup);
-            RenderInformation.Add(new RenderInformation(atlasData.Key, m_spriteSheetCache.GetLength(atlasData.Key),  renderGroup));
+            RenderInformation.Add(new RenderInformation(atlasData.Key, _spriteSheetCache.GetLength(atlasData.Key),  renderGroup));
         }
 
         protected override void OnCreate()
@@ -52,17 +52,7 @@ namespace SmokGnu.SpriteSheetRenderer.Render
                 r.DestroyBuffers();
 
             RenderInformation.Clear();
-            m_debugBuffer.Dispose();
-        }
-
-        class Base
-        {
-            
-        }
-        
-        class MyClass : Base
-        {
-            
+            _debugBuffer.Dispose();
         }
 
         protected override void OnUpdate()
@@ -127,7 +117,7 @@ namespace SmokGnu.SpriteSheetRenderer.Render
             if (instanceCount <= 0) 
                 return instanceCount;
         
-            var stride = instanceCount >= 16 ? 16 : 16 * m_spriteSheetCache.GetLength(renderInformation.material);
+            var stride = instanceCount >= 16 ? 16 : 16 * _spriteSheetCache.GetLength(renderInformation.material);
             if (renderInformation.updateUvs)
             {
                 ReleaseUvBuffer(renderIndex);
