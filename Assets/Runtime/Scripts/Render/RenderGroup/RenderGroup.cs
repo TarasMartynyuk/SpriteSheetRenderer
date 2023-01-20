@@ -16,6 +16,7 @@ namespace SmokGnu.SpriteSheetRenderer.Render.RenderGroup
 
         public static Entity CreateRenderGroup(float4[] uvs, string name)
         {
+            // TODO: member
             var archetype = EntityManager.CreateArchetype(
                 typeof(SpriteIndexBuffer),
                 typeof(MatrixBuffer),

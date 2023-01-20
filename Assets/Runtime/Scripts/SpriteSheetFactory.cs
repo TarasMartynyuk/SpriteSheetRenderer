@@ -11,13 +11,11 @@ namespace SmokGnu.SpriteSheetRenderer
 {
     public class SpriteSheetFactory
     {
-        public static SpriteSheetFactory Instance;
-        
         private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
         private readonly Entity3DFactory _entity3DFactory;
     
-        public EntityDefinition AnimatedSprite3DDefinition { get; private set; }
-        public EntityDefinition StaticSpriteArchetype { get; private set; }
+        public EntityDefinition AnimatedSprite3DDefinition { get; }
+        public EntityDefinition StaticSpriteArchetype { get; }
 
         public SpriteSheetFactory(Entity3DFactory entity3DFactory)
         {
@@ -27,8 +25,8 @@ namespace SmokGnu.SpriteSheetRenderer
                 typeof(SpriteIndex), typeof(SpriteSheetColor), typeof(SpriteSheetRenderGroupHookComponent)
             };
             var animatedSpriteComponentTypes = staticSpriteComponentTypes.Concat(typeof(SpriteSheetAnimationComponent));
-            AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.Definition.ComponentTypes.Concat(animatedSpriteComponentTypes));
-            StaticSpriteArchetype = new EntityDefinition(entity3DFactory.Definition.ComponentTypes.Concat(staticSpriteComponentTypes)); 
+            AnimatedSprite3DDefinition = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(animatedSpriteComponentTypes));
+            StaticSpriteArchetype = new EntityDefinition(entity3DFactory.DefinitionScale3D.ComponentTypes.Concat(staticSpriteComponentTypes)); 
         }
     
         public void InitAnimatedSprite(Entity entity, SpriteSheetAnimator animator = null)

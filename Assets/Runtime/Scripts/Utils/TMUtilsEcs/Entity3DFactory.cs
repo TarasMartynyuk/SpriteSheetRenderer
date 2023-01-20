@@ -16,8 +16,8 @@ namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
             Definition = new EntityDefinition(new ComponentType[]
             {
                 typeof(LocalTransform),
-                typeof(LocalToWorld),
                 typeof(WorldTransform),
+                typeof(LocalToWorld),
             });
 
             DefinitionScale3D =

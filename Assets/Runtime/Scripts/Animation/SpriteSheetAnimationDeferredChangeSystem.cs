@@ -3,6 +3,7 @@ using Unity.Entities;
 
 namespace SmokGnu.SpriteSheetRenderer.Animation
 {
+    [DisableAutoCreation]
     public partial class SpriteSheetAnimationDeferredChangeSystem : SystemBase
     {
         protected override void OnUpdate()
