@@ -1,6 +1,0 @@
-[submodule "Modules/TMUtils"]
-	path = Modules/TMUtils
-	url = https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils.git
-[submodule "Modules/tmutils-ecs"]
-	path = Modules/tmutils-ecs
-	url = https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils-ecs.git
