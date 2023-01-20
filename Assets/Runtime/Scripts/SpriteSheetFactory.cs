@@ -14,8 +14,8 @@ namespace SmokGnu.SpriteSheetRenderer
         private static EntityManager EntityManager => World.DefaultGameObjectInjectionWorld.EntityManager;
         private readonly Entity3DFactory _entity3DFactory;
     
-        public EntityDefinition AnimatedSprite3DDefinition { get; private set; }
-        public EntityDefinition StaticSpriteArchetype { get; private set; }
+        public EntityDefinition AnimatedSprite3DDefinition { get; }
+        public EntityDefinition StaticSpriteArchetype { get; }
 
         public SpriteSheetFactory(Entity3DFactory entity3DFactory)
         {
