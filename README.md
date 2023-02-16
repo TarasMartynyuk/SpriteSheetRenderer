@@ -69,18 +69,23 @@ public bool IsAnimationEventTriggeredThisFrame;
 ```
 
 
+## Dependencies
+
+- Entities __1.0.0-pre.15__
+- unity.nuget.newtonsoft-json - not essential,  used in some debug visualization.
+
+
 ## Fork changes compared to original
 
-* Using default unity 3D transforms (LocalToWorld). Allowes parenting of entities (hierarchical transforms). This also means that we are using full float4x4 matrix as opposed to a smaller float3x2 in original. Possible to optimize this back later.
+* Using default unity entities 3D transforms (WorldTransform & co, from Transforms V2 introduced in pre-release). Allows parenting of entities (hierarchical transforms). This also means that we are using full float4x4 matrix as opposed to a smaller float3x2 in original. Possible to optimize this back later.
 * Flipping sprites
 * Static sprites - separate scriptable object and workflow
 * Animation definition data stored in burstable, unmanaged ECS. (Also separated from per-instance data). Managed objects are now required only for first-time recording.
 * Deferred animation change for jobs.
-* Scriptable objects refactor: duration property, easier init, removed duplicate name.
-* Upgraded entities to 17.042.
+* Scriptable objects refactor: duration property, easier init.
+* Upgraded Entities to __1.0.0-pre.15__.
 * Organized as a unity package
-* Has a dependency on my [Utils package](https://gitlab.com/tm-sfml/tarasmartyniuk-unity/tmutils)  
 * Refactor: 
     - removed unnecessary mapping collections, 
-    - consolidated multiple static data into main system and factory singleton.
+    - consolidated multiple static data into non-singleton main system and factory.
     - rewrote "next free render group index" logic to use RemoveAtSwapBack.
