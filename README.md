@@ -3,7 +3,7 @@ High performance way to render 2D sprite-sheet animations in Unity ECS. Entities
 
 ## How to use
 
-* 1- Create Animation/Static Sprite ScriptableObject assert in editor:
+* 1- Create Animation/Static Sprite ScriptableObject asset in editor:
 
 ![This is an image](/RepositoryMetadata/AnimationScriptable.png)
 
