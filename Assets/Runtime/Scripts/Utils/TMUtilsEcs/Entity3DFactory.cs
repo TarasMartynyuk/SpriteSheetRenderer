@@ -15,9 +15,7 @@ namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
         {
             Definition = new EntityDefinition(new ComponentType[]
             {
-                typeof(LocalTransform),
-                typeof(WorldTransform),
-                typeof(LocalToWorld),
+                typeof(LocalTransform), typeof(WorldTransform), typeof(LocalToWorld),
             });
 
             DefinitionScale3D =
@@ -42,12 +40,9 @@ namespace SmokGnu.SpriteSheetRenderer.Utils.TMUtilsEcs
         public void Init3DEntity(Entity entity, float3? scale3D = null)
         {
             EntityManager.SetComponentData(entity, LocalTransform.Identity);
-            
-            if (scale3D != null)
-            {
-                var scaleMatrix = float3x3.identity;
-                EntityManager.SetComponentData(entity, new PostTransformScale { Value = scaleMatrix });
-            }
+
+            var scaleMatrix = float3x3.Scale(scale3D.GetValueOrDefault(Float3V.One));
+            EntityManager.SetComponentData(entity, new PostTransformScale { Value = scaleMatrix });
 
             // cmp_err?
             // EntityTransformUtils.SetRootPositionUpdateLTW(entity, float3.zero);

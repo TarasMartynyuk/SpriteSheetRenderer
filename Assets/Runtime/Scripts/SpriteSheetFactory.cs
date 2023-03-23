@@ -43,7 +43,6 @@ namespace SmokGnu.SpriteSheetRenderer
     
         public void InitStaticSprite(Entity spriteSheetEntity, StaticSpriteScriptable staticSprite)
         {
-            _entity3DFactory.Init3DEntity(spriteSheetEntity);
             RenderGroup.AddToNewRenderGroup(spriteSheetEntity, staticSprite.RenderGroup);
             InitSprite(spriteSheetEntity);
         }
