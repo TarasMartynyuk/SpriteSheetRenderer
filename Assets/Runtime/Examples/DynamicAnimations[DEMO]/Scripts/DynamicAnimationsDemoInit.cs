@@ -42,7 +42,7 @@ namespace SpriteSheetRendererExamples
             // 3) Populate components
             var trs = LocalTransform.FromPositionRotationScale(new float3(15), quaternion.identity, 1);
             EntityManager.AddComponentData(character, trs);
-            var pts = new PostTransformScale() { Value = float3x3.Scale(2) };
+            var pts = new PostTransformMatrix() { Value = float4x4.Scale(2) };
             // var vec = pts.Value.GetScale();
             EntityManager.AddComponentData(character, pts);
             // var color = Color.white;
